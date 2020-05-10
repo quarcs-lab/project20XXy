@@ -17,15 +17,6 @@ toc: false
 bibliography: references.bib
 biblio-style: authoryear-comp
 output:
-  MonashEBSTemplates::workingpaper:
-    fig_caption: yes
-    fig_height: 4
-    fig_width: 6
-    includes:
-      in_header: preamble.tex
-    keep_tex: yes
-    number_sections: yes
-    citation_package: biblatex
   bookdown::html_document2:
     code_download: true
     toc: true
@@ -37,6 +28,15 @@ output:
     code_folding: "show"
     theme: "cosmo"
     highlight: "monochrome"
+  MonashEBSTemplates::workingpaper:
+    fig_caption: yes
+    fig_height: 4
+    fig_width: 6
+    includes:
+      in_header: preamble.tex
+    keep_tex: yes
+    number_sections: yes
+    citation_package: biblatex
   bookdown::word_document2:
     toc: false
 ---
@@ -60,6 +60,7 @@ knitr::opts_chunk$set(
   warning=FALSE)
 library(tidyverse)
 library(knitr)
+library(kableExtra)
 ```
 
 # Introduction
@@ -168,14 +169,27 @@ Leave one blank line to separate paragraphs.
 Write one sentence per line.
 Leave one blank line to separate paragraphs.
 
-This is a table that is nativaly created in this document using R
+This is a table that is natively created in this document using R
 
 
 ```{r}
 cars %>% 
   head(5) %>% 
-  kable(caption = "A knitr kable table") 
+  kable(caption = "A knitr kable table") %>% 
+  kable_styling()
 ```
+
+
+This table is imported from a csv file
+
+```{r message=FALSE, warning=FALSE}
+tab1 <- read_csv("other-tabs/skim2010-nicer.csv")
+tab1 %>% 
+  kable(caption = "An imported table") %>% 
+  kable_styling()
+  
+```
+
 
 
 Here I add a PNG figure from the results folder
