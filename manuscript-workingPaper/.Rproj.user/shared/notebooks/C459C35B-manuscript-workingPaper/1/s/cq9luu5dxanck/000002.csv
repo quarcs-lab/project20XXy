@@ -1,0 +1,9 @@
+"0","cars %>% "
+"0","  head(5) %>% "
+"0","  kable(caption = ""A knitr kable table"") "
+"2","Registered S3 methods overwritten by 'htmltools':
+  method               from         
+  print.html           tools:rstudio
+  print.shiny.tag      tools:rstudio
+  print.shiny.tag.list tools:rstudio
+"
