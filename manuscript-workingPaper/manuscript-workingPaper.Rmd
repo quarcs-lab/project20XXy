@@ -16,9 +16,21 @@ cover: false
 toc: false
 bibliography: references.bib
 biblio-style: authoryear-comp
-always_allow_html: true
+always_allow_html: yes
 output:
+  bookdown::html_document2:
+    code_download: yes
+    code_folding: show
+    highlight: monochrome
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
   MonashEBSTemplates::workingpaper:
+    citation_package: biblatex
     fig_caption: yes
     fig_height: 4
     fig_width: 6
@@ -26,20 +38,10 @@ output:
       in_header: preamble.tex
     keep_tex: yes
     number_sections: yes
-    citation_package: biblatex
-  bookdown::html_document2:
-    code_download: true
-    toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
-    toc_depth: 4
-    number_sections: true
-    code_folding: "show"
-    theme: "cosmo"
-    highlight: "monochrome"
   bookdown::word_document2:
-    toc: false
+    toc: no
+  md_document: default
+  github_document: default
 ---
 
 
@@ -63,6 +65,7 @@ knitr::opts_chunk$set(
   warning=FALSE)
 library(tidyverse)
 library(knitr)
+options(kableExtra.auto_format = FALSE) 
 library(kableExtra)
 ```
 
