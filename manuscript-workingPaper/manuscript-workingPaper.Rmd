@@ -7,7 +7,7 @@ author:
   address: Graduate School of International Development\newline Nagoya University\newline Furocho, Nagoya, 464-8601, JAPAN
   email: carlos@gsid.nagoya-u.ac.jp
   correspondingauthor: true
-abstract: "tba"
+abstract: "tba tba"
 keywords: "a, b, c"
 wpnumber: no/yr
 jelcodes: R10, R11, R58
@@ -16,7 +16,17 @@ cover: false
 toc: false
 bibliography: references.bib
 biblio-style: authoryear-comp
+always_allow_html: true
 output:
+  MonashEBSTemplates::workingpaper:
+    fig_caption: yes
+    fig_height: 4
+    fig_width: 6
+    includes:
+      in_header: preamble.tex
+    keep_tex: yes
+    number_sections: yes
+    citation_package: biblatex
   bookdown::html_document2:
     code_download: true
     toc: true
@@ -28,18 +38,10 @@ output:
     code_folding: "show"
     theme: "cosmo"
     highlight: "monochrome"
-  MonashEBSTemplates::workingpaper:
-    fig_caption: yes
-    fig_height: 4
-    fig_width: 6
-    includes:
-      in_header: preamble.tex
-    keep_tex: yes
-    number_sections: yes
-    citation_package: biblatex
   bookdown::word_document2:
     toc: false
 ---
+
 
 <style>
 h1.title {font-size: 18pt; color: DarkBlue;} 
@@ -51,6 +53,7 @@ body {color: #333333;}
 a, a:hover {color: #8B3A62;}
 pre {font-size: 12px;}
 </style>
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
