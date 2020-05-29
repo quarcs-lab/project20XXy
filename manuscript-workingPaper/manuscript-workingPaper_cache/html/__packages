@@ -10,3 +10,5 @@ stringr
 forcats
 knitr
 kableExtra
+xtable
+stargazer

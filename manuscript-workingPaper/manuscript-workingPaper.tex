@@ -285,6 +285,7 @@ Graduate School of International Development\newline Nagoya University\newline F
 \usepackage{makeidx}   %For \cleardoublepage \phantomsection \printindex
 \usepackage{dsfont}    %For \mathds{R} - real R in math mode
 \usepackage{todonotes}
+\usepackage{dcolumn}   % For Latex tables
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -320,18 +321,18 @@ Leave one blank line to separate paragraphs.
 Write one sentence per line.
 Leave one blank line to separate paragraphs.
 
-Regional inequality is a pervasive feature of the Indonesian economy \autocites{esmara1975regional}{mishra2009economic}{bendesa2016}.
+Regional inequality is a pervasive feature of the Indonesian economy \autocite{esmara1975regional,mishra2009economic,bendesa2016}.
 To a large extent, the insular geography and the unbalanced spatial distribution of natural resources suggest that regional inequality is an expected outcome.
 However, regional improvements in labor productivity may help reduce these regional imbalances and promote economic development.
 Moreover, since the early 2000s, major political reforms such as decentralization and democratization initiatives may have influenced the trajectories of labor productivity and its proximate determinants: physical capital, human capital, and aggregate efficiency.
 
 The results of this paper contribute to the literature of regional development in Indonesia in three fronts.
-First, there is a large literature that studies provincial income disparities in Indonesia \autocites{akita1988regional}{mishra2009economic}{akita2011structural}.
-To this literature, this paper contributes an evaluation of provincial disparities in some of the main determinants of per-capita income: labor productivity, physical capital, human capital and efficiency.\footnote{By studying the determinants of income, this paper is also related to the literature that decomposes income differences into factors in Indonesia \autocites{akitaLukman1995}{kataoka2010factor}{kataoka2018inequality}.}
-Second, there is a growing literature that studies provincial convergence with a focus on the dynamics of the ``average'' province that converges to a unique equilibrium \autocites{garcia1998differences}{resosudarmo2006regional}{vidyattama2013regional}.
+First, there is a large literature that studies provincial income disparities in Indonesia \autocite{akita1988regional,mishra2009economic,akita2011structural}.
+To this literature, this paper contributes an evaluation of provincial disparities in some of the main determinants of per-capita income: labor productivity, physical capital, human capital and efficiency.\footnote{By studying the determinants of income, this paper is also related to the literature that decomposes income differences into factors in Indonesia \autocite{akitaLukman1995,kataoka2010factor,kataoka2018inequality}.}
+Second, there is a growing literature that studies provincial convergence with a focus on the dynamics of the ``average'' province that converges to a unique equilibrium \autocite{garcia1998differences,resosudarmo2006regional,vidyattama2013regional}.
 To this literature, this paper provides an alternative perspective the goes beyond the dynamics of the average province.
 Specifically, this paper incorporates the role of provincial heterogeneity and the formation of multiple convergence clubs (multiple equilibria).
-Third, there is an emerging literature that studies provincial convergence in Indonesia from a convergence clubs perspective \autocites{gunawan2019provinces}{kurniawan2019poor}{mendez2020efficiencyConvergence}.
+Third, there is an emerging literature that studies provincial convergence in Indonesia from a convergence clubs perspective \autocite{gunawan2019provinces,kurniawan2019poor,mendez2020efficiencyConvergence}.
 To this literature, this paper contributes a more comprehensive evaluation of productivity-related indicators.\footnote{The papers of \textcite{sakamoto2007} and \textcite{gunawan2019provinces}, for instance, only focus on income, while the paper of \textcite{mendez2019efficiencyIndonesia} only focuses on efficiency. Although \textcite{kurniawan2019poor} evaluate four different socio-economic indicators, they do not include the dynamics of labor productivity, physical capital, and efficiency, which are the main indicators of the current paper.}
 
 The rest of this paper is organized as follows.
@@ -363,8 +364,63 @@ Based on publicly available information from the Central Bureau of Statistics of
 Based on the same data source, human capital per worker is constructed as a weighted average of the years of education of the labor force.
 Based on the physical capital stock estimates of \textcite{kataoka2013capital}, physical capital per worker is constructed by dividing provincial capital stock by the number of workers in the labor force.
 
-\hypertarget{other-subsection-1}{%
-\subsection{Other subsection}\label{other-subsection-1}}
+\hypertarget{regression-table-in-plain-text}{%
+\subsection{Regression table in plain text}\label{regression-table-in-plain-text}}
+
+\hypertarget{regression-results}{%
+\section{Regression Results}\label{regression-results}}
+
+\begin{verbatim}
+                                   Dependent variable:                   
+                ---------------------------------------------------------
+                                   rating                     high.rating
+                                     OLS                        probit   
+                         (1)                    (2)               (3)    
+\end{verbatim}
+
+\begin{longtable}[]{@{}l@{}}
+\toprule
+\endhead
+\begin{minipage}[t]{0.97\columnwidth}\raggedright
+complaints 0.692*** 0.682***
+(0.149) (0.129)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.97\columnwidth}\raggedright
+privileges -0.104 -0.103
+(0.135) (0.129)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.97\columnwidth}\raggedright
+learning 0.249 0.238* 0.164***
+(0.160) (0.139) (0.053)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.97\columnwidth}\raggedright
+raises -0.033
+(0.202)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.97\columnwidth}\raggedright
+critical 0.015 -0.001
+(0.147) (0.044)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.97\columnwidth}\raggedright
+advance -0.062
+(0.042)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.97\columnwidth}\raggedright
+Constant 11.000 11.300 -7.480**
+(11.700) (7.320) (3.570)\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+Observations 30 30 30\\
+R2 0.715 0.715\\
+Adjusted R2 0.656 0.682\\
+Log Likelihood -9.090\\
+Akaike Inf. Crit. 26.200\\
+Residual Std. Error 7.140 (df = 24) 6.860 (df = 26)\\
+F Statistic 12.100*** (df = 5; 24) 21.700*** (df = 3; 26)\\
+=============================================================================
+Note: \emph{p\textless0.1; \textbf{p\textless0.05; }}p\textless0.01
 
 \hypertarget{methodology}{%
 \section{Methodology}\label{methodology}}
@@ -399,8 +455,8 @@ where \(\delta_{i}\) is constant over time but varies across economies, \(\xi_{i
 Specifically, a one-sided t test with heteroskedasticity-autocorrelation consistent (HAC) standard errors is used.
 In this setting, the null hypothesis of convergence is rejected when \(t_{b} < -1.65\).
 
-\hypertarget{other-subsection-2}{%
-\subsection{Other subsection}\label{other-subsection-2}}
+\hypertarget{other-subsection-1}{%
+\subsection{Other subsection}\label{other-subsection-1}}
 
 \hypertarget{results}{%
 \section{Results}\label{results}}

@@ -18,6 +18,17 @@ bibliography: references.bib
 biblio-style: authoryear-comp
 always_allow_html: yes
 output:
+  bookdown::word_document2:
+    toc: no
+  MonashEBSTemplates::workingpaper:
+    citation_package: biblatex
+    fig_caption: yes
+    fig_height: 4
+    fig_width: 6
+    includes:
+      in_header: preamble.tex
+    keep_tex: yes
+    number_sections: yes
   bookdown::html_document2:
     code_download: yes
     code_folding: show
@@ -29,17 +40,6 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: no
-  MonashEBSTemplates::workingpaper:
-    citation_package: biblatex
-    fig_caption: yes
-    fig_height: 4
-    fig_width: 6
-    includes:
-      in_header: preamble.tex
-    keep_tex: yes
-    number_sections: yes
-  bookdown::word_document2:
-    toc: no
   md_document: default
   github_document: default
 ---
@@ -62,11 +62,16 @@ knitr::opts_chunk$set(
   echo = FALSE,
   cache=TRUE,
   messages=FALSE,
-  warning=FALSE)
+  warning=FALSE,
+  out.width = "95%")
 library(tidyverse)
 library(knitr)
+options(digits = 3)
+options(scipen = 999)
 options(kableExtra.auto_format = FALSE) 
 library(kableExtra)
+library(xtable)
+library(stargazer)
 ```
 
 # Introduction

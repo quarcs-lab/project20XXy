@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.14)  25 MAY 2020 15:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.14)  29 MAY 2020 22:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1515,7 +1515,9 @@ s/tikzlibrarypositioning.code.tex
 File: tikzlibrarypositioning.code.tex 2008/10/06 v3.0.1a (rcs-revision 1.7)
 )
 \c@@todonotes@numberoftodonotes=\count433
-) (/usr/local/texlive/2018/texmf-dist/tex/latex/tools/array.sty
+) (/usr/local/texlive/2018/texmf-dist/tex/latex/tools/dcolumn.sty
+Package: dcolumn 2014/10/28 v1.06 decimal alignment package (DPC)
+(/usr/local/texlive/2018/texmf-dist/tex/latex/tools/array.sty
 Package: array 2018/04/07 v2.4g Tabular extension package (FMi)
 \col@sep=\dimen304
 \ar@mcellbox=\box64
@@ -1524,7 +1526,7 @@ Package: array 2018/04/07 v2.4g Tabular extension package (FMi)
 \extratabsurround=\skip99
 \backup@length=\skip100
 \ar@cellbox=\box65
-) (/usr/local/texlive/2018/texmf-dist/tex/latex/multirow/multirow.sty
+)) (/usr/local/texlive/2018/texmf-dist/tex/latex/multirow/multirow.sty
 Package: multirow 2016/11/25 v2.2 Span multiple rows of a table
 \multirow@colwidth=\skip101
 \multirow@cntb=\count434
@@ -1619,34 +1621,34 @@ File: english.lbx 2018/03/04 v3.11 biblatex localization (PK/MW)
 (./manuscript-workingPaper.aux)
 \openout1 = `manuscript-workingPaper.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 304.
-LaTeX Font Info:    ... okay on input line 304.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 304.
-LaTeX Font Info:    ... okay on input line 304.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 304.
-LaTeX Font Info:    ... okay on input line 304.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 304.
-LaTeX Font Info:    ... okay on input line 304.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 304.
-LaTeX Font Info:    ... okay on input line 304.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 304.
-LaTeX Font Info:    ... okay on input line 304.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 304.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 304.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 305.
+LaTeX Font Info:    ... okay on input line 305.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 305.
+LaTeX Font Info:    ... okay on input line 305.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 305.
+LaTeX Font Info:    ... okay on input line 305.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 305.
+LaTeX Font Info:    ... okay on input line 305.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 305.
+LaTeX Font Info:    ... okay on input line 305.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 305.
+LaTeX Font Info:    ... okay on input line 305.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 305.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 305.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 304.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 304.
-LaTeX Font Info:    ... okay on input line 304.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 304.
-LaTeX Font Info:    ... okay on input line 304.
-LaTeX Font Info:    Try loading font information for T1+ppl on input line 304.
+LaTeX Font Info:    ... okay on input line 305.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 305.
+LaTeX Font Info:    ... okay on input line 305.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 305.
+LaTeX Font Info:    ... okay on input line 305.
+LaTeX Font Info:    Try loading font information for T1+ppl on input line 305.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/t1ppl.fd
 File: t1ppl.fd 2001/06/04 font definitions for T1/ppl.
 )
-LaTeX Info: Redefining \microtypecontext on input line 304.
+LaTeX Info: Redefining \microtypecontext on input line 305.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
@@ -1660,7 +1662,7 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-ppl.cfg 2005/11/16 v1.6 microtype config. file: Palatino (RS)
 )
 \AtBeginShipoutBox=\box76
-Package hyperref Info: Link coloring ON on input line 304.
+Package hyperref Info: Link coloring ON on input line 305.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2018/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
@@ -1668,9 +1670,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count447
 )
-LaTeX Info: Redefining \ref on input line 304.
-LaTeX Info: Redefining \pageref on input line 304.
-LaTeX Info: Redefining \nameref on input line 304.
+LaTeX Info: Redefining \ref on input line 305.
+LaTeX Info: Redefining \pageref on input line 305.
+LaTeX Info: Redefining \nameref on input line 305.
 (./manuscript-workingPaper.out) (./manuscript-workingPaper.out)
 \@outlinefile=\write6
 \openout6 = `manuscript-workingPaper.out'.
@@ -1717,8 +1719,8 @@ Package biblatex Info: Data encoding 'utf8' specified.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'manuscript-workingPaper.bbl' found.
 (./manuscript-workingPaper.bbl)
-Package biblatex Info: Reference section=0 on input line 304.
-Package biblatex Info: Reference segment=0 on input line 304.
+Package biblatex Info: Reference section=0 on input line 305.
+Package biblatex Info: Reference segment=0 on input line 305.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: threeparttable package is loaded.
@@ -1752,148 +1754,153 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 )) ABD: EveryShipout initializing macros
-LaTeX Font Info:    Try loading font information for T1+fvs on input line 305.
+LaTeX Font Info:    Try loading font information for T1+fvs on input line 306.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/bera/t1fvs.fd
 File: t1fvs.fd 2004/09/07 scalable font definitions for T1/fvs.
 )
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 9.85492pt on input line 305.
+(Font)              scaled to size 9.85492pt on input line 306.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `fvs' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 22.39185pt on input line 305.
+(Font)              scaled to size 22.39185pt on input line 306.
 LaTeX Font Info:    Font shape `T1/fvs/b/n' will be
-(Font)              scaled to size 22.39185pt on input line 305.
+(Font)              scaled to size 22.39185pt on input line 306.
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 10.79993pt on input line 305.
+(Font)              scaled to size 10.79993pt on input line 306.
 LaTeX Font Info:    Font shape `T1/fvs/b/n' will be
-(Font)              scaled to size 10.79993pt on input line 305.
-LaTeX Font Info:    Try loading font information for OT1+ppl on input line 305.
+(Font)              scaled to size 10.79993pt on input line 306.
+LaTeX Font Info:    Try loading font information for OT1+ppl on input line 306.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/ot1ppl.fd
 File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
 )
-LaTeX Font Info:    Try loading font information for OML+zplm on input line 305
+LaTeX Font Info:    Try loading font information for OML+zplm on input line 306
 .
 (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
-LaTeX Font Info:    Try loading font information for OMS+zplm on input line 305
+LaTeX Font Info:    Try loading font information for OMS+zplm on input line 306
 .
 (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
-LaTeX Font Info:    Try loading font information for OMX+zplm on input line 305
+LaTeX Font Info:    Try loading font information for OMX+zplm on input line 306
 .
 (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 12.50409pt on input line 305.
+(Font)              scaled to size 12.50409pt on input line 306.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 9.37807pt on input line 305.
+(Font)              scaled to size 9.37807pt on input line 306.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 7.29405pt on input line 305.
+(Font)              scaled to size 7.29405pt on input line 306.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 12.50409pt on input line 305.
+(Font)              scaled to size 12.50409pt on input line 306.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 9.37807pt on input line 305.
+(Font)              scaled to size 9.37807pt on input line 306.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 7.29405pt on input line 305.
-LaTeX Font Info:    Try loading font information for OT1+zplm on input line 305
+(Font)              scaled to size 7.29405pt on input line 306.
+LaTeX Font Info:    Try loading font information for OT1+zplm on input line 306
 .
 (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/ot1zplm.fd
 File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 )
-Underfull \hbox (badness 10000) in paragraph at lines 305--305
+Underfull \hbox (badness 10000) in paragraph at lines 306--306
 
  []
 
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 11.40997pt on input line 305.
+(Font)              scaled to size 11.40997pt on input line 306.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 8.33606pt on input line 305.
+(Font)              scaled to size 8.33606pt on input line 306.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 6.25204pt on input line 305.
+(Font)              scaled to size 6.25204pt on input line 306.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 11.40997pt on input line 305.
+(Font)              scaled to size 11.40997pt on input line 306.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 8.33606pt on input line 305.
+(Font)              scaled to size 8.33606pt on input line 306.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 6.25204pt on input line 305.
+(Font)              scaled to size 6.25204pt on input line 306.
 [1
 
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `T1/fvs/b/n' will be
-(Font)              scaled to size 9.85492pt on input line 306.
+(Font)              scaled to size 9.85492pt on input line 307.
 LaTeX Font Info:    Font shape `T1/fvs/b/n' will be
-(Font)              scaled to size 13.49991pt on input line 314.
+(Font)              scaled to size 13.49991pt on input line 315.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 5.21004pt on input line 330.
+(Font)              scaled to size 5.21004pt on input line 331.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 5.21004pt on input line 330.
+(Font)              scaled to size 5.21004pt on input line 331.
 [2]
+LaTeX Font Info:    Try loading font information for T1+fvm on input line 373.
+(/usr/local/texlive/2018/texmf-dist/tex/latex/bera/t1fvm.fd
+File: t1fvm.fd 2004/09/07 scalable font definitions for T1/fvm.
+)
+LaTeX Font Info:    Font shape `T1/fvm/m/n' will be
+(Font)              scaled to size 9.85492pt on input line 373.
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 12.9599pt on input line 380.
+(Font)              scaled to size 12.9599pt on input line 379.
 LaTeX Font Info:    Font shape `T1/fvs/b/n' will be
-(Font)              scaled to size 12.9599pt on input line 380.
-[3] [4]
+(Font)              scaled to size 12.9599pt on input line 379.
+[3]
+Overfull \hbox (45.4803pt too wide) in paragraph at lines 415--424
+\T1/ppl/m/n/10.95 (-20) =======================================================
+======================
+ []
+
+[4]
 <manuscript-workingPaper_files/figure-latex/codeChunkName-1.pdf, id=162, 423.58
 25pt x 281.05pt>
 File: manuscript-workingPaper_files/figure-latex/codeChunkName-1.pdf Graphic fi
 le (type pdf)
 <use manuscript-workingPaper_files/figure-latex/codeChunkName-1.pdf>
 Package pdftex.def Info: manuscript-workingPaper_files/figure-latex/codeChunkNa
-me-1.pdf  used on input line 414.
+me-1.pdf  used on input line 470.
 (pdftex.def)             Requested size: 318.66948pt x 211.44739pt.
 <other-figs/finalclubs_k_all.png, id=163, 433.62pt x 289.08pt>
 File: other-figs/finalclubs_k_all.png Graphic file (type png)
 <use other-figs/finalclubs_k_all.png>
-Package pdftex.def Info: other-figs/finalclubs_k_all.png  used on input line 49
-2.
+Package pdftex.def Info: other-figs/finalclubs_k_all.png  used on input line 54
+8.
 (pdftex.def)             Requested size: 318.66948pt x 212.4558pt.
-[5 <./manuscript-workingPaper_files/figure-latex/codeChunkName-1.pdf>] [6 <./ot
-her-figs/finalclubs_k_all.png>]
+[5] [6 <./manuscript-workingPaper_files/figure-latex/codeChunkName-1.pdf>] [7 <
+./other-figs/finalclubs_k_all.png>]
 
 Package hyperref Warning: The anchor of a bookmark and its parent's must not
-(hyperref)                be the same. Added a new anchor on input line 518.
+(hyperref)                be the same. Added a new anchor on input line 574.
 
-[7] [8]
-LaTeX Font Info:    Try loading font information for T1+fvm on input line 536.
-(/usr/local/texlive/2018/texmf-dist/tex/latex/bera/t1fvm.fd
-File: t1fvm.fd 2004/09/07 scalable font definitions for T1/fvm.
-)
-LaTeX Font Info:    Font shape `T1/fvm/m/n' will be
-(Font)              scaled to size 9.85492pt on input line 536.
-
-Underfull \hbox (badness 1226) in paragraph at lines 536--536
+[8] [9]
+Underfull \hbox (badness 1226) in paragraph at lines 592--592
 [][]\T1/ppl/m/n/10.95 (+20) Mendez, C (2020). Re-gional Ef-fi-ciency Con-ver-ge
 nce and Ef-fi-ciency Clus-ters: Ev-i-dence
  []
 
 
-Underfull \hbox (badness 1810) in paragraph at lines 536--536
+Underfull \hbox (badness 1810) in paragraph at lines 592--592
 \T1/ppl/m/n/10.95 (+20) from the provinces of In-done-sia 1990^^U2010. \T1/ppl/
 m/it/10.95 (+20) Asia-Pacific Jour-nal of Re-gional Sci-ence
  []
 
-[9] [10]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 538.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 538.
+[10] [11]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 594.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 594.
 (./manuscript-workingPaper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 538.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 538.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 594.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 594.
 Package rerunfilecheck Info: File `manuscript-workingPaper.out' has not changed
 .
-(rerunfilecheck)             Checksum: 5C17CBAF877BAD5BA9C6D0DD6D5E478E;3389.
+(rerunfilecheck)             Checksum: 2A534EFEB080D0A57D49F36EF37770B3;3617.
 
 LaTeX Warning: There were undefined references.
 
@@ -1904,20 +1911,20 @@ Package biblatex Warning: Please rerun LaTeX.
 Package logreq Info: Writing requests to 'manuscript-workingPaper.run.xml'.
 \openout1 = `manuscript-workingPaper.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 538.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 594.
  )
 (\end occurred inside a group at level 1)
 
 ### semi simple group (level 1) entered at line 180 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 41627 strings out of 492649
- 764278 string characters out of 6129621
- 1190253 words of memory out of 5000000
- 44684 multiletter control sequences out of 15000+600000
- 621552 words of font info for 233 fonts, out of 8000000 for 9000
+ 41652 strings out of 492649
+ 764675 string characters out of 6129621
+ 1191688 words of memory out of 5000000
+ 44700 multiletter control sequences out of 15000+600000
+ 623148 words of font info for 235 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,12n,92p,10459b,18241s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,12n,92p,10459b,18309s stack positions out of 5000i,500n,10000p,200000b,80000s
 pdfTeX warning (dest): name{Hfootnote.2} has been referenced bu
 t does not exist, replaced by a fixed one
 
@@ -1934,12 +1941,13 @@ ve/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive
 ist/fonts/type1/public/bera/fvsb8a.pfb></usr/local/texlive/2018/texmf-dist/font
 s/type1/public/bera/fvsr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/
 urw/palatino/uplb8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/pal
-atino/uplr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/palatino/u
-plri8a.pfb>
-Output written on manuscript-workingPaper.pdf (10 pages, 213071 bytes).
+atino/uplbi8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/palatino/
+uplr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/palatino/uplri8a
+.pfb>
+Output written on manuscript-workingPaper.pdf (11 pages, 224187 bytes).
 PDF statistics:
- 271 PDF objects out of 1000 (max. 8388607)
- 240 compressed objects within 3 object streams
- 70 named destinations out of 1000 (max. 500000)
- 26783 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 287 PDF objects out of 1000 (max. 8388607)
+ 254 compressed objects within 3 object streams
+ 74 named destinations out of 1000 (max. 500000)
+ 26791 words of extra memory for PDF output out of 29859 (max. 10000000)
 
