@@ -3,10 +3,11 @@ title: "Regressions tables from stargazer"
 author: "Carlos Mendez"
 date: "5/29/2020"
 output:
-  html_document: default
   pdf_document:
     includes:
-      in_header: "preamble.tex"
+      in_header: preamble.tex
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -185,4 +186,68 @@ stargazer(linear.1, linear.2, probit.model, type="html", title="Regression Resul
 ```{r, results= "asis"}
 stargazer(linear.1, linear.2, probit.model, type="html", title="Regression Results", align=TRUE)
 ```
+
+### Export latex table
+
+```{r, results= "asis"}
+stargazer(linear.1, linear.2, probit.model,
+          title="Regression Results",
+          align=TRUE,
+          type = "html",
+          no.space = TRUE,
+          out = "table.html")
+```
+
+
+### Export html table
+
+
+```{r}
+stargazer(linear.1, linear.2, probit.model,
+          title="Regression Results",
+          align=TRUE,
+          type = "text",
+          no.space = TRUE,
+          out = "table.html")
+```
+
+
+### Export text table
+
+
+```{r}
+stargazer(linear.1, linear.2, probit.model,
+          title="Regression Results",
+          align=TRUE,
+          type = "text",
+          no.space = TRUE,
+          out = "table.text")
+```
+
+
+## Input external tables
+
+### From latex code
+
+<!-- To compile to pdf add the following:  \input{table.tex} -->
+
+
+### From html code
+
+```{r eval=T, echo=FALSE}
+htmltools::includeHTML("table.html")
+```
+
+## Word tables
+
+```{r eval=T, echo=FALSE}
+stargazer(linear.1, linear.2, probit.model,
+          title="Regression Results",
+          align=TRUE,
+          type = "text",
+          no.space = TRUE,
+          out = "table.text")
+```
+
+
 
