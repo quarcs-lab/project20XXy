@@ -1,0 +1,138 @@
+---
+title: "Data exploration"
+subtitle: "An interactive and automated exploration in R"
+author: "Carlos Mendez"
+output:
+  html_document:
+    code_download: true
+    df_print: paged
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 4
+    number_sections: true
+    code_folding: "show"
+    theme: "cosmo"
+    highlight: "monochrome"
+  pdf_document: default
+  word_document: default
+---
+
+<style>
+h1.title {font-size: 18pt; color: DarkBlue;} 
+body, h1, h2, h3, h4 {font-family: "Palatino", serif;}
+body {font-size: 12pt;}
+/* Headers */
+h1,h2,h3,h4,h5,h6{font-size: 14pt; color: #00008B;}
+body {color: #333333;}
+a, a:hover {color: #8B3A62;}
+pre {font-size: 12px;}
+</style>
+
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(ExPanDaR) 
+
+theme_set(theme_minimal())
+
+# Change the presentation of decimal numbers to 4 and avoid scientific notation
+options(prompt="R> ", digits=4, scipen=999)
+```
+
+
+
+>  Available at <https://carlosmendez777.shinyapps.io/ehc1990and2016/>
+
+This work is licensed under the Creative Commons Attribution-Share Alike 4.0 International License. 
+
+
+
+# Original data source
+
+The data are taken from ... [TBA]
+
+
+# Import the data
+
+```{r}
+dat <- read_csv("../data/dataLong2years-geo-iso.csv")
+dat
+```
+
+```{r}
+glimpse(dat)
+```
+
+Select all variables but id
+
+```{r}
+dat <- dat %>% 
+  select(
+    -id
+  )
+```
+
+
+
+# Definitions of variables
+
+
+```{r}
+df_definitions <- read_csv("../data/definitions.csv")
+df_definitions 
+```
+
+
+Remove the first raw
+
+```{r}
+df_definitions = df_definitions[-1,]
+df_definitions
+```
+
+# Interactive exploration
+
+## Initial exploration
+
+```{r eval=FALSE, include=T}
+# Run it in the console
+ExPanD(
+  df = dat,
+  df_def = df_definitions,
+  export_nb_option = TRUE,
+  title = "Automatic data exploration",
+  abstract = paste("TBA")
+    )
+```
+
+
+## Customized exploration
+
+```{r}
+customized <- readRDS("ExPanD.RDS")
+```
+
+
+
+```{r eval=FALSE, include=T}
+# Run it in the console
+ExPanD(
+  df = dat,
+  df_def = df_definitions,
+  config_list = customized,
+  export_nb_option = TRUE,
+  title = "Data exploration of expected human capital",
+  abstract = paste("Work in progress")
+    )
+```
+
+
+
+END
+
+
+
+

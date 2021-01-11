@@ -1,0 +1,113 @@
+---
+title: "Regressions tables from stargazer"
+author: "Carlos Mendez"
+date: "5/29/2020"
+output:
+  html_document: default
+  pdf_document:
+    includes:
+      in_header: preamble.tex
+  github_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache=TRUE,
+  messages=FALSE,
+  warning=FALSE,
+  out.width = "95%")
+library(tidyverse)
+library(knitr)
+options(digits = 3)
+options(scipen = 999)
+options(kableExtra.auto_format = FALSE) 
+library(kableExtra)
+library(xtable)
+library(stargazer)
+```
+
+
+
+## Regression models
+
+```{r }
+## 2 OLS models
+linear.1 <- lm(rating ~ complaints + privileges + learning + raises + critical, data=attitude)
+linear.2 <- lm(rating ~ complaints + privileges + learning, data=attitude)
+ 
+## create an indicator dependent variable, and run a probit model
+ 
+attitude$high.rating <- (attitude$rating > 70)
+
+probit.model <- glm(high.rating ~ learning + critical + advance, data=attitude, family = binomial(link = "probit"))
+ 
+```
+
+### Latex
+
+
+
+### Latex with longer names 
+
+```{r}
+stargazer(linear.1, linear.2, probit.model,
+          type ="text",
+          title ="Regression Results",
+          align = TRUE,
+          dep.var.labels = c("Overall Rating","High Rating"),
+          covariate.labels = c("Handling of Complaints",
+                             "No Special Privileges",
+                             "Opportunity to Learn",
+                             "Performance-Based Raises",
+                             "Too Critical","Advancement"),
+          no.space = TRUE,
+          out = "../results/tab-Regtable.tex")
+```
+
+```{r}
+stargazer(linear.1, linear.2, probit.model,
+          type ="text",
+          title ="Regression Results",
+          align = TRUE,
+          dep.var.labels = c("Overall Rating","High Rating"),
+          covariate.labels = c("Handling of Complaints",
+                             "No Special Privileges",
+                             "Opportunity to Learn",
+                             "Performance-Based Raises",
+                             "Too Critical","Advancement"),
+          omit.stat = c("LL","ser","f"),
+          no.space = TRUE,
+          out = "../results/tab-Regtable.html")
+```
+
+
+
+
+### HTML with  asis option
+
+Once you compile, it will render correctly
+
+```{r, results= "asis"}
+stargazer(linear.1, linear.2, probit.model, type="html", title="Regression Results", align=TRUE)
+```
+
+
+
+## Input external tables
+
+### From latex code
+
+<!-- To compile to pdf add the following:  \input{table.tex} -->
+
+
+### From html code
+
+```{r eval=T, echo=FALSE}
+htmltools::includeHTML("../results/tab-Regtable.html")
+```
+
+
+
+
+
