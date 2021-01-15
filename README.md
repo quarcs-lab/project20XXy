@@ -1,1 +1,1 @@
-# Manuscript draft template
+# About this repository
