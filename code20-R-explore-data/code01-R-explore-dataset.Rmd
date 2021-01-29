@@ -17,6 +17,8 @@ output:
     highlight: "monochrome"
   pdf_document: default
   word_document: default
+  github_document: default
+always_allow_html: true
 ---
 
 <style>
