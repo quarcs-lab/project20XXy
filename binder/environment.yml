@@ -1,13 +1,16 @@
+name: pysal-env
 channels:
   - conda-forge
   - defaults
 dependencies:
   - python =3.7
-  - dataprep
   - bokeh
   - pip
+  - git
   - geopandas
+  - dataprep
   - seaborn
+  - plotly
   - descartes
   - folium
   - ipython
@@ -21,7 +24,6 @@ dependencies:
   - palettable
   - scikit-learn
   - statsmodels
-  - sympy
   - hvplot
   - holoviews
   - geoviews
