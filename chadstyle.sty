@@ -1,58 +1,40 @@
-%  chadstyle.sty   Chad Jones, 5/1/08
-%
-%  Chad's style file for nice paper format.
-%  Various ideas for this style are taken from
-%    -- Matthias Doepke and Michele Tertilt
-%    -- Tony Roberts
+%  Design based on the paper template of Chad Jones
 
-\special{papersize=8.5in,11in}
-%\usepackage{palatino,amssymb,amsfonts,amsmath,latexsym,setspace}
-\usepackage{utopia,amssymb,amsfonts,amsmath,latexsym,setspace}
+
+\special{papersize=8.27in,11.69in}
+\usepackage{palatino,amssymb,amsfonts,amsmath,latexsym,setspace}
 \usepackage[dvips]{graphicx}
 \usepackage{natbib,fancyhdr}
+\usepackage{float}
+\usepackage{pdfcolmk}
+\usepackage{booktabs}
+\usepackage{lscape}
+\usepackage{threeparttable}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{wallpaper}
 
-
-
-
-% example file to change the style of LaTeX
-% Tony Roberts May 2004
-% first colour for latex or pdflatex
-\ifx\pdfoutput\@undefined\usepackage[usenames,dvips]{color}
-\else\usepackage[usenames,dvipsnames]{color}
-% and fix pdf colour problems
-\IfFileExists{pdfcolmk.sty}{\usepackage{pdfcolmk}}{} 
-\fi
-
-% Chad's colors:
-% See http://web.njit.edu/~kevin/rgb.txt.html for possibilities
+% Define colors
 \definecolor{ChadDarkBlue}{rgb}{.1,0,.2}  
 \definecolor{ChadBlue}{rgb}{.1,.1,.5}  
 \definecolor{ChadRoyal}{rgb}{.2,.2,.8}  
-%\definecolor{ChadGreen}{rgb}{0,.35,.1}
-%\definecolor{ChadGreen}{rgb}{0,.5,.25}  % Too bright
-%\definecolor{ChadGreen}{rgb}{0,.4,.2}    % Still too bright
 \definecolor{ChadGreen}{rgb}{0,.4,0}    % Dark Green
-%\definecolor{ChadRed}{rgb}{.8,.1,.2}    % Too bright
-\definecolor{ChadRed}{rgb}{.5,0,.5}  % purple
+\definecolor{ChadRed}{rgb}{.5,0,.5}  % Purple
 
-%%% HYPERLINKS %%%%%%%%%%%%%%%%%%%%%
-\usepackage[colorlinks,breaklinks,   % deleted ps2pdf 11/6/15
+% Hyperlinks setup
+\usepackage[colorlinks,breaklinks,
      bookmarks=false,
-     pdfstartview=Fit,  % for fitting entire page; FitW just fits width
-     pdfview=Fit,       % after traversing a hyperlink
+     pdfstartview=Fit,
+     pdfview=Fit,
      linkcolor=ChadRed,
      urlcolor=ChadGreen,
-     citecolor=Black,
+     citecolor=black,
      hyperfootnotes=false
-         ]{hyperref}
-\usepackage[figure,table]{hypcap} % Correct a problem with hyperref
-\urlstyle{rm} %so it doesn't use a typewriter font for url's.
-
-%%%%%%%%%%%%%%%%%%%%%
-
+]{hyperref}
+\usepackage[figure,table]{hypcap}
+\urlstyle{rm} % Use roman font for URLs
 
 % Fix title, sections, etc.
-
 \let\LaTeXtitle\title
 \renewcommand{\title}[1]{\LaTeXtitle{\color{ChadBlue}{\LARGE #1}}}
 \renewcommand{\abstractname}{\color{ChadBlue}Abstract}
@@ -63,67 +45,53 @@
 \renewcommand{\@startsection}[6]{\LaTeX@startsection%
 {#1}{#2}{#3}{#4}{#5}{\color{ChadBlue}\raggedright #6}} 
 
-%% % Fix periods at end of section numbers
-%% \renewcommand \thesection {\@arabic\c@section.}
-%% \renewcommand\thesubsection   {\thesection\@arabic\c@subsection}%.}
-%% \renewcommand\thesubsubsection{\thesubsection \@arabic\c@subsubsection}%.}
-
-
-% Add a period *only* after Section and *only* in title, not cross ref
-% April 2017
+% Add a period only after section titles, not in cross references
 \makeatletter
 \renewcommand{\@seccntformat}[1]{%
   \csname the#1\endcsname% Print sectional counter
-  \ifnum\pdfstrcmp{#1}{section}=0 .\fi% If \section, print .
+  \ifnum\pdfstrcmp{#1}{section}=0 .\fi% If \section, print period
   \quad% Space between number and title
 }
 \makeatother
 
-
-
-% Margin, Paragraph Setup
+% Margin and paragraph setup
 \onehalfspacing
-%\textheight=21.5cm \textwidth=14.95cm \topmargin=-5.5mm
-%\oddsidemargin=8mm \evensidemargin=8mm
 \textheight=20.5cm \textwidth=14.35cm \topmargin=0mm
 \oddsidemargin=11mm \evensidemargin=11mm
-%\setlength{\parindent}{0em} 
-%\setlength{\parskip}{1.5ex plus0.5ex minus0.5ex}
-%\setlength{\parsep}{0pt}
 \setlength{\parskip}{0pt}
 
-% This is how to control linespacing using setspace
-% (\singlespacing or doublespacing just call this command)
+% Control linespacing using setspace
 \setstretch{1.4}
 
-%% Setting up page headers
+% Page headers
 \pagestyle{fancy}
 \rhead[]{\thepage}
 \lhead[\thepage]{}
 \cfoot[]{} 
 \renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{13.59999pt} % Set head height as suggested
 
 \newcommand{\runningheads}[2]{
    \chead[\color{ChadGreen}{\uppercase {\footnotesize #1}}]  % Author page header
    {\color{ChadGreen}{\uppercase {\footnotesize #2}}}  % Short title
-  }
+}
 
-% Make hyperlinks jump more accurately
+% Improve hyperlink jump accuracy
 \makeatletter
 \newcommand\org@hypertarget{}
 \let\org@hypertarget\hypertarget
 \renewcommand\hypertarget[2]{%
 \Hy@raisedlink{\org@hypertarget{#1}{}}#2%
-} \makeatother 
+} 
+\makeatother 
 
+% Spacing in tables and figures
+\renewcommand{\arraystretch}{1} % Space between rows
+\addtolength{\textfloatsep}{0pt} % Space between floats and text
+\addtolength{\abovecaptionskip}{0pt} % Space above caption
+\addtolength{\belowcaptionskip}{.15in} % Space below caption
 
-% Spacing in Tables and Figures
-%\renewcommand{\tabcolsep}{1pt}   % space between columns
-\renewcommand{\arraystretch}{1.5} % space between rows
-\addtolength{\textfloatsep}{0pt} % space between floats and text
-\addtolength{\abovecaptionskip}{0pt} % space above caption
-\addtolength{\belowcaptionskip}{.15in} % space below caption
-
+% Custom commands
 \newcommand{\spc}[0]{\vspace{.1in}}
 \newcommand{\fignote}[2]{\begin{center}\parbox[c]{#1}{\footnotesize #2} \end{center}}
 \newcommand{\tabnote}[2]{\begin{center}\parbox[c]{#1}{\footnotesize #2} \end{center}}
@@ -138,7 +106,7 @@
 \newcommand{\rr}[1]{\textcolor{red}{#1}}
 \newcommand{\imp}[0]{$\Rightarrow \,$} % implies
 
-%% Shortcut commands
+% Mathematical shortcut commands
 \newcommand{\growth}[1]{\frac{\dot{#1}_t}{{#1}_t}}
 \newcommand{\prtl}[2]{\frac{\partial #1}{\partial #2}}
 \newcommand{\prtlsec}[2]{\frac{\partial^2 #1}{\partial #2^2}}
@@ -150,9 +118,7 @@
 \newcommand{\down}[0]{\downarrow \hspace{-.5ex}}
 \newcommand{\query}[1]{{\it \color{red}[??? #1]}}
 
-
-%\newcommand{\fignote}[2]{\begin{center}\parbox[c]{#1}{\footnotesize #2} \end{center}}
-%\newcommand{\tabnote}[2]{\begin{center}\parbox[c]{#1}{\footnotesize #2} \end{center}}
+% Additional custom commands
 \newcommand{\Prob}[1]{\mbox{\textnormal{Pr}} \, [#1] }
 \newcommand{\SubSubSection}[1]{\subsubsection{#1} \baselineskip=18pt}
 \newcommand{\problem}[2]{\hspace{.1in} {{\color{ChadBlue}{\bf #1:} #2}}}
@@ -163,5 +129,10 @@
 \newcommand{\Proof}[2]{{\hspace{-\parindent} {\color{ChadGreen}\bf Proof of Proposition}~\ref{#1}.}
 {\color{ChadBlue} #2} \vspace{.1in}}
 
+\newcommand{\pfrac}[2]{\left( \frac{#1}{#2} \right)}  % frac with large parentheses
 
-\newcommand{\pfrac}[2]{\left( \frac{#1}{#2} \right)}  % frac with large paren
+% Minimize hyphenation
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
