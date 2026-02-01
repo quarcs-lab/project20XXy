@@ -80,27 +80,6 @@ The `./log/` directory contains progress logs that preserve conversation context
 
 ---
 
-## Directory Structure
-
-```
-project_root/
-├── CLAUDE.md              # This file (AI instructions)
-├── README.md              # Project documentation
-├── legacy/                # Original project snapshot (DO NOT MODIFY)
-├── log/                   # Progress logs (YYYYMMDD_HHMM.md)
-├── data/                  # Working data files
-│   ├── raw/              # Unprocessed data
-│   ├── processed/        # Cleaned data
-│   └── output/           # Analysis results
-├── code/                  # Analysis scripts
-│   ├── python/           # Python scripts
-│   ├── R/                # R scripts
-│   ├── stata/            # Stata scripts
-│   └── notebooks/        # Jupyter/Quarto notebooks
-├── slides/                # Quarto presentations
-├── docs/                  # Documentation and reports
-└── output/                # Final outputs (figures, tables, reports)
-```
 
 ---
 
