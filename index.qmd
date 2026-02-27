@@ -33,13 +33,19 @@ bibliography: references.bib
 
 ## Introduction {#sec-introduction}
 
-[FILL: Motivate the research question. Why does this topic matter?]
+Regional economic disparities remain a central concern in development economics.
+Understanding the relationship between GDP per capita and life expectancy
+across regions is critical for designing **effective policy interventions**.
 
-[FILL: State the objectives and methods used.]
+This paper uses a novel synthetic dataset to examine these patterns,
+employing both parametric and non-parametric methods [@keola2015monitoring].
 
-[FILL: Preview the main results.]
+Our results suggest a strong positive correlation between economic output
+and health outcomes, with significant heterogeneity across geographic clusters.
 
-[FILL: Describe the contribution of this paper.]
+This study contributes to the literature in two ways. First, we provide
+a multi-language reproducible workflow. Second, we demonstrate how
+*modern tools* can enhance transparency in empirical research.
 
 The rest of this article is organized as follows.
 @sec-literature provides an overview of the related literature.
@@ -49,7 +55,10 @@ Finally, @sec-conclusion offers some concluding remarks.
 
 ## Related literature {#sec-literature}
 
-[FILL: Review the relevant literature and position your contribution.]
+The relationship between income and health has been extensively studied
+since the seminal work of @keola2015monitoring. Recent advances
+in spatial econometrics have enabled more nuanced analyses of regional
+disparities^[See also the World Bank regional development reports.].
 
 ## Data and methods {#sec-data}
 
@@ -61,7 +70,7 @@ Finally, @sec-conclusion offers some concluding remarks.
 
 [FILL: Describe the dataset. Include sources, time period, and key variables.]
 
-The following figure, generated in @notebook-01, provides an overview of the data.
+The following figure, generated in [N1: Sample Data Exploration](notebooks/notebook-01.ipynb), provides an overview of the data.
 
 {{< embed notebooks/notebook-01.ipynb#fig-sample >}}
 
@@ -69,7 +78,7 @@ The following figure, generated in @notebook-01, provides an overview of the dat
 
 {{< embed notebooks/notebook-01.ipynb#tbl-summary >}}
 
-The same analysis is replicated in R (@notebook-02) and Stata (@notebook-03) to
+The same analysis is replicated in R ([N2: Sample R Analysis](notebooks/notebook-02.ipynb)) and Stata ([N3: Sample Stata Analysis](notebooks/notebook-03.ipynb)) to
 demonstrate multi-language support.
 
 {{< embed notebooks/notebook-02.ipynb#fig-r-sample >}}

@@ -24,7 +24,7 @@
 | **Authors** | `[FILL: Author names and affiliations]` |
 | **Stage** | `[FILL: Idea / Data collection / Analysis / Writing / Revision]` |
 | **Primary tools** | R, Python, Stata, Quarto, LaTeX |
-| **Reference manager** | Mendeley (exports to `.bib`) |
+| **Reference manager** | Zotero (exports to `.bib`) |
 | **Manuscript** | `index.qmd` (Quarto manuscript project) |
 | **Environment** | `uv` + `pyproject.toml` (Python 3.12) |
 | **Data source** | `[FILL: e.g., OSF repository, survey, API]` |
@@ -66,6 +66,7 @@ before ending a session, or when context is building up. See **Session Managemen
 | `data/rawData/` | Raw, unmodified source data (never edit these) |
 | `handoffs/` | Session handoff reports for cross-session continuity |
 | `images/` | Figures, plots, and visual outputs |
+| `latex/` | Overleaf sync staging (`index.tex` + `.baseline.tex`) |
 | `legacy/` | Archived materials from previous versions |
 | `notebooks/` | Jupyter notebooks (`.ipynb` + `.md` pairs via Jupytext) |
 | `notes/` | Research notes, brainstorming, and ideas |
@@ -100,6 +101,7 @@ Reusable procedures are defined as slash commands in `.claude/commands/`. Each `
 | `/project:render` | Clean render of the manuscript (HTML + PDF + Word) |
 | `/project:new-notebook` | Create a new notebook with Jupytext pairing and register it |
 | `/project:handoff` | Write a session handoff report |
+| `/project:sync-tex` | Transfer collaborator LaTeX edits (Overleaf) back into `index.qmd` |
 
 ### Credentials
 
@@ -151,6 +153,22 @@ Create a file in `./handoffs/` named `YYYYMMDD_HHMM.md` whenever you:
 - Render one format: `quarto render index.qmd --to html|pdf|docx`
 - Alternative LaTeX template available in `templates/chadManuscript/`
 
+### Overleaf Collaboration
+
+For collaborators who edit in LaTeX, the project supports an Overleaf sync workflow:
+
+1. **Render** — `bash scripts/render.sh` generates `latex/index.tex` (staged for Overleaf) and `latex/.baseline.tex` (local baseline for diffing)
+2. **Sync** — Push to GitHub; Overleaf pulls `latex/index.tex` for collaborators to edit
+3. **Pull** — After collaborators edit on Overleaf, pull changes back to GitHub
+4. **Transfer** — Run `/project:sync-tex` to diff baseline vs modified tex and apply prose changes to `index.qmd`
+
+**Key constraints:**
+
+- Only **prose edits** are transferred; `{{< embed >}}` shortcodes are preserved as-is
+- Figure/table captions live in notebook cells and cannot be synced back from LaTeX
+- The preamble (before `\begin{document}`) is auto-generated — collaborator edits there are ignored
+- `latex/.baseline.tex` is gitignored (local-only diffing artifact)
+
 ### Notebooks
 
 - Location: `notebooks/` (Python, R, or Stata kernels)
@@ -181,7 +199,7 @@ Create a file in `./handoffs/` named `YYYYMMDD_HHMM.md` whenever you:
 
 ### References
 
-- Managed via **Mendeley**, exported to `references.bib` (root)
+- Managed via **Zotero**, exported to `references.bib` (root)
 - Annotation notes go in `references/` (Markdown format)
 - In Quarto, cite with `@key` for inline or `[@key]` for parenthetical
 

@@ -147,6 +147,7 @@ _manuscript/           # Rendered outputs (HTML, PDF, Word, notebook previews)
 data/                  # Datasets (rawData/ for unmodified sources)
 code/                  # Standalone analysis scripts
 notes/                 # Research notes, brainstorming, and ideas
+latex/                 # LaTeX staging for Overleaf collaboration
 images/                # Figures and plots
 tables/                # Output tables
 slides/                # Quarto presentations

@@ -21,6 +21,9 @@ _freeze/
 # Rendered outputs (Quarto manuscript → _manuscript/)
 _manuscript/
 
+# LaTeX / Overleaf sync (baseline is local-only)
+latex/.baseline.tex
+
 # LaTeX intermediates
 *.log
 *.aux
