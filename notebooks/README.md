@@ -15,6 +15,37 @@ uv run jupytext --sync notebooks/notebook-01.md
 jupyter kernelspec list
 ```
 
+## Selecting the Right Kernel
+
+Each notebook is written in a specific language and requires the matching Jupyter
+kernel. Use this table to know which kernel to select when you open a notebook:
+
+| Notebook | Language | Kernel to select |
+| --- | --- | --- |
+| `notebook-01.ipynb` | Python | **Python 3 (ipykernel)** — use the project `.venv` |
+| `notebook-02.ipynb` | R | **IR** |
+| `notebook-03.ipynb` | Stata | **Stata (nbstata)** |
+
+> **Tip:** You can identify a notebook's language from its first code cell:
+> `import` → Python, `library()` → R, `set seed` → Stata.
+
+### In VSCode
+
+1. Open the notebook and click **"Select Kernel"** in the top-right corner.
+2. **Python notebooks:** Choose **"Python Environments..."** → select the project
+   `.venv` (recommended, so you have access to all project dependencies).
+3. **R / Stata notebooks:** Choose **"Jupyter Kernel..."** → pick **IR** or
+   **Stata (nbstata)** from the list.
+4. If a kernel doesn't appear, press **Cmd+Shift+P** (macOS) or **Ctrl+Shift+P**
+   (Windows/Linux) → run **"Developer: Reload Window"** to refresh the kernel list.
+
+### In Jupyter (browser)
+
+Go to **Kernel → Change Kernel** in the menu bar and select the matching kernel
+from the dropdown.
+
+---
+
 ## Kernel Setup
 
 The template supports three Jupyter kernels. Each must be installed before its

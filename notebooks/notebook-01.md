@@ -7,10 +7,12 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.19.1
 kernelspec:
-  display_name: Python 3
+  display_name: project20xxy
   language: python
   name: python3
 ---
+
++++ {"_sphinx_cell_id": "fe987973-1466-48df-995e-6c4bf97fe398"}
 
 ---
 title: "N1: Sample Data Exploration"
@@ -23,6 +25,9 @@ producing labeled figures and tables that are embedded in the manuscript via
 Quarto's `{{< embed >}}` shortcode.
 
 ```{code-cell} ipython3
+---
+_sphinx_cell_id: a5165839-e2e8-4c44-92ab-19142af690f2
+---
 import sys
 sys.path.insert(0, "..")
 from config import set_seeds, DATA_DIR
@@ -31,6 +36,9 @@ set_seeds()
 ```
 
 ```{code-cell} ipython3
+---
+_sphinx_cell_id: 6b6eb2fb-7340-486b-91f5-acd4ce7be6e8
+---
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -40,6 +48,9 @@ sns.set_theme(style="whitegrid")
 ```
 
 ```{code-cell} ipython3
+---
+_sphinx_cell_id: 6ae42ab7-5bba-421d-87db-1619def44ace
+---
 #| label: fig-sample
 #| fig-cap: "Synthetic regional indicators: GDP per capita vs. life expectancy across 80 simulated regions, colored by geographic cluster."
 
@@ -75,6 +86,9 @@ plt.show()
 ```
 
 ```{code-cell} ipython3
+---
+_sphinx_cell_id: 027751de-4ea9-4ef0-98c8-f2ea4091e030
+---
 #| label: tbl-summary
 #| tbl-cap: "Summary statistics by region."
 

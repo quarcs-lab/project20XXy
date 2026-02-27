@@ -12,6 +12,8 @@ kernelspec:
   name: ir
 ---
 
++++ {"_sphinx_cell_id": "d9d1d52e-3ef4-469b-a04d-1fc08282c0b9"}
+
 ---
 title: "N2: Sample R Analysis"
 ---
@@ -24,6 +26,7 @@ Quarto's `{{< embed >}}` shortcode. It mirrors `notebook-01` (Python) using R.
 
 ```{code-cell} r
 ---
+_sphinx_cell_id: 36429972-debf-4a1a-a44f-09d7d4fc39d9
 vscode:
   languageId: r
 ---
@@ -34,6 +37,7 @@ set_seeds()
 
 ```{code-cell} r
 ---
+_sphinx_cell_id: 8addf620-2046-424a-ae6e-7bb55f8fa526
 vscode:
   languageId: r
 ---
@@ -42,6 +46,7 @@ library(ggplot2)
 
 ```{code-cell} r
 ---
+_sphinx_cell_id: 3067c465-3c98-434b-9fbf-2b0c5294d48c
 vscode:
   languageId: r
 ---
@@ -76,6 +81,7 @@ ggplot(df, aes(x = gdp_per_capita, y = life_expectancy, color = region, shape = 
 
 ```{code-cell} r
 ---
+_sphinx_cell_id: f7c341cf-6d94-4323-a432-778bbb147cc5
 vscode:
   languageId: r
 ---
