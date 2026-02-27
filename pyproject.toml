@@ -1,5 +1,5 @@
 [project]
-name = "project20XXy"
+name = "project20XXy"  # [FILL: Rename to your project slug]
 version = "0.1.0"
 description = "[FILL: Project description]"
 requires-python = ">=3.12"

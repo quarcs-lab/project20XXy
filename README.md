@@ -12,6 +12,22 @@
 
 ## Setup
 
+### Customizing This Template
+
+After cloning this repository for a new project, update these files:
+
+1. **`README.md`** -- Replace all `[FILL:]` placeholders (title, description, objectives, methods, data)
+2. **`index.qmd`** -- Set the manuscript title, authors, affiliations, abstract, and keywords
+3. **`pyproject.toml`** -- Update `name`, `description`, and `authors`
+4. **`CLAUDE.md`** -- Fill in the Project Context table (title, authors, stage, data source)
+5. **`_quarto.yml`** -- Update notebook titles as you add new notebooks
+
+Search for all remaining placeholders:
+
+```bash
+grep -r "\[FILL:" --include="*.md" --include="*.qmd" --include="*.toml" .
+```
+
 ### Requirements
 
 - [Quarto](https://quarto.org/) (>= 1.4)
@@ -19,6 +35,16 @@
 - Python 3.12+
 - R (for R notebooks)
 - Stata (for Stata notebooks, optional)
+
+Verify your setup (all commands should return version numbers):
+
+```bash
+quarto --version        # >= 1.4
+uv --version            # any recent version
+python3 --version       # >= 3.12
+R --version             # optional, for R notebooks
+stata -v                # optional, for Stata notebooks
+```
 
 ### Installation
 

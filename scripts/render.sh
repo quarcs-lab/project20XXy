@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "=== Clean render: project20XXy ==="
+echo "=== Clean render: $(basename "$(pwd)") ==="
 
 echo "1. Cleaning Quarto caches..."
 rm -rf _freeze/
