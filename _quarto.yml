@@ -1,0 +1,36 @@
+project:
+  type: manuscript
+  output-dir: .
+  render:
+    - "*.qmd"
+    - "!legacy/"
+    - "!templates/"
+
+manuscript:
+  article: index.qmd
+  notebooks:
+    - notebook: notebooks/notebook-01.ipynb
+      title: "N1: Sample Data Exploration"
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    lightbox: true
+    citation-location: document
+
+  pdf:
+    documentclass: scrartcl
+    papersize: letter
+    number-sections: true
+    colorlinks: true
+    keep-tex: true
+
+  docx: default
+
+execute:
+  freeze: auto
+
+editor: visual

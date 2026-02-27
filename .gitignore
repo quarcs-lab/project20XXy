@@ -1,4 +1,45 @@
+# R
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment (uv)
+.venv/
+
+# Quarto
+/.quarto/
+**/*.quarto_ipynb
+notebooks/*.out.ipynb
+_freeze/
+
+# Rendered outputs
+index.html
+index.pdf
+index.docx
+index.tex
+index_files/
+site_libs/
+
+# LaTeX intermediates
+*.log
+*.aux
+*.bbl
+*.blg
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# OS
+.DS_Store
+
+# Credentials (never commit)
+.env
+credentials.json
+token.json
