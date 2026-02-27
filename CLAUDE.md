@@ -145,7 +145,7 @@ Create a file in `./handoffs/` named `YYYYMMDD_HHMM.md` whenever you:
 
 - Source: `index.qmd` (Quarto manuscript project type)
 - Config: `_quarto.yml` defines output formats and notebook registration
-- Outputs: HTML (interactive), PDF (letter, KOMA-Script), Word
+- Outputs: `_manuscript/` directory (HTML, PDF, Word, notebook previews)
 - Render all: `quarto render` or `bash scripts/render.sh` (clean render)
 - Render one format: `quarto render index.qmd --to html|pdf|docx`
 - Alternative LaTeX template available in `templates/chadManuscript/`

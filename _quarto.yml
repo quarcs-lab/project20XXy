@@ -1,8 +1,8 @@
 project:
   type: manuscript
-  output-dir: .
   render:
     - "*.qmd"
+    - "notebooks/*.ipynb"
     - "!legacy/"
     - "!templates/"
 

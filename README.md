@@ -69,7 +69,7 @@ paths, and important Quarto integration notes.
 ### Rendering the manuscript
 
 ```bash
-# Render all formats (HTML, PDF, Word)
+# Render all formats (HTML, PDF, Word) → outputs in _manuscript/
 quarto render
 
 # Render a single format
@@ -80,6 +80,8 @@ quarto render index.qmd --to docx
 # Clean render (clears caches first)
 bash scripts/render.sh
 ```
+
+Rendered files (including notebook preview pages) are placed in `_manuscript/`.
 
 ## Project Structure
 

@@ -18,13 +18,8 @@ __pycache__/
 notebooks/*.out.ipynb
 _freeze/
 
-# Rendered outputs
-index.html
-index.pdf
-index.docx
-index.tex
-index_files/
-site_libs/
+# Rendered outputs (Quarto manuscript → _manuscript/)
+_manuscript/
 
 # LaTeX intermediates
 *.log
