@@ -16,6 +16,7 @@ __pycache__/
 /.quarto/
 **/*.quarto_ipynb
 notebooks/*.out.ipynb
+site_libs/
 _freeze/
 
 # Rendered outputs (Quarto manuscript → _manuscript/)
