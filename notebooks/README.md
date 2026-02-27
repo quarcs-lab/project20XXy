@@ -153,15 +153,43 @@ tables (e.g., via `pandas` or `knitr::kable()`).
 
 ### Registering Notebooks
 
-New notebooks must be registered in `_quarto.yml` under `manuscript.notebooks`:
+New notebooks must be registered in `_quarto.yml` in **two places**:
 
-```yaml
-manuscript:
-  notebooks:
-    - notebook: notebooks/notebook-01.ipynb
-      title: "N1: Notebook title"
-    - notebook: notebooks/notebook-02.ipynb
-      title: "N2: New notebook title"
+1. Under `manuscript.notebooks` (so Quarto links them in the manuscript sidebar):
+
+   ```yaml
+   manuscript:
+     notebooks:
+       - notebook: notebooks/notebook-01.ipynb
+         title: "N1: Notebook title"
+   ```
+
+2. Under `project.render` (so Quarto generates their preview HTML pages):
+
+   ```yaml
+   project:
+     render:
+       - "*.qmd"
+       - "notebooks/*.ipynb"    # ← must include notebooks
+   ```
+
+### Quarto Configuration Notes
+
+> **Do NOT set `output-dir: .` in `_quarto.yml`.** This prevents Quarto from
+> generating the notebook preview HTML pages (`*-preview.html`) that are linked
+> from the manuscript sidebar. Use the default output directory (`_manuscript/`).
+
+Rendered outputs are placed in `_manuscript/`:
+
+```text
+_manuscript/
+  index.html                          # Main manuscript
+  index.pdf
+  index.docx
+  notebooks/
+    notebook-01-preview.html          # Clickable notebook previews
+    notebook-02-preview.html
+    notebook-03-preview.html
 ```
 
 ### Reproducibility

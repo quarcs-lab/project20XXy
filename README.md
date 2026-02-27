@@ -83,6 +83,31 @@ bash scripts/render.sh
 
 Rendered files (including notebook preview pages) are placed in `_manuscript/`.
 
+## Workflow
+
+The full workflow from a fresh clone to a rendered manuscript:
+
+1. **Install Python dependencies:** `uv sync`
+2. **Install notebook kernels** for R and Stata (see Notebook Kernels above)
+3. **Execute notebooks** to generate outputs:
+
+   ```bash
+   uv run jupyter execute --inplace notebooks/notebook-01.ipynb
+   uv run jupyter execute --inplace notebooks/notebook-02.ipynb
+   uv run jupyter execute --inplace notebooks/notebook-03.ipynb
+   ```
+
+4. **Render the manuscript:**
+
+   ```bash
+   quarto render
+   ```
+
+5. **View the output:** open `_manuscript/index.html` in a browser
+
+See [notebooks/README.md](notebooks/README.md) for details on kernel setup,
+cell labeling, and Jupytext pairing.
+
 ## Project Structure
 
 ```text
@@ -92,6 +117,7 @@ references.bib         # Bibliography
 config.py / config.R   # Reproducibility config (seeds, paths)
 pyproject.toml         # Python dependencies
 notebooks/             # Jupyter notebooks (.ipynb + .md pairs)
+_manuscript/           # Rendered outputs (HTML, PDF, Word, notebook previews)
 data/                  # Datasets (rawData/ for unmodified sources)
 code/                  # Standalone analysis scripts
 notes/                 # Research notes, brainstorming, and ideas
