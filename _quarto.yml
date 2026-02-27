@@ -11,6 +11,10 @@ manuscript:
   notebooks:
     - notebook: notebooks/notebook-01.ipynb
       title: "N1: Sample Data Exploration"
+    - notebook: notebooks/notebook-02.ipynb
+      title: "N2: Sample R Analysis"
+    - notebook: notebooks/notebook-03.ipynb
+      title: "N3: Sample Stata Analysis"
 
 format:
   html:

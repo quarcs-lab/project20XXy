@@ -45,17 +45,12 @@ When replacing files, rename the old version or move it to `legacy/`.
 All work must remain inside this project folder. Never navigate above the project root.
 If you need external resources, ask for permission first.
 
-### 3. Do not overwrite workflows without permission
-
-Files in `workflows/` are curated SOPs. You may update them when you learn something new,
-but never delete or replace a workflow without explicit approval.
-
-### 4. Preserve raw data
+### 3. Preserve raw data
 
 Files in `data/rawData/` are source-of-truth inputs. Never modify them.
 All transformations should produce new files in `data/` or other directories.
 
-### 5. Document progress via handoff reports
+### 4. Document progress via handoff reports
 
 Write a handoff report to `./handoffs/` after completing significant work,
 before ending a session, or when context is building up. See **Session Management** below.
@@ -66,22 +61,20 @@ before ending a session, or when context is building up. See **Session Managemen
 
 | Directory | Purpose |
 | --------- | ------- |
-| `code/` | Analysis scripts (R, Python, Stata) |
+| `code/` | Standalone analysis scripts (R, Python, Stata) |
 | `data/` | Processed datasets |
 | `data/rawData/` | Raw, unmodified source data (never edit these) |
 | `handoffs/` | Session handoff reports for cross-session continuity |
-| `ideas/` | Research ideas and brainstorming notes |
 | `images/` | Figures, plots, and visual outputs |
 | `legacy/` | Archived materials from previous versions |
 | `notebooks/` | Jupyter notebooks (`.ipynb` + `.md` pairs via Jupytext) |
-| `notes/` | Research notes |
-| `references/` | Bibliography files (`.bib`), annotated bibliographies |
+| `notes/` | Research notes, brainstorming, and ideas |
+| `references/` | Annotated bibliographies and reference notes |
 | `slides/` | Quarto presentations (see `slides/README.md` for style guide) |
 | `tables/` | Output tables (LaTeX, CSV, or other formats) |
 | `scripts/` | Build and utility scripts (`render.sh`) |
 | `templates/` | LaTeX manuscript template (`chadManuscript/`, alternative) |
-| `tools/` | Python scripts for deterministic task execution |
-| `workflows/` | Markdown SOPs defining procedures |
+| `.claude/commands/` | Claude slash commands for agent procedures |
 | `.github/` | GitHub agents, prompts, and skills |
 
 **Key files:**
@@ -97,23 +90,15 @@ before ending a session, or when context is building up. See **Session Managemen
 
 ---
 
-## WAT Framework
+## Claude Commands
 
-This project uses the **WAT architecture** (Workflows, Agents, Tools) to separate reasoning from execution.
+Reusable procedures are defined as slash commands in `.claude/commands/`. Each `.md` file becomes a `/project:command-name` command in Claude Code.
 
-- **Workflows** (`workflows/`): Markdown SOPs that define objectives, inputs, tools, outputs, and edge cases
-- **Agents** (you): Read workflows, orchestrate tool execution, handle errors, ask when uncertain
-- **Tools** (`tools/`): Deterministic Python scripts for API calls, data transforms, file operations
-
-### Operating Principles
-
-1. **Check for existing tools first.** Before writing new code, look in `tools/` for something that already does what you need. Only create new scripts when nothing exists for the task.
-
-2. **Follow the workflow.** If a workflow exists for your task in `workflows/`, follow it. If no workflow exists, proceed with your best judgment and document what you did.
-
-3. **Fix and document failures.** When a tool fails: read the full error, fix the script, verify the fix, then update the workflow with what you learned. If the tool uses paid API calls, ask before re-running.
-
-4. **Improve the system.** When you discover better methods or encounter recurring issues, update the relevant workflow. But never delete or replace a workflow without permission (Rule 3).
+| Command | Purpose |
+| ------- | ------- |
+| `/project:render` | Clean render of the manuscript (HTML + PDF + Word) |
+| `/project:new-notebook` | Create a new notebook with Jupytext pairing and register it |
+| `/project:handoff` | Write a session handoff report |
 
 ### Credentials
 
@@ -170,9 +155,20 @@ Create a file in `./handoffs/` named `YYYYMMDD_HHMM.md` whenever you:
 - Location: `notebooks/` (Python, R, or Stata kernels)
 - Each `.ipynb` is paired with a `.md:myst` file via **Jupytext** (for version control)
 - Sync: `uv run jupytext --sync notebooks/<file>.md`
-- Labeled outputs (e.g., `#| label: fig-sample`) are embedded in the manuscript via `{{< embed >}}`
+- Execute: `uv run jupyter execute --inplace notebooks/<file>.ipynb` (`--inplace` is required)
+- Labeled outputs are embedded in the manuscript via `{{< embed >}}`
 - Register new notebooks in `_quarto.yml` under `manuscript.notebooks`
-- See `notebooks/README.md` for conventions
+- See `notebooks/README.md` for full kernel setup and conventions
+
+**Quarto cell directives by language:**
+
+- Python / R: `#| label: fig-name` (hash-pipe prefix)
+- Stata: `*| label: fig-name` (star-pipe prefix, since `*` is Stata's comment character)
+
+**Stata-specific notes:**
+
+- Use **nbstata** (not `stata_kernel`) — see `notebooks/README.md` for installation
+- Do NOT use the `tbl-` label prefix for Stata cells with text output (triggers Quarto's table parser and crashes); use a plain label instead (e.g., `stata-summary`)
 
 ### Environment
 
@@ -184,8 +180,8 @@ Create a file in `./handoffs/` named `YYYYMMDD_HHMM.md` whenever you:
 
 ### References
 
-- Managed via **Mendeley** (see `notes/README.md`)
-- Exported to `.bib` format: `references.bib` (root) and `references/`
+- Managed via **Mendeley**, exported to `references.bib` (root)
+- Annotation notes go in `references/` (Markdown format)
 - In Quarto, cite with `@key` for inline or `[@key]` for parenthetical
 
 ### Presentations

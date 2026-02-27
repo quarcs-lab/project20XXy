@@ -2,6 +2,85 @@
 
 Computational notebooks that provide inputs (figures, tables) for the manuscript.
 
+## Quick Reference
+
+```bash
+# Execute a notebook and save outputs
+uv run jupyter execute --inplace notebooks/notebook-01.ipynb
+
+# Sync Jupytext pair after editing
+uv run jupytext --sync notebooks/notebook-01.md
+
+# List installed kernels
+jupyter kernelspec list
+```
+
+## Kernel Setup
+
+The template supports three Jupyter kernels. Each must be installed before its
+notebooks can be executed.
+
+### Python (automatic)
+
+The Python kernel is installed automatically when you run `uv sync`. No extra
+setup is needed.
+
+### R (IRkernel)
+
+**Requirements:** R must be installed on the system.
+
+From an R console (or terminal):
+
+```bash
+R -e "install.packages(c('IRkernel', 'ggplot2', 'knitr'), repos='https://cloud.r-project.org')"
+R -e "IRkernel::installspec()"
+```
+
+This installs the kernel and the R packages used by the sample notebook. Add any
+additional R packages your project needs to the first `install.packages()` call.
+
+**Verify:** `jupyter kernelspec list` should show `ir`.
+
+### Stata (nbstata)
+
+**Requirements:** Stata must be installed and licensed on the system.
+
+> **Important:** Use [nbstata](https://github.com/hugetim/nbstata), not the
+> older `stata_kernel`. The legacy `stata_kernel` (v1.14.2) has a graph-capture
+> bug that crashes with Stata 19+.
+
+**Step 1 — Install nbstata:**
+
+```bash
+pip install nbstata
+python -m nbstata.install
+```
+
+If your system Python differs from the one used by Jupyter, use the full path
+to the Python that has pip (e.g., `/usr/local/bin/python3` or the miniforge path).
+
+**Step 2 — Configure Stata path:**
+
+Create `~/.config/nbstata/nbstata.conf`:
+
+```ini
+[nbstata]
+stata_dir = /Applications/Stata
+edition = se
+```
+
+Adjust `stata_dir` and `edition` for your system:
+
+| OS | Typical `stata_dir` |
+| --- | --- |
+| macOS | `/Applications/Stata` |
+| Linux | `/usr/local/stata19` |
+| Windows | `C:\Program Files\Stata19` |
+
+Valid editions: `be` (Basic), `se` (Standard), `mp` (Multiprocessor).
+
+**Verify:** `jupyter kernelspec list` should show `stata`.
+
 ## Conventions
 
 ### Naming
@@ -28,14 +107,24 @@ uv run jupytext --sync notebooks/notebook-01.ipynb
 
 ### Labeling Outputs for the Manuscript
 
-To embed a figure or table in `index.qmd`, add a label in the notebook cell:
+To embed a figure or table in `index.qmd`, add a label in the notebook cell.
+
+**Python / R cells** — use `#|` prefix:
 
 ```python
 #| label: fig-my-figure
 #| fig-cap: "Description of the figure"
 
-# Your plotting code here
 plt.show()
+```
+
+**Stata cells** — use `*|` prefix (because `*` is Stata's comment character):
+
+```stata
+*| label: fig-my-figure
+*| fig-cap: "Description of the figure"
+
+twoway scatter y x
 ```
 
 Then reference it in the manuscript:
@@ -43,6 +132,24 @@ Then reference it in the manuscript:
 ```markdown
 {{< embed notebooks/notebook-01.ipynb#fig-my-figure >}}
 ```
+
+### Stata Label Restriction
+
+Do **not** use the `tbl-` prefix for Stata cell labels that produce stream text
+output (e.g., `tabstat`, `table`, `summarize`). The `tbl-` prefix triggers
+Quarto's table parser, which expects a markdown-formatted table and will crash
+on Stata's plain-text output.
+
+Instead, use a plain label:
+
+```stata
+*| label: stata-summary
+
+tabstat gdp_per_capita life_expectancy, by(region) stat(mean sd count)
+```
+
+This restriction does not apply to Python or R cells that output proper markdown
+tables (e.g., via `pandas` or `knitr::kable()`).
 
 ### Registering Notebooks
 
@@ -77,8 +184,35 @@ source("../config.R")
 set_seeds()
 ```
 
-### Supported Kernels
+**Stata:**
 
-- **Python** — Managed via `uv` virtual environment
-- **R** — Requires R installation + `IRkernel` package
-- **Stata** — Requires Stata license + `stata_kernel` pip package
+```stata
+clear all
+set seed 42
+```
+
+### Executing Notebooks
+
+To execute notebooks and save their outputs (required before rendering):
+
+```bash
+# Python
+uv run jupyter execute --inplace notebooks/notebook-01.ipynb
+
+# R (requires IRkernel)
+uv run jupyter execute --inplace notebooks/notebook-02.ipynb
+
+# Stata (requires nbstata)
+uv run jupyter execute --inplace notebooks/notebook-03.ipynb
+```
+
+The `--inplace` flag is required to write outputs back into the `.ipynb` file.
+Without it, the notebook executes but outputs are discarded.
+
+After execution, sync the Jupytext pairs:
+
+```bash
+uv run jupytext --sync notebooks/notebook-01.ipynb
+uv run jupytext --sync notebooks/notebook-02.ipynb
+uv run jupytext --sync notebooks/notebook-03.ipynb
+```

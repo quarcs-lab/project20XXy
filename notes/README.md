@@ -1,3 +1,5 @@
-# InfoHERE
+# Notes
 
-Your references should be managed using Mendeley
+Research notes, brainstorming, and ideas.
+
+Use descriptive filenames: `topic-description.md`

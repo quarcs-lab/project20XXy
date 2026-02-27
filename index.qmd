@@ -69,6 +69,17 @@ The following figure, generated in @notebook-01, provides an overview of the dat
 
 {{< embed notebooks/notebook-01.ipynb#tbl-summary >}}
 
+The same analysis is replicated in R (@notebook-02) and Stata (@notebook-03) to
+demonstrate multi-language support.
+
+{{< embed notebooks/notebook-02.ipynb#fig-r-sample >}}
+
+{{< embed notebooks/notebook-02.ipynb#tbl-r-summary >}}
+
+{{< embed notebooks/notebook-03.ipynb#fig-stata-sample >}}
+
+{{< embed notebooks/notebook-03.ipynb#stata-summary >}}
+
 ### Methods
 
 [FILL: Describe the econometric or statistical methods.]

@@ -34,6 +34,38 @@ uv sync
 uv run jupyter notebook
 ```
 
+### Notebook Kernels
+
+The Python kernel is installed automatically by `uv sync`. R and Stata kernels
+require additional setup.
+
+**R kernel (IRkernel):**
+
+```bash
+R -e "install.packages(c('IRkernel', 'ggplot2', 'knitr'), repos='https://cloud.r-project.org')"
+R -e "IRkernel::installspec()"
+```
+
+**Stata kernel (nbstata):**
+
+```bash
+pip install nbstata
+python -m nbstata.install
+```
+
+Then create `~/.config/nbstata/nbstata.conf`:
+
+```ini
+[nbstata]
+stata_dir = /Applications/Stata
+edition = se
+```
+
+Adjust `stata_dir` and `edition` for your OS and Stata version.
+
+See [notebooks/README.md](notebooks/README.md) for full details, platform-specific
+paths, and important Quarto integration notes.
+
 ### Rendering the manuscript
 
 ```bash
@@ -59,11 +91,12 @@ config.py / config.R   # Reproducibility config (seeds, paths)
 pyproject.toml         # Python dependencies
 notebooks/             # Jupyter notebooks (.ipynb + .md pairs)
 data/                  # Datasets (rawData/ for unmodified sources)
-code/                  # Analysis scripts
+code/                  # Standalone analysis scripts
+notes/                 # Research notes, brainstorming, and ideas
 images/                # Figures and plots
 tables/                # Output tables
 slides/                # Quarto presentations
-references/            # Annotated bibliographies
+references/            # Annotated bibliographies and reference notes
 templates/             # LaTeX manuscript template (alternative)
 scripts/               # Build scripts
 handoffs/              # Session progress logs
