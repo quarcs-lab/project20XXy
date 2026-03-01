@@ -12,8 +12,6 @@ kernelspec:
   name: nbstata
 ---
 
-+++ {"_sphinx_cell_id": "efe1cf55-1dfe-490d-b40f-1b3a50e9af1e"}
-
 ---
 title: "N3: Sample Stata Analysis"
 ---
@@ -28,18 +26,12 @@ Quarto's `{{< embed >}}` shortcode. It mirrors `notebook-01` (Python) using Stat
 must be registered. See `notebooks/README.md` for setup instructions.
 
 ```{code-cell}
----
-_sphinx_cell_id: 487434fb-2aa5-4555-acf0-59a652acb7e0
----
 * Reproducibility setup
 clear all
 set seed 42
 ```
 
 ```{code-cell}
----
-_sphinx_cell_id: 887deda5-33d6-4696-8907-30be836c8109
----
 * Generate synthetic cross-sectional data (80 regions, 4 clusters)
 quietly {
     set obs 80
@@ -57,9 +49,6 @@ describe
 ```
 
 ```{code-cell}
----
-_sphinx_cell_id: 8ef6826b-2696-4c83-8617-38fd9d4a8c04
----
 *| label: fig-stata-sample
 *| fig-cap: "Synthetic regional indicators: GDP per capita vs. life expectancy across 80 simulated regions, colored by geographic cluster (Stata)."
 
@@ -75,9 +64,6 @@ twoway ///
 ```
 
 ```{code-cell}
----
-_sphinx_cell_id: d88141ca-5176-410b-bcd4-307fecf0c4cb
----
 *| label: stata-summary
 
 tabstat gdp_per_capita life_expectancy, by(region) stat(mean sd count) format(%9.1f)

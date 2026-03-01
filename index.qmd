@@ -74,7 +74,7 @@ The following figure, generated in [N1: Sample Data Exploration](notebooks/noteb
 
 {{< embed notebooks/notebook-01.ipynb#fig-sample >}}
 
-@tbl-summary reports summary statistics by region.
+The following table reports summary statistics by region.
 
 {{< embed notebooks/notebook-01.ipynb#tbl-summary >}}
 

@@ -80,15 +80,14 @@ additional R packages your project needs to the first `install.packages()` call.
 > older `stata_kernel`. The legacy `stata_kernel` (v1.14.2) has a graph-capture
 > bug that crashes with Stata 19+.
 
-**Step 1 — Install nbstata:**
+**Step 1 — Register the nbstata kernel:**
+
+`nbstata` is already included in `pyproject.toml`, so `uv sync` installs it
+into the project's `.venv`. You only need to register the Jupyter kernel:
 
 ```bash
-pip install nbstata
-python -m nbstata.install
+uv run python -m nbstata.install
 ```
-
-If your system Python differs from the one used by Jupyter, use the full path
-to the Python that has pip (e.g., `/usr/local/bin/python3` or the miniforge path).
 
 **Step 2 — Configure Stata path:**
 
@@ -110,7 +109,7 @@ Adjust `stata_dir` and `edition` for your system:
 
 Valid editions: `be` (Basic), `se` (Standard), `mp` (Multiprocessor).
 
-**Verify:** `jupyter kernelspec list` should show `stata`.
+**Verify:** `jupyter kernelspec list` should show `nbstata`.
 
 ## Conventions
 
@@ -184,25 +183,19 @@ tables (e.g., via `pandas` or `knitr::kable()`).
 
 ### Registering Notebooks
 
-New notebooks must be registered in `_quarto.yml` in **two places**:
+New notebooks must be registered in `_quarto.yml` under `manuscript.notebooks`
+(so Quarto links them in the manuscript sidebar):
 
-1. Under `manuscript.notebooks` (so Quarto links them in the manuscript sidebar):
+```yaml
+manuscript:
+  notebooks:
+    - notebook: notebooks/notebook-04.ipynb
+      title: "N4: Your notebook title"
+```
 
-   ```yaml
-   manuscript:
-     notebooks:
-       - notebook: notebooks/notebook-01.ipynb
-         title: "N1: Notebook title"
-   ```
-
-2. Under `project.render` (so Quarto generates their preview HTML pages):
-
-   ```yaml
-   project:
-     render:
-       - "*.qmd"
-       - "notebooks/*.ipynb"    # ← must include notebooks
-   ```
+The `project.render` section already includes a `notebooks/*.ipynb` wildcard,
+so new notebooks are automatically picked up for rendering without additional
+configuration.
 
 ### Quarto Configuration Notes
 
