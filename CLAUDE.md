@@ -66,23 +66,46 @@ The full directory structure and root-level files are documented in `README.md` 
 - `_quarto.yml` -- Quarto project config (output formats, notebook registrations)
 - `references.bib` -- Bibliography (exported from Zotero)
 - `config.py` / `config.R` -- Reproducibility config (seed = 42, project paths)
+- `jupytext.toml` -- Cell metadata filter (strips `_sphinx_cell_id`, `execution`, `vscode`)
 - `notebooks/` -- Jupyter notebooks (`.ipynb` + `.md:myst` pairs via Jupytext)
 - `data/rawData/` -- Raw source data (never modify)
+- `scripts/render.sh` -- Clean render + Overleaf staging (safe to call from any directory)
 - `handoffs/` -- Session handoff reports
+- `.claude/skills/` -- Claude Code skills (24 SKILL.md files with frontmatter)
 - `.env` -- API keys and secrets (gitignored, never commit)
 
 ---
 
-## Claude Commands
+## Claude Skills
 
-Reusable procedures are defined as slash commands in `.claude/commands/`.
+Reusable procedures are defined as skills in `.claude/skills/`. Each skill has a `SKILL.md` with YAML frontmatter (`description`, `allowed-tools`, optional `argument-hint` and `disable-model-invocation`).
 
-| Command | Purpose |
-| ------- | ------- |
+| Skill | Purpose |
+| ----- | ------- |
 | `/project:render` | Clean render of the manuscript (HTML + PDF + Word) |
+| `/project:execute` | Execute all notebooks, strip metadata, and sync Jupytext pairs |
 | `/project:new-notebook` | Create a new notebook with Jupytext pairing and register it |
 | `/project:handoff` | Write a session handoff report |
 | `/project:sync-tex` | Transfer collaborator LaTeX edits (Overleaf) back into `index.qmd` |
+| `/project:cite` | Find a paper, add BibTeX to `references.bib`, show citation syntax |
+| `/project:literature-note` | Create a structured annotation note for a paper in `references/` |
+| `/project:regression-table` | Format estimation output as a publication-quality table |
+| `/project:new-slide-deck` | Create a revealjs presentation with the project style guide |
+| `/project:init` | Fill all `[FILL:]` placeholders to initialize a new project |
+| `/project:check-env` | Verify tools, kernels, and dependencies are installed |
+| `/project:submission-prep` | Run pre-submission checks and generate a submission checklist |
+| `/project:bib-check` | Audit citations in `index.qmd` against `references.bib` |
+| `/project:new-analysis` | Scaffold a method-specific analysis notebook (DiD, IV, RDD, etc.) |
+| `/project:robustness-table` | Generate robustness checks and format a combined results table |
+| `/project:interpret-results` | Write academic prose interpreting regression output |
+| `/project:data-audit` | Scan notebooks for data file references and verify paths exist |
+| `/project:codebook` | Auto-generate a variable codebook from a dataset |
+| `/project:draft-section` | Draft manuscript prose from bullet points or an outline |
+| `/project:abstract` | Generate a structured abstract from the current manuscript |
+| `/project:referee-response` | Draft point-by-point response to referee comments |
+| `/project:freeze-check` | Verify notebook execution freshness before rendering |
+| `/project:env-snapshot` | Save environment state to `notes/` for reproducibility |
+| `/project:figures-gallery` | Generate an HTML gallery of all project figures |
 
 ---
 
@@ -153,7 +176,7 @@ These are non-obvious pitfalls. See `README.md` for full workflow documentation.
 **Notebooks:**
 
 - `--inplace` is required for `jupyter execute` — without it, outputs are discarded
-- Register new notebooks in `_quarto.yml` under `manuscript.notebooks`
+- Register new notebooks in `_quarto.yml` under `manuscript.notebooks` (the `project.render` wildcard handles the rest)
 - Labeled outputs are embedded in the manuscript via `{{< embed >}}`
 
 **Cell directives by language:**
@@ -165,6 +188,15 @@ These are non-obvious pitfalls. See `README.md` for full workflow documentation.
 
 - Use **nbstata** kernel (not the legacy `stata_kernel`)
 - Do NOT use the `tbl-` label prefix for Stata cells with text output — it triggers Quarto's table parser and crashes. Use a plain label instead (e.g., `stata-summary`)
+
+**Jupytext cell metadata:**
+
+- `jupytext.toml` strips `_sphinx_cell_id`, `execution`, and `vscode` metadata via `cell_metadata_filter`. Without this filter, those keys leak into `.md` pairs and cause `:::` rendering noise in Quarto output. Do not remove this filter.
+- `jupyter execute --inplace` re-adds `execution` timestamps to `.ipynb` cell metadata on every run. These create noisy git diffs. Strip them after execution if needed for a clean commit.
+
+**Cross-references to embedded notebook outputs:**
+
+- `@tbl-` and `@fig-` cross-references to `{{< embed >}}`-ed notebook content may produce "Unable to resolve crossref" warnings in some Quarto versions. Use plain prose instead of `@label` when referencing embedded content inline.
 
 **Python packages:**
 

@@ -1,3 +1,10 @@
+---
+name: new-notebook
+description: Creates a Jupyter notebook with Jupytext pairing and registers it in _quarto.yml. Use when adding a new notebook.
+argument-hint: <name> <title>
+allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+---
+
 # Create New Notebook
 
 Create a new Jupyter notebook with Jupytext pairing and register it in the manuscript.

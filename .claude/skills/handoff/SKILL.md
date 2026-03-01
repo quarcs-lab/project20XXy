@@ -1,3 +1,9 @@
+---
+name: handoff
+description: Writes a session handoff report to handoffs/ with project state, work done, decisions, and next steps. Use at session end or after significant work.
+allowed-tools: Bash, Read, Write, Glob, Grep
+---
+
 # Write Handoff Report
 
 Write a session handoff report to preserve context across sessions.

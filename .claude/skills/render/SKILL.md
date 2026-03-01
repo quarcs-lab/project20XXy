@@ -1,3 +1,10 @@
+---
+name: render
+description: Runs the clean render pipeline (HTML, PDF, Word) via scripts/render.sh. Use when asked to render, build, or compile the manuscript.
+disable-model-invocation: true
+allowed-tools: Bash, Read, Glob, Grep
+---
+
 # Render Manuscript
 
 Run the clean render pipeline and report results.
