@@ -31,8 +31,10 @@ format:
     number-sections: true
     colorlinks: true
     keep-tex: true
+    notebook-links: false
 
-  docx: default
+  docx:
+    notebook-links: false
 
 execute:
   freeze: auto

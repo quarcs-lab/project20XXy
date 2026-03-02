@@ -1,12 +1,7 @@
 # CLAUDE.md -- AI Assistant Instructions
 
-> **Template:** project20XXy -- a reusable research project template.
-> Clone this repo for each new research project and fill in the `[FILL: ...]` placeholders below.
-> For full documentation, see `README.md`.
-
-## Quick Start
-
 **Your role:** Research assistant and workflow orchestrator for an academic research project.
+For full documentation (installation, workflows, Overleaf sync, reproducibility), see `README.md`.
 
 **First actions for every session:**
 
@@ -36,185 +31,100 @@
 
 These are non-negotiable behavioral constraints.
 
-### 1. Never delete data or code
-
-Do not delete any files in `data/`, `code/`, `notebooks/`, `references/`, or `templates/`.
-When replacing files, rename the old version or move it to `legacy/`.
-
-### 2. Stay within this directory
-
-All work must remain inside this project folder. Never navigate above the project root.
-If you need external resources, ask for permission first.
-
-### 3. Preserve raw data
-
-Files in `data/rawData/` are source-of-truth inputs. Never modify them.
-All transformations should produce new files in `data/` or other directories.
-
-### 4. Document progress via handoff reports
-
-Write a handoff report to `./handoffs/` after completing significant work,
-before ending a session, or when context is building up. See **Session Management** below.
+1. **Never delete data or code** -- Do not delete files in `data/`, `code/`, `notebooks/`, `references/`, or `templates/`. Move old versions to `legacy/`.
+2. **Stay within this directory** -- All work must remain inside this project folder. Ask before accessing external resources.
+3. **Preserve raw data** -- Files in `data/rawData/` are source-of-truth inputs. Never modify them.
+4. **Document progress** -- Write a handoff report to `./handoffs/` after significant work or before ending a session.
 
 ---
 
 ## Key Paths
 
-The full directory structure and root-level files are documented in `README.md` under **Project Structure**. The most frequently referenced paths:
-
-- `index.qmd` -- Main manuscript source
-- `_quarto.yml` -- Quarto project config (output formats, notebook registrations)
-- `references.bib` -- Bibliography (exported from Zotero)
-- `config.py` / `config.R` -- Reproducibility config (seed = 42, project paths)
-- `jupytext.toml` -- Cell metadata filter (strips `_sphinx_cell_id`, `execution`, `vscode`)
-- `notebooks/` -- Jupyter notebooks (`.ipynb` + `.md:myst` pairs via Jupytext)
-- `data/rawData/` -- Raw source data (never modify)
-- `scripts/render.sh` -- Clean render + Overleaf staging (safe to call from any directory)
-- `handoffs/` -- Session handoff reports
-- `.claude/skills/` -- Claude Code skills (24 SKILL.md files with frontmatter)
-- `.env` -- API keys and secrets (gitignored, never commit)
+| Path | Purpose |
+| ---- | ------- |
+| `index.qmd` | Main manuscript source |
+| `_quarto.yml` | Quarto config (formats, notebook registrations) |
+| `references.bib` | Bibliography (from Zotero) |
+| `config.py` / `config.R` | Reproducibility config (seed = 42, project paths) |
+| `pyproject.toml` / `uv.lock` | Python dependencies |
+| `jupytext.toml` | Cell metadata filter |
+| `notebooks/` | Jupyter notebooks (`.ipynb` + `.md:myst` pairs) |
+| `data/rawData/` | Raw source data (never modify) |
+| `scripts/render.sh` | Clean render + Overleaf staging |
+| `handoffs/` | Session handoff reports |
+| `.claude/skills/` | 24 skill definitions (SKILL.md with YAML frontmatter) |
+| `.env` | API keys and secrets (gitignored, never commit) |
 
 ---
 
-## Claude Skills
+## Skills
 
-Reusable procedures are defined as skills in `.claude/skills/`. Each skill has a `SKILL.md` with YAML frontmatter (`description`, `allowed-tools`, optional `argument-hint` and `disable-model-invocation`).
+Invoke with `/project:<name>`. See `README.md` § Available Skills for full descriptions and SKILL.md links.
 
-| Skill | Purpose |
-| ----- | ------- |
-| `/project:render` | Clean render of the manuscript (HTML + PDF + Word) |
-| `/project:execute` | Execute all notebooks, strip metadata, and sync Jupytext pairs |
-| `/project:new-notebook` | Create a new notebook with Jupytext pairing and register it |
-| `/project:handoff` | Write a session handoff report |
-| `/project:sync-tex` | Transfer collaborator LaTeX edits (Overleaf) back into `index.qmd` |
-| `/project:cite` | Find a paper, add BibTeX to `references.bib`, show citation syntax |
-| `/project:literature-note` | Create a structured annotation note for a paper in `references/` |
-| `/project:regression-table` | Format estimation output as a publication-quality table |
-| `/project:new-slide-deck` | Create a revealjs presentation with the project style guide |
-| `/project:init` | Fill all `[FILL:]` placeholders to initialize a new project |
-| `/project:check-env` | Verify tools, kernels, and dependencies are installed |
-| `/project:submission-prep` | Run pre-submission checks and generate a submission checklist |
-| `/project:bib-check` | Audit citations in `index.qmd` against `references.bib` |
-| `/project:new-analysis` | Scaffold a method-specific analysis notebook (DiD, IV, RDD, etc.) |
-| `/project:robustness-table` | Generate robustness checks and format a combined results table |
-| `/project:interpret-results` | Write academic prose interpreting regression output |
-| `/project:data-audit` | Scan notebooks for data file references and verify paths exist |
-| `/project:codebook` | Auto-generate a variable codebook from a dataset |
-| `/project:draft-section` | Draft manuscript prose from bullet points or an outline |
-| `/project:abstract` | Generate a structured abstract from the current manuscript |
-| `/project:referee-response` | Draft point-by-point response to referee comments |
-| `/project:freeze-check` | Verify notebook execution freshness before rendering |
-| `/project:env-snapshot` | Save environment state to `notes/` for reproducibility |
-| `/project:figures-gallery` | Generate an HTML gallery of all project figures |
+**Build & Execution** -- Side-effect skills, manual invocation only.
+
+| `/project:render` | `/project:execute` | `/project:init` | `/project:sync-tex` |
+| --- | --- | --- | --- |
+
+**Notebook & Presentation Creation** -- Create new files; accept arguments.
+
+| `/project:new-notebook` | `/project:new-analysis` | `/project:new-slide-deck` |
+| --- | --- | --- |
+
+**Writing & Results** -- Draft prose, interpret output, format tables.
+
+| `/project:draft-section` | `/project:abstract` | `/project:interpret-results` |
+| --- | --- | --- |
+| `/project:regression-table` | `/project:robustness-table` | `/project:referee-response` |
+
+**References & Data** -- Manage citations, literature notes, data docs.
+
+| `/project:cite` | `/project:literature-note` | `/project:codebook` |
+| --- | --- | --- |
+
+**Quality Checks & Audits** -- Read-only; can be auto-invoked when relevant.
+
+| `/project:bib-check` | `/project:data-audit` | `/project:freeze-check` |
+| --- | --- | --- |
+| `/project:check-env` | `/project:submission-prep` | `/project:figures-gallery` |
+
+**Session Management** -- `/project:handoff` and `/project:env-snapshot`
 
 ---
 
 ## Session Management
 
-### Starting a Session
-
-1. Read this `CLAUDE.md`
-2. Read the most recent file in `./handoffs/`
-3. Confirm understanding of current state before proceeding
-
-### Writing Handoff Reports
-
-Create a file in `./handoffs/` named `YYYYMMDD_HHMM.md` whenever you:
-
-- Complete significant work
-- Are about to end a session
-- Make major decisions that need to be preserved
-- Accumulate context that would be lost on session reset
-
-**Include in every handoff:**
+**Handoff reports** go in `./handoffs/` as `YYYYMMDD_HHMM.md`. Write one when you complete significant work, make major decisions, or end a session. Every handoff must include:
 
 - Current project state (one paragraph)
-- Work completed this session (bullet list with key results)
-- Decisions made and their rationale
+- Work completed (bullet list)
+- Decisions made and rationale
 - Open issues or blockers
 - Concrete next steps
 
-### Ending a Session
-
-1. Write a handoff report
-2. Verify all outputs are saved
-3. Summarize next steps for the user
-
 ---
 
-## Common Commands
+## Essential Commands
+
+See `README.md` § Manuscript Workflow and § Notebook Workflow for full details.
 
 ```bash
-# Render manuscript (all formats)
-quarto render
-bash scripts/render.sh              # clean render + Overleaf staging
-
-# Render single format
-quarto render index.qmd --to html   # or pdf, docx
-
-# Execute a notebook (--inplace is REQUIRED)
-uv run jupyter execute --inplace notebooks/<file>.ipynb
-
-# Sync Jupytext pairs
-uv run jupytext --sync notebooks/<file>.md
-
-# Python packages (NEVER use pip install)
-uv add <package>                    # adds to pyproject.toml + uv.lock
-uv sync                             # reinstall from lockfile
-
-# Run commands in project environment
-uv run jupyter notebook
-uv run python script.py
+bash scripts/render.sh                                      # clean render (all formats)
+uv run jupyter execute --inplace notebooks/<file>.ipynb      # execute notebook (--inplace REQUIRED)
+uv add <package>                                             # add Python package (NEVER use pip)
 ```
 
 ---
 
 ## Workflow Gotchas
 
-These are non-obvious pitfalls. See `README.md` for full workflow documentation.
+These are non-obvious pitfalls. See `README.md` for full context.
 
-**Notebooks:**
-
-- `--inplace` is required for `jupyter execute` — without it, outputs are discarded
-- Register new notebooks in `_quarto.yml` under `manuscript.notebooks` (the `project.render` wildcard handles the rest)
-- Labeled outputs are embedded in the manuscript via `{{< embed >}}`
-
-**Cell directives by language:**
-
-- Python / R: `#| label: fig-name` (hash-pipe prefix)
-- Stata: `*| label: fig-name` (star-pipe prefix, since `*` is Stata's comment character)
-
-**Stata-specific:**
-
-- Use **nbstata** kernel (not the legacy `stata_kernel`)
-- Do NOT use the `tbl-` label prefix for Stata cells with text output — it triggers Quarto's table parser and crashes. Use a plain label instead (e.g., `stata-summary`)
-
-**Jupytext cell metadata:**
-
-- `jupytext.toml` strips `_sphinx_cell_id`, `execution`, and `vscode` metadata via `cell_metadata_filter`. Without this filter, those keys leak into `.md` pairs and cause `:::` rendering noise in Quarto output. Do not remove this filter.
-- `jupyter execute --inplace` re-adds `execution` timestamps to `.ipynb` cell metadata on every run. These create noisy git diffs. Strip them after execution if needed for a clean commit.
-
-**Cross-references to embedded notebook outputs:**
-
-- `@tbl-` and `@fig-` cross-references to `{{< embed >}}`-ed notebook content may produce "Unable to resolve crossref" warnings in some Quarto versions. Use plain prose instead of `@label` when referencing embedded content inline.
-
-**Python packages:**
-
-- NEVER use `pip install` — it bypasses the lockfile. Always use `uv add`
-- All `uv`-installed packages are available in `.venv/`, which the Jupyter kernel uses
-
-**Overleaf sync constraints:**
-
-- Only **prose edits** are transferred; `{{< embed >}}` shortcodes are preserved as-is
-- Figure/table captions live in notebook cells and cannot be synced back from LaTeX
-- The preamble (before `\begin{document}`) is auto-generated — collaborator edits there are ignored
-- `latex/.baseline.tex` is gitignored (local-only diffing artifact)
-
-**References:**
-
-- Cite with `@key` for inline or `[@key]` for parenthetical
-- Annotation notes go in `references/` (Markdown format)
-
-**Credentials:**
-
-- API keys and secrets live in `.env`. Never store secrets anywhere else. Never commit `.env` or credential files to git.
+- **`--inplace` is required** for `jupyter execute` -- without it, outputs are discarded
+- **Register new notebooks** in `_quarto.yml` under `manuscript.notebooks`
+- **Stata cell directives** use `*|` prefix (not `#|`), e.g., `*| label: fig-name`
+- **Never use `tbl-` prefix** for Stata text output cells -- it triggers Quarto's table parser and crashes. Use a plain label (e.g., `stata-summary`)
+- **Never use `pip install`** -- it bypasses the lockfile. Always use `uv add`
+- **Avoid `@fig-`/`@tbl-` cross-refs** to `{{< embed >}}`-ed notebook content -- use plain prose instead (avoids "Unable to resolve crossref" warnings)
+- **Jupytext metadata filter** in `jupytext.toml` strips `_sphinx_cell_id`, `execution`, and `vscode` keys. Do not remove it.
+- **Credentials** go in `.env` only. Never commit secrets to git.
