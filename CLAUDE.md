@@ -45,7 +45,6 @@ These are non-negotiable behavioral constraints.
 | `index.qmd` | Main manuscript source |
 | `_quarto.yml` | Quarto config (formats, notebook registrations) |
 | `references.bib` | Bibliography (from Zotero) |
-| `config.py` / `config.R` | Reproducibility config (seed = 42, project paths) |
 | `pyproject.toml` / `uv.lock` | Python dependencies |
 | `notebooks/` | Quarto notebooks (`.qmd`) |
 | `data/rawData/` | Raw source data (never modify) |

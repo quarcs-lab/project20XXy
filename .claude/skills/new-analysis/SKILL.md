@@ -27,8 +27,8 @@ Create a new notebook pre-populated with method-specific boilerplate for a commo
    - Check `notebooks/` for existing files to determine the next sequential number
    - Ask the user for the kernel: Python, R, or Stata
    - Create the `.qmd` with YAML frontmatter (`title` and `jupyter` kernel) and the setup cell:
-     - **Python:** `import sys; sys.path.insert(0, ".."); from config import set_seeds, DATA_DIR; set_seeds()`
-     - **R:** `source("../config.R"); set_seeds()`
+     - **Python:** `import random; import numpy as np; random.seed(42); np.random.seed(42)`
+     - **R:** `set.seed(42)`
      - **Stata:** `clear all` followed by `set seed 42`
 
 3. Add method-specific sections as markdown and code cells:

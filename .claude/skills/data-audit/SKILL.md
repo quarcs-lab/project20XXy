@@ -17,7 +17,7 @@ Scan all notebooks for data file references and verify they exist on disk.
 
 2. Extract every referenced file path and normalize it:
    - Resolve relative paths from the notebook's directory (`notebooks/`)
-   - Resolve paths using `DATA_DIR`, `RAW_DATA_DIR` from `config.py` / `config.R`
+   - Resolve relative paths (e.g., `../data/rawData/`) from the notebook directory
 
 3. Check that each referenced file exists in `data/rawData/` or `data/`
 

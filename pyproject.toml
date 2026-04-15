@@ -13,7 +13,6 @@ dependencies = [
     "pandas>=2.2.0",
     "matplotlib>=3.8.2",
     "seaborn>=0.13.2",
-    # Notebook utilities
-    "tabulate>=0.9.0",
+    # Stata kernel
     "nbstata>=0.8.6",
 ]

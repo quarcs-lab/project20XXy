@@ -19,9 +19,9 @@ Create a new Quarto notebook (`.qmd`) and register it in the manuscript.
 2. Check `notebooks/` for existing notebooks to determine the next number
 3. Create the `.qmd` file in `notebooks/` with:
    - YAML frontmatter specifying `title` and `jupyter` kernel (ask user: Python → `python3`, R → `ir`, Stata → `nbstata`)
-   - A first code cell with the setup appropriate for the chosen kernel:
-     - **Python:** `import sys; sys.path.insert(0, ".."); from config import set_seeds, DATA_DIR; set_seeds()`
-     - **R:** `source("../config.R"); set_seeds()`
+   - A first code cell that sets the random seed for reproducibility:
+     - **Python:** `import random; import numpy as np; random.seed(42); np.random.seed(42)`
+     - **R:** `set.seed(42)`
      - **Stata:** `clear all` followed by `set seed 42`
    - A markdown section with the notebook title and overview
 4. Register the notebook in `_quarto.yml` under `manuscript.notebooks`:

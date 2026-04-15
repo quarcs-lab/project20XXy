@@ -10,13 +10,8 @@ producing labeled figures and tables that are embedded in the manuscript via
 Quarto's `{{< embed >}}` shortcode. It mirrors `notebook-01` (Python) using R.
 
 ```{r}
-# Reproducibility setup
-source("../config.R")
-set_seeds()
-```
-
-```{r}
 library(ggplot2)
+set.seed(42)
 ```
 
 ```{r}
@@ -24,7 +19,6 @@ library(ggplot2)
 #| fig-cap: "Synthetic regional indicators: GDP per capita vs. life expectancy across 80 simulated regions, colored by geographic cluster (R)."
 
 # Generate synthetic cross-sectional data
-set.seed(RANDOM_SEED)
 n <- 80
 region <- rep(c("North", "South", "East", "West"), each = n / 4)
 
