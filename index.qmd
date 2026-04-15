@@ -70,24 +70,24 @@ disparities^[See also the World Bank regional development reports.].
 
 [FILL: Describe the dataset. Include sources, time period, and key variables.]
 
-The following figure, generated in [N1: Sample Data Exploration](notebooks/notebook-01.ipynb), provides an overview of the data.
+The following figure, generated in [N1: Sample Data Exploration](notebooks/notebook-01.qmd), provides an overview of the data.
 
-{{< embed notebooks/notebook-01.ipynb#fig-sample >}}
+{{< embed notebooks/notebook-01.qmd#fig-sample >}}
 
 The following table reports summary statistics by region.
 
-{{< embed notebooks/notebook-01.ipynb#tbl-summary >}}
+{{< embed notebooks/notebook-01.qmd#tbl-summary >}}
 
-The same analysis is replicated in R ([N2: Sample R Analysis](notebooks/notebook-02.ipynb)) and Stata ([N3: Sample Stata Analysis](notebooks/notebook-03.ipynb)) to
+The same analysis is replicated in R ([N2: Sample R Analysis](notebooks/notebook-02.qmd)) and Stata ([N3: Sample Stata Analysis](notebooks/notebook-03.qmd)) to
 demonstrate multi-language support.
 
-{{< embed notebooks/notebook-02.ipynb#fig-r-sample >}}
+{{< embed notebooks/notebook-02.qmd#fig-r-sample >}}
 
-{{< embed notebooks/notebook-02.ipynb#tbl-r-summary >}}
+{{< embed notebooks/notebook-02.qmd#tbl-r-summary >}}
 
-{{< embed notebooks/notebook-03.ipynb#fig-stata-sample >}}
+{{< embed notebooks/notebook-03.qmd#fig-stata-sample >}}
 
-{{< embed notebooks/notebook-03.ipynb#stata-summary >}}
+{{< embed notebooks/notebook-03.qmd#stata-summary >}}
 
 ### Methods
 

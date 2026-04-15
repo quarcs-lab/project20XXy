@@ -13,25 +13,24 @@ Verify that all registered notebooks have been executed and their outputs are cu
 1. Read `_quarto.yml` and extract all notebook paths from `manuscript.notebooks`.
 
 2. For each registered notebook, check:
-   - **Has outputs:** Open the `.ipynb` JSON and check if any code cells have non-empty `outputs` arrays
-   - **Last modified:** File modification timestamp of the `.ipynb`
-   - **Outputs age:** Check `execution` metadata timestamps in cell metadata (if present) to determine when outputs were last generated
+   - **Last modified:** File modification timestamp of the `.qmd`
    - **Freeze cache:** Check if `_freeze/notebooks/<name>/` directory exists and contains cached output
+   - **Cache freshness:** Compare `.qmd` modification time against `_freeze/` cache timestamps
 
 3. Determine freshness status for each notebook:
-   - **Current:** has outputs and the `.ipynb` has not been modified since outputs were generated
-   - **Stale:** has outputs but the `.ipynb` source cells have been modified more recently than the outputs
-   - **Unexecuted:** no outputs in any code cell
-   - **Freeze only:** no cell outputs but a `_freeze/` cache exists (Quarto will use the cache)
+   - **Current:** freeze cache exists and `.qmd` has not been modified since cache was generated
+   - **Stale:** freeze cache exists but `.qmd` has been modified more recently
+   - **Unexecuted:** no freeze cache exists
+   - **No cache dir:** `_freeze/` directory does not exist at all
 
 4. Report a summary table:
 
    ```
-   Notebook              Has Outputs   Last Modified        Status
+   Notebook              Freeze Cache   Last Modified        Status
    ─────────────────────────────────────────────────────────────────
-   notebook-01.ipynb     Yes           2026-02-28 14:30     Current
-   notebook-02.ipynb     Yes           2026-03-01 09:15     Stale
-   notebook-03.ipynb     No            2026-02-25 11:00     Unexecuted
+   notebook-01.qmd       Yes            2026-02-28 14:30     Current
+   notebook-02.qmd       Yes            2026-03-01 09:15     Stale
+   notebook-03.qmd       No             2026-02-25 11:00     Unexecuted
    ```
 
 5. If any notebooks are stale or unexecuted, flag them and offer to run `/project:execute` to re-execute all notebooks.

@@ -26,7 +26,7 @@ Create a new notebook pre-populated with method-specific boilerplate for a commo
 2. Follow the same notebook creation conventions as `/project:new-notebook`:
    - Check `notebooks/` for existing files to determine the next sequential number
    - Ask the user for the kernel: Python, R, or Stata
-   - Create the `.ipynb` with the appropriate kernel and setup cell:
+   - Create the `.qmd` with YAML frontmatter (`title` and `jupyter` kernel) and the setup cell:
      - **Python:** `import sys; sys.path.insert(0, ".."); from config import set_seeds, DATA_DIR; set_seeds()`
      - **R:** `source("../config.R"); set_seeds()`
      - **Stata:** `clear all` followed by `set seed 42`
@@ -49,17 +49,12 @@ Create a new notebook pre-populated with method-specific boilerplate for a commo
    - **LASSO:** cross-validation for lambda, coefficient path plot (`#| label: fig-lasso-path`), selected variables, post-LASSO OLS
    - **Panel FE:** within estimator, entity and time FE, clustered standard errors, Hausman test (FE vs RE)
 
-4. Create the Jupytext `.md` pair:
-   ```bash
-   uv run jupytext --set-formats ipynb,md:myst notebooks/<name>.ipynb
-   ```
-
-5. Register in `_quarto.yml` under `manuscript.notebooks`:
+4. Register in `_quarto.yml` under `manuscript.notebooks`:
    ```yaml
-   - notebook: notebooks/<name>.ipynb
+   - notebook: notebooks/<name>.qmd
      title: "N<number>: <title>"
    ```
 
-6. Confirm the notebook renders: `quarto render notebooks/<name>.ipynb`
+5. Confirm the notebook renders: `quarto render notebooks/<name>.qmd`
 
-7. Report the file path and list the embed-ready cell labels created.
+6. Report the file path and list the embed-ready cell labels created.

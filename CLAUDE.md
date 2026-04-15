@@ -47,8 +47,7 @@ These are non-negotiable behavioral constraints.
 | `references.bib` | Bibliography (from Zotero) |
 | `config.py` / `config.R` | Reproducibility config (seed = 42, project paths) |
 | `pyproject.toml` / `uv.lock` | Python dependencies |
-| `jupytext.toml` | Cell metadata filter |
-| `notebooks/` | Jupyter notebooks (`.ipynb` + `.md:myst` pairs) |
+| `notebooks/` | Quarto notebooks (`.qmd`) |
 | `data/rawData/` | Raw source data (never modify) |
 | `scripts/render.sh` | Clean render + Overleaf staging |
 | `handoffs/` | Session handoff reports |
@@ -110,7 +109,7 @@ See `README.md` § Manuscript Workflow and § Notebook Workflow for full details
 
 ```bash
 bash scripts/render.sh                                      # clean render (all formats)
-uv run jupyter execute --inplace notebooks/<file>.ipynb      # execute notebook (--inplace REQUIRED)
+quarto render notebooks/<file>.qmd                           # render individual notebook
 uv add <package>                                             # add Python package (NEVER use pip)
 ```
 
@@ -120,11 +119,9 @@ uv add <package>                                             # add Python packag
 
 These are non-obvious pitfalls. See `README.md` for full context.
 
-- **`--inplace` is required** for `jupyter execute` -- without it, outputs are discarded
 - **Register new notebooks** in `_quarto.yml` under `manuscript.notebooks`
-- **Stata cell directives** use `*|` prefix (not `#|`), e.g., `*| label: fig-name`
+- **All languages use `#|`** for cell options in `.qmd` fenced code blocks (including Stata)
 - **Never use `tbl-` prefix** for Stata text output cells -- it triggers Quarto's table parser and crashes. Use a plain label (e.g., `stata-summary`)
 - **Never use `pip install`** -- it bypasses the lockfile. Always use `uv add`
 - **Avoid `@fig-`/`@tbl-` cross-refs** to `{{< embed >}}`-ed notebook content -- use plain prose instead (avoids "Unable to resolve crossref" warnings)
-- **Jupytext metadata filter** in `jupytext.toml` strips `_sphinx_cell_id`, `execution`, and `vscode` keys. Do not remove it.
 - **Credentials** go in `.env` only. Never commit secrets to git.

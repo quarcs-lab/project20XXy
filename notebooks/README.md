@@ -5,11 +5,11 @@ Computational notebooks that provide inputs (figures, tables) for the manuscript
 ## Quick Reference
 
 ```bash
-# Execute a notebook and save outputs
-uv run jupyter execute --inplace notebooks/notebook-01.ipynb
+# Render a single notebook
+quarto render notebooks/notebook-01.qmd
 
-# Sync Jupytext pair after editing
-uv run jupytext --sync notebooks/notebook-01.md
+# Render all notebooks + manuscript
+quarto render
 
 # List installed kernels
 jupyter kernelspec list
@@ -17,32 +17,17 @@ jupyter kernelspec list
 
 ## Selecting the Right Kernel
 
-Each notebook is written in a specific language and requires the matching Jupyter
-kernel. Use this table to know which kernel to select when you open a notebook:
+Each notebook specifies its kernel in the YAML frontmatter (`jupyter: <kernel>`).
+Use this table to know which kernel each notebook requires:
 
-| Notebook | Language | Kernel to select |
+| Notebook | Language | Kernel (`jupyter:` value) |
 | --- | --- | --- |
-| `notebook-01.ipynb` | Python | **Python 3 (ipykernel)** — use the project `.venv` |
-| `notebook-02.ipynb` | R | **IR** |
-| `notebook-03.ipynb` | Stata | **Stata (nbstata)** |
+| `notebook-01.qmd` | Python | `python3` |
+| `notebook-02.qmd` | R | `ir` |
+| `notebook-03.qmd` | Stata | `nbstata` |
 
-> **Tip:** You can identify a notebook's language from its first code cell:
-> `import` → Python, `library()` → R, `set seed` → Stata.
-
-### In VSCode
-
-1. Open the notebook and click **"Select Kernel"** in the top-right corner.
-2. **Python notebooks:** Choose **"Python Environments..."** → select the project
-   `.venv` (recommended, so you have access to all project dependencies).
-3. **R / Stata notebooks:** Choose **"Jupyter Kernel..."** → pick **IR** or
-   **Stata (nbstata)** from the list.
-4. If a kernel doesn't appear, press **Cmd+Shift+P** (macOS) or **Ctrl+Shift+P**
-   (Windows/Linux) → run **"Developer: Reload Window"** to refresh the kernel list.
-
-### In Jupyter (browser)
-
-Go to **Kernel → Change Kernel** in the menu bar and select the matching kernel
-from the dropdown.
+> **Tip:** You can identify a notebook's language from its fenced code blocks:
+> `` ```{python} `` → Python, `` ```{r} `` → R, `` ```{stata} `` → Stata.
 
 ---
 
@@ -115,31 +100,33 @@ Valid editions: `be` (Basic), `se` (Standard), `mp` (Multiprocessor).
 
 ### Naming
 
-- Use sequential numbering: `notebook-01.ipynb`, `notebook-02.ipynb`, etc.
-- Each `.ipynb` file has a paired `.md` file (MyST Markdown) managed by Jupytext.
+- Use sequential numbering: `notebook-01.qmd`, `notebook-02.qmd`, etc.
+- Each notebook is a plain-text `.qmd` file (no binary formats, clean git diffs).
 
-### Jupytext Pairing
+### Notebook Structure
 
-Every notebook is stored in two formats:
+Each `.qmd` notebook has:
 
-- `.ipynb` — Standard Jupyter format (for execution and interactive use)
-- `.md` — MyST Markdown format (for version control, clean diffs in git)
+1. **YAML frontmatter** with `title` and `jupyter` kernel specification
+2. **Markdown sections** as regular text between code blocks
+3. **Fenced code blocks** using the language-specific syntax
 
-Sync changes between formats:
+Example frontmatter:
 
-```bash
-# After editing the .md file
-uv run jupytext --sync notebooks/notebook-01.md
-
-# After editing the .ipynb file
-uv run jupytext --sync notebooks/notebook-01.ipynb
+```yaml
+---
+title: "N4: My Analysis"
+jupyter: python3
+---
 ```
 
 ### Labeling Outputs for the Manuscript
 
 To embed a figure or table in `index.qmd`, add a label in the notebook cell.
 
-**Python / R cells** — use `#|` prefix:
+All languages use the `#|` (hash-pipe) prefix for cell options in `.qmd` files:
+
+**Python:**
 
 ```python
 #| label: fig-my-figure
@@ -148,11 +135,20 @@ To embed a figure or table in `index.qmd`, add a label in the notebook cell.
 plt.show()
 ```
 
-**Stata cells** — use `*|` prefix (because `*` is Stata's comment character):
+**R:**
+
+```r
+#| label: fig-r-figure
+#| fig-cap: "Description of the figure"
+
+ggplot(df, aes(x, y)) + geom_point()
+```
+
+**Stata:**
 
 ```stata
-*| label: fig-my-figure
-*| fig-cap: "Description of the figure"
+#| label: fig-stata-figure
+#| fig-cap: "Description of the figure"
 
 twoway scatter y x
 ```
@@ -160,7 +156,7 @@ twoway scatter y x
 Then reference it in the manuscript:
 
 ```markdown
-{{< embed notebooks/notebook-01.ipynb#fig-my-figure >}}
+{{< embed notebooks/notebook-01.qmd#fig-my-figure >}}
 ```
 
 ### Stata Label Restriction
@@ -173,7 +169,7 @@ on Stata's plain-text output.
 Instead, use a plain label:
 
 ```stata
-*| label: stata-summary
+#| label: stata-summary
 
 tabstat gdp_per_capita life_expectancy, by(region) stat(mean sd count)
 ```
@@ -189,11 +185,11 @@ New notebooks must be registered in `_quarto.yml` under `manuscript.notebooks`
 ```yaml
 manuscript:
   notebooks:
-    - notebook: notebooks/notebook-04.ipynb
+    - notebook: notebooks/notebook-04.qmd
       title: "N4: Your notebook title"
 ```
 
-The `project.render` section already includes a `notebooks/*.ipynb` wildcard,
+The `project.render` section already includes a `notebooks/*.qmd` wildcard,
 so new notebooks are automatically picked up for rendering without additional
 configuration.
 
@@ -241,30 +237,4 @@ set_seeds()
 ```stata
 clear all
 set seed 42
-```
-
-### Executing Notebooks
-
-To execute notebooks and save their outputs (required before rendering):
-
-```bash
-# Python
-uv run jupyter execute --inplace notebooks/notebook-01.ipynb
-
-# R (requires IRkernel)
-uv run jupyter execute --inplace notebooks/notebook-02.ipynb
-
-# Stata (requires nbstata)
-uv run jupyter execute --inplace notebooks/notebook-03.ipynb
-```
-
-The `--inplace` flag is required to write outputs back into the `.ipynb` file.
-Without it, the notebook executes but outputs are discarded.
-
-After execution, sync the Jupytext pairs:
-
-```bash
-uv run jupytext --sync notebooks/notebook-01.ipynb
-uv run jupytext --sync notebooks/notebook-02.ipynb
-uv run jupytext --sync notebooks/notebook-03.ipynb
 ```

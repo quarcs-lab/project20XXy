@@ -37,19 +37,14 @@ Create a publication-quality regression table from estimation output in a notebo
    - **Footer:** Significance legend and notes about standard errors
 
 4. Create or update a cell in the specified notebook with:
-   - Cell directive: `#| label: tbl-<descriptive-name>` (or `*|` for Stata)
-   - Cell directive: `#| tbl-cap: "<caption>"` (or `*|` for Stata)
+   - Cell directive: `#| label: tbl-<descriptive-name>`
+   - Cell directive: `#| tbl-cap: "<caption>"`
    - The code to generate the formatted Markdown table
    - **Stata caveat:** Do NOT use `tbl-` prefix for Stata text output — use a plain label instead (e.g., `stata-regression`)
 
-5. Sync the Jupytext pair:
-   ```bash
-   uv run jupytext --sync notebooks/<name>.md
+5. Show the user the embed shortcode to paste into `index.qmd`:
    ```
-
-6. Show the user the embed shortcode to paste into `index.qmd`:
-   ```
-   {{< embed notebooks/<name>.ipynb#tbl-<label> >}}
+   {{< embed notebooks/<name>.qmd#tbl-<label> >}}
    ```
 
 ## Error handling

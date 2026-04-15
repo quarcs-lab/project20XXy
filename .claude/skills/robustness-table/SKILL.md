@@ -34,22 +34,17 @@ Given a baseline regression, generate code for standard robustness checks and fo
    - Use consistent variable naming for results collection
 
 4. Create a summary cell that collects all results into a single table:
-   - Cell directive: `#| label: tbl-robustness` (or `*|` for Stata)
-   - Cell directive: `#| tbl-cap: "Robustness checks"` (or `*|` for Stata)
+   - Cell directive: `#| label: tbl-robustness`
+   - Cell directive: `#| tbl-cap: "Robustness checks"`
    - Format: baseline in column (1), each robustness check in subsequent columns
    - Follow academic conventions: coefficient (SE), significance stars, N, R², FE indicators
    - **Stata caveat:** Do NOT use `tbl-` prefix for Stata text output — use a plain label (e.g., `stata-robustness`)
 
 5. Optionally export the table to `tables/` as a standalone file (LaTeX or CSV)
 
-6. Sync the Jupytext pair:
-   ```bash
-   uv run jupytext --sync notebooks/<name>.md
+6. Show the embed shortcode for `index.qmd`:
    ```
-
-7. Show the embed shortcode for `index.qmd`:
-   ```
-   {{< embed notebooks/<name>.ipynb#tbl-robustness >}}
+   {{< embed notebooks/<name>.qmd#tbl-robustness >}}
    ```
 
 ## Error handling

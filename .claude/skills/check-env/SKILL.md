@@ -29,7 +29,7 @@ Verify that all required tools and dependencies are installed and correctly conf
 
 3. Check the Python virtual environment:
    - Verify `.venv/` exists
-   - Run `uv run python -c "import numpy; import pandas; import matplotlib; import jupytext; print('Core packages OK')"` to confirm importability
+   - Run `uv run python -c "import numpy; import pandas; import matplotlib; print('Core packages OK')"` to confirm importability
 
 4. Check nbstata configuration (if nbstata kernel is present):
    - Verify `~/.config/nbstata/nbstata.conf` exists

@@ -8,7 +8,7 @@
 
 `project20XXy` is a ready-to-clone template for reproducible academic research. It integrates:
 
-- **Multi-language notebooks** — Python, R, and Stata in the same project, each with Jupyter notebooks paired to Markdown files for clean version control.
+- **Multi-language notebooks** — Python, R, and Stata in the same project, using Quarto notebooks (`.qmd`) — plain-text files with clean version control.
 - **Quarto manuscript** — A single source file (`index.qmd`) that embeds figures and tables from notebooks and renders to HTML, PDF, and Word simultaneously.
 - **Overleaf collaboration** — A sync workflow that lets LaTeX-only collaborators edit the manuscript in Overleaf while you keep working in Quarto.
 - **Reproducibility by design** — Shared seed configuration, locked dependencies, and raw data protection built into the project structure.
@@ -26,15 +26,10 @@ cd [FILL: project directory]
 # 2. Install Python dependencies
 uv sync
 
-# 3. Execute the sample notebooks
-uv run jupyter execute --inplace notebooks/notebook-01.ipynb
-uv run jupyter execute --inplace notebooks/notebook-02.ipynb
-uv run jupyter execute --inplace notebooks/notebook-03.ipynb
-
-# 4. Render the manuscript (HTML + PDF + Word)
+# 3. Render the manuscript (executes notebooks + builds HTML + PDF + Word)
 quarto render
 
-# 5. View the output
+# 4. View the output
 open _manuscript/index.html
 ```
 
@@ -49,9 +44,9 @@ The diagram below shows how the pieces fit together. Notebooks produce labeled f
 ```mermaid
 flowchart LR
     subgraph Notebooks ["notebooks/"]
-        NB1["notebook-01.ipynb<br/>(Python)"]
-        NB2["notebook-02.ipynb<br/>(R)"]
-        NB3["notebook-03.ipynb<br/>(Stata)"]
+        NB1["notebook-01.qmd<br/>(Python)"]
+        NB2["notebook-02.qmd<br/>(R)"]
+        NB3["notebook-03.qmd<br/>(Stata)"]
     end
 
     subgraph Manuscript ["Manuscript Source"]
@@ -135,7 +130,7 @@ uv sync
 # The Python Jupyter kernel is installed automatically
 ```
 
-This creates a `.venv/` with locked dependencies from `uv.lock`. All Python commands should be prefixed with `uv run` to use this environment (e.g., `uv run jupyter notebook`).
+This creates a `.venv/` with locked dependencies from `uv.lock`. All Python commands should be prefixed with `uv run` to use this environment.
 
 ### R Kernel (IRkernel)
 
@@ -210,7 +205,7 @@ The manuscript lives in `index.qmd`. It uses standard Markdown with Quarto exten
 
 - **Sections** with cross-reference IDs: `## Introduction {#sec-introduction}`
 - **Citations** from `references.bib`: `@key` (narrative) or `[@key]` (parenthetical)
-- **Embedded outputs** from notebooks: `{{< embed notebooks/notebook-01.ipynb#fig-sample >}}`
+- **Embedded outputs** from notebooks: `{{< embed notebooks/notebook-01.qmd#fig-sample >}}`
 
 You write prose in `index.qmd` and keep computational work in the notebooks. The embed shortcodes pull figures and tables from notebooks into the manuscript at render time.
 
@@ -247,31 +242,28 @@ flowchart TD
 
 ### Creating Notebooks
 
-Notebooks follow sequential naming: `notebook-01.ipynb`, `notebook-02.ipynb`, etc. Each notebook is paired with a `.md:myst` file via [Jupytext](https://jupytext.readthedocs.io/) — the `.ipynb` is for execution, and the `.md` is for version control (clean diffs in git).
+Notebooks use Quarto's native `.qmd` format — plain-text files with YAML frontmatter and fenced code blocks. They follow sequential naming: `notebook-01.qmd`, `notebook-02.qmd`, etc.
 
 To create a new notebook, use the Claude Code command `/project:new-notebook`, or manually:
 
-1. Create the `.ipynb` with the appropriate kernel (Python, R, or Stata)
+1. Create a `.qmd` file with the appropriate kernel in the YAML frontmatter (`jupyter: python3`, `jupyter: ir`, or `jupyter: nbstata`)
 2. Add a setup cell that loads the reproducibility config (see [Reproducibility](#reproducibility))
-3. Pair it with Jupytext: `uv run jupytext --set-formats ipynb,md:myst notebooks/notebook-04.ipynb`
-4. Register it in `_quarto.yml` under `manuscript.notebooks` (the `project.render` wildcard `notebooks/*.ipynb` picks up new notebooks automatically)
+3. Register it in `_quarto.yml` under `manuscript.notebooks` (the `project.render` wildcard `notebooks/*.qmd` picks up new notebooks automatically)
 
-### Executing Notebooks
+### Rendering Notebooks
 
-Notebooks must be executed before rendering the manuscript (so their outputs are available for embedding):
+Notebooks are rendered by Quarto, which handles execution automatically via `freeze: auto`:
 
 ```bash
-# Execute a notebook (--inplace is required to save outputs back to the file)
-uv run jupyter execute --inplace notebooks/notebook-01.ipynb
+# Render a single notebook
+quarto render notebooks/notebook-01.qmd
 
-# After editing the .ipynb interactively, sync the .md pair
-uv run jupytext --sync notebooks/notebook-01.ipynb
+# Render the full manuscript (renders all notebooks + manuscript)
+quarto render
 
-# After editing the .md file directly, sync the .ipynb pair
-uv run jupytext --sync notebooks/notebook-01.md
+# Clean render (clears caches first)
+bash scripts/render.sh
 ```
-
-> **Important:** The `--inplace` flag is required for `jupyter execute`. Without it, outputs are discarded.
 
 ### Embedding Outputs in the Manuscript
 
@@ -279,7 +271,7 @@ To embed a figure or table from a notebook into `index.qmd`, you need two things
 
 **1. A labeled cell in the notebook:**
 
-For Python or R cells, use the `#|` (hash-pipe) prefix:
+All languages use the `#|` (hash-pipe) prefix for cell options in `.qmd` fenced code blocks:
 
 ```python
 #| label: fig-my-plot
@@ -289,28 +281,20 @@ plt.plot(x, y)
 plt.show()
 ```
 
-For Stata cells, use the `*|` (star-pipe) prefix (because `*` is Stata's comment character):
-
-```stata
-*| label: fig-stata-scatter
-*| fig-cap: "Stata scatter plot"
-twoway scatter y x
-```
-
 > **Stata restriction:** Do NOT use the `tbl-` label prefix for Stata cells that produce text output (e.g., `tabstat`, `summarize`). The `tbl-` prefix triggers Quarto's table parser, which crashes on Stata's plain-text output. Use a plain label instead (e.g., `stata-summary`).
 
 **2. An embed shortcode in `index.qmd`:**
 
 ```markdown
-{{< embed notebooks/notebook-01.ipynb#fig-my-plot >}}
+{{< embed notebooks/notebook-01.qmd#fig-my-plot >}}
 ```
 
 The label after `#` must match the cell label exactly.
 
 ```mermaid
 flowchart LR
-    A["Notebook cell<br/>label: fig-sample"] --> B["jupyter execute<br/>--inplace"]
-    B --> C["Output saved<br/>in .ipynb"]
+    A["Notebook cell<br/>label: fig-sample"] --> B["quarto render"]
+    B --> C["Output cached<br/>in _freeze/"]
     C --> D["Embed shortcode<br/>in index.qmd"]
     D --> E["quarto render<br/>Figure in manuscript"]
 ```
@@ -433,7 +417,7 @@ quarto render slides/your-presentation.qmd
 
 | Directory | Purpose | Key Contents |
 | --------- | ------- | ------------ |
-| `notebooks/` | Computational notebooks | `.ipynb` + `.md:myst` pairs (Python, R, Stata). Outputs are embedded in the manuscript via `{{< embed >}}`. See [notebooks/README.md](notebooks/README.md). |
+| `notebooks/` | Computational notebooks | Quarto notebooks (`.qmd`) in Python, R, and Stata. Outputs are embedded in the manuscript via `{{< embed >}}`. See [notebooks/README.md](notebooks/README.md). |
 | `data/` | Processed datasets | Transformed data produced by notebooks or scripts. |
 | `data/rawData/` | Raw source data | **Never modify these files.** This is the source of truth for all analyses. |
 | `code/` | Standalone scripts | R, Python, or Stata scripts that run outside notebooks. |
@@ -461,7 +445,6 @@ quarto render slides/your-presentation.qmd
 | `uv.lock` | Locked dependency versions (auto-generated by `uv`) | Never edit manually — updated by `uv sync` / `uv add` |
 | `config.py` | Python reproducibility config — seed (42), project paths | Rarely — only if adding new path constants |
 | `config.R` | R reproducibility config — seed (42), project paths | Rarely — only if adding new path constants |
-| `jupytext.toml` | Jupytext config — `cell_metadata_filter` strips `_sphinx_cell_id`, `execution`, and `vscode` metadata that cause Quarto rendering noise | Rarely — do not remove the `cell_metadata_filter` |
 | `.python-version` | Pins Python to 3.12 for `uv` | Only if upgrading Python |
 | `.gitignore` | Git ignore rules | When adding new file types to exclude |
 | `.env` | API keys and secrets (**gitignored**) | When adding credentials (never commit this file) |
@@ -490,7 +473,7 @@ These skills have side effects (running pipelines, modifying files) and can only
 | Skill | What It Does | Definition |
 | ----- | ------------ | ---------- |
 | `/project:render` | Clean render of the manuscript (HTML + PDF + Word) via `scripts/render.sh` | [SKILL.md](.claude/skills/render/SKILL.md) |
-| `/project:execute` | Execute all notebooks, strip noisy cell metadata, and sync Jupytext pairs | [SKILL.md](.claude/skills/execute/SKILL.md) |
+| `/project:execute` | Execute all registered notebooks via Quarto | [SKILL.md](.claude/skills/execute/SKILL.md) |
 | `/project:init` | Fill all `[FILL:]` placeholders across the template for a new project | [SKILL.md](.claude/skills/init/SKILL.md) |
 | `/project:sync-tex` | Transfer collaborator LaTeX edits from Overleaf back into `index.qmd` | [SKILL.md](.claude/skills/sync-tex/SKILL.md) |
 
@@ -500,7 +483,7 @@ These skills create new files. They accept arguments (shown when you type the co
 
 | Skill | What It Does | Definition |
 | ----- | ------------ | ---------- |
-| `/project:new-notebook` | Create a Jupyter notebook with Jupytext pairing and register it in `_quarto.yml` | [SKILL.md](.claude/skills/new-notebook/SKILL.md) |
+| `/project:new-notebook` | Create a Quarto notebook (`.qmd`) and register it in `_quarto.yml` | [SKILL.md](.claude/skills/new-notebook/SKILL.md) |
 | `/project:new-analysis` | Scaffold a method-specific analysis notebook (DiD, IV, RDD, LASSO, Panel FE) | [SKILL.md](.claude/skills/new-analysis/SKILL.md) |
 | `/project:new-slide-deck` | Create a revealjs slide deck in `slides/` with the project style guide | [SKILL.md](.claude/skills/new-slide-deck/SKILL.md) |
 

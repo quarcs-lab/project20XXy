@@ -15,8 +15,9 @@ Create an HTML gallery page displaying all project figures with their captions a
    - Record each file's name, path, and modification date
 
 2. Scan all registered notebooks (from `_quarto.yml`) for cells with `fig-` labels:
+   - Grep `.qmd` files for `#| label: fig-` directives
    - Extract the cell label (e.g., `fig-sample`, `fig-event-study`)
-   - Extract the caption from `#| fig-cap:` or `*| fig-cap:` directives
+   - Extract the caption from `#| fig-cap:` directives
    - Record the source notebook path
 
 3. Generate an HTML gallery page with:
@@ -29,7 +30,7 @@ Create an HTML gallery page displaying all project figures with their captions a
      - The cell label
      - The caption (from cell directive)
      - The source notebook name
-     - The embed shortcode: `{{< embed notebooks/<name>.ipynb#<label> >}}`
+     - The embed shortcode: `{{< embed notebooks/<name>.qmd#<label> >}}`
    - Simple CSS styling for a grid layout
 
 4. Save the gallery to `_manuscript/figures-gallery.html` (the `_manuscript/` directory is gitignored, so this output won't be committed).

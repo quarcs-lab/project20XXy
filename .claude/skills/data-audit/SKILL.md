@@ -10,11 +10,10 @@ Scan all notebooks for data file references and verify they exist on disk.
 
 ## Steps
 
-1. Scan all `.ipynb` files in `notebooks/` for data loading patterns:
+1. Scan all `.qmd` files in `notebooks/` for data loading patterns:
    - **Python:** `pd.read_csv(...)`, `pd.read_stata(...)`, `pd.read_excel(...)`, `pd.read_parquet(...)`, `open(...)`, `np.loadtxt(...)`
    - **R:** `read.csv(...)`, `read_csv(...)`, `read.dta(...)`, `haven::read_dta(...)`, `readxl::read_excel(...)`, `load(...)`
    - **Stata:** `use "..."`, `import delimited "..."`, `import excel "..."`, `insheet using "..."`
-   - Also check the `.md` Jupytext pairs for the same patterns
 
 2. Extract every referenced file path and normalize it:
    - Resolve relative paths from the notebook's directory (`notebooks/`)
