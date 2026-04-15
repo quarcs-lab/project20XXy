@@ -19,7 +19,14 @@ site_libs/
 _freeze/
 
 # Rendered outputs (Quarto manuscript → _manuscript/)
-_manuscript/
+# Ignore intermediate files but track the final manuscripts
+_manuscript/*
+!_manuscript/index.html
+!_manuscript/index.pdf
+!_manuscript/index.docx
+!_manuscript/notebooks/
+_manuscript/notebooks/*
+!_manuscript/notebooks/*-preview.html
 
 # LaTeX / Overleaf sync (baseline is local-only)
 latex/.baseline.tex

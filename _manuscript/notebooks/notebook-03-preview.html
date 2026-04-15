@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="generator" content="quarto-1.9.37">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+    <title>Example of Stata Analysis</title>
+    <style>
+      /* Default styles provided by pandoc.
+      ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+      */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      ul.task-list{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+        vertical-align: middle;
+      }
+      /* CSS for syntax highlighting */
+      html { -webkit-text-size-adjust: 100%; }
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+    </style>
+
+    <style>
+      body.hypothesis-enabled #quarto-embed-header {
+        padding-right: 36px;
+      }
+
+      #quarto-embed-header {
+        height: 3em;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: solid 1px;
+      }
+
+      #quarto-embed-header h6 {
+        font-size: 1.1em;
+        padding-top: 0.6em;
+        margin-left: 1em;
+        margin-right: 1em;
+        font-weight: 400;
+      }
+
+      #quarto-embed-header a.quarto-back-link,
+      #quarto-embed-header a.quarto-download-embed {
+        font-size: 0.8em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      .quarto-back-container {
+        padding-left: 0.5em;
+        display: flex;
+      }
+
+      .headroom {
+          will-change: transform;
+          transition: transform 200ms linear;
+      }
+
+      .headroom--pinned {
+          transform: translateY(0%);
+      }
+
+      .headroom--unpinned {
+          transform: translateY(-100%);
+      }      
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script>
+    window.document.addEventListener("DOMContentLoaded", function () {
+
+      var header = window.document.querySelector("#quarto-embed-header");
+      const titleBannerEl = window.document.querySelector("body > #title-block-header");
+      if (titleBannerEl) {
+        titleBannerEl.style.paddingTop = header.clientHeight + "px";
+      }
+      const contentEl = window.document.getElementById('quarto-content');
+      for (const child of contentEl.children) {
+        child.style.paddingTop = header.clientHeight + "px";
+        child.style.marginTop = "1em";
+      }
+
+      // Use the article root if the `back` call doesn't work. This isn't perfect
+      // but should typically work
+      window.quartoBackToArticle = () => {
+        var currentUrl = window.location.href;
+        window.history.back();
+        setTimeout(() => {
+            // if location was not changed in 100 ms, then there is no history back
+            if(currentUrl === window.location.href){              
+                // redirect to site root
+                window.location.href = "../index.html";
+            }
+        }, 100);
+      }
+
+      const headroom = new window.Headroom(header, {
+        tolerance: 5,
+        onPin: function () {
+        },
+        onUnpin: function () {
+        },
+      });
+      headroom.init();
+    });
+    </script>
+
+    
+<script src="../site_libs/manuscript-notebook/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-f93d581b41f20e53031fef139986cb6a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+     <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>  
+        <link rel="stylesheet" href="../styles.css">
+      </head>
+
+  <body class="quarto-notebook quarto-light">
+    <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
+      
+      <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link" href=""><i class="bi bi-caret-left"></i> Back to Article</a>
+      <h6><i class="bi bi-journal-code"></i> Example of Stata Analysis</h6>
+
+            <a href="../notebooks/notebook-03.qmd" class="btn btn-primary quarto-download-embed" download="notebook-03.qmd">Download Source</a>
+          </div>
+
+     <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Example of Stata Analysis</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+          </div>
+
+    
+    <div class="quarto-title-meta-container">
+      <div class="quarto-title-meta-column-start">
+        
+        <div class="quarto-title-meta">
+
+                
+          
+                
+              </div>
+      </div>
+      <div class="quarto-title-meta-column-end quarto-other-formats-target">
+      </div>
+    </div>
+
+
+
+    <div class="quarto-other-links-text-target">
+    </div>  </div>
+</header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import">1. Data Import</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">2. Exploratory Data Analysis</a>
+  <ul class="collapse">
+  <li><a href="#descriptive-statistics" id="toc-descriptive-statistics" class="nav-link" data-scroll-target="#descriptive-statistics">Descriptive Statistics</a></li>
+  </ul></li>
+  <li><a href="#gdp-growth-over-time" id="toc-gdp-growth-over-time" class="nav-link" data-scroll-target="#gdp-growth-over-time">GDP Growth Over Time</a></li>
+  <li><a href="#convergence-growth-vs.-initial-income" id="toc-convergence-growth-vs.-initial-income" class="nav-link" data-scroll-target="#convergence-growth-vs.-initial-income">Convergence: Growth vs.&nbsp;Initial Income</a></li>
+  <li><a href="#correlation-matrix" id="toc-correlation-matrix" class="nav-link" data-scroll-target="#correlation-matrix">Correlation Matrix</a></li>
+  <li><a href="#panel-data-regressions" id="toc-panel-data-regressions" class="nav-link" data-scroll-target="#panel-data-regressions">3. Panel Data Regressions</a>
+  <ul class="collapse">
+  <li><a href="#estimation" id="toc-estimation" class="nav-link" data-scroll-target="#estimation">Estimation</a></li>
+  </ul></li>
+  <li><a href="#export-regression-tables" id="toc-export-regression-tables" class="nav-link" data-scroll-target="#export-regression-tables">Export Regression Tables</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">      
+
+       <section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>This notebook provides a step-by-step introduction to <strong>panel data analysis</strong> using Stata. It mirrors the Python analysis (notebook-01) using the same synthetic Barro-style growth dataset, demonstrating that the same econometric results can be reproduced across different software environments.</p>
+<p>The workflow follows three stages:</p>
+<ol type="1">
+<li><strong>Data import</strong> — load the panel dataset and declare its structure</li>
+<li><strong>Exploratory data analysis</strong> — descriptive statistics, visualization, and correlation analysis</li>
+<li><strong>Fixed effects regression</strong> — estimate growth equations using <code>reghdfe</code></li>
+</ol>
+<p><strong>Prerequisites:</strong> Stata must be installed and the <code>nbstata</code> kernel registered. The packages <code>reghdfe</code> and <code>estout</code> must be installed (<code>ssc install reghdfe</code> and <code>ssc install estout</code>).</p>
+</section>
+<section id="data-import" class="level2">
+<h2 class="anchored" data-anchor-id="data-import">1. Data Import</h2>
+<p>In Stata, panel data must be explicitly declared using <code>xtset</code>. This tells Stata which variable identifies the entities (countries) and which variable identifies time periods. The <code>delta(5)</code> option indicates that observations are spaced 5 years apart.</p>
+<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="c3256bd9" class="cell" data-execution_count="1">
+<pre><code>* Clear memory and set the random seed for reproducibility
+clear all
+set seed 42
+
+* Load the panel dataset generated by the Python notebook
+import delimited "../data/panel_growth.csv", clear
+
+* Declare the panel structure: country is the entity, year is the time variable
+* delta(5) tells Stata the time gap between observations is 5 years
+xtset country year, delta(5)
+
+* Inspect the dataset: variable names, types, and number of observations
+describe</code></pre>
+<div class="cell-output cell-output-display">
+<style>div.jp-Notebook .datagrid-container {min-height: 448px; }</style>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(encoding automatically selected: ISO-8859-1)
+(8 vars, 240 obs)
+
+Panel variable: country (strongly balanced)
+ Time variable: year, 1990 to 2015
+         Delta: 5 units
+
+Contains data
+ Observations:           240                  
+    Variables:             8                  
+-------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+-------------------------------------------------------------------------------
+country         byte    %8.0g                 
+year            int     %8.0g                 
+gdp_growth      float   %9.0g                 
+ln_initial_gdp  float   %9.0g                 
+investment      float   %9.0g                 
+schooling       float   %9.0g                 
+pop_growth      float   %9.0g                 
+trade_openness  float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: country  year
+     Note: Dataset has changed since last saved.</code></pre>
+</div>
+</div></div>
+</section>
+<div id="9cc59e5e" class="cell markdown">
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">2. Exploratory Data Analysis</h2>
+<section id="descriptive-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="descriptive-statistics">Descriptive Statistics</h3>
+<p>We compare summary statistics at the beginning (1990) and end (2015) of the sample period. Each variable appears twice in the table, allowing the reader to see how the distribution has changed over 25 years.</p>
+</section>
+</section>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="ab049b62" class="cell" data-execution_count="2">
+<pre><code>* Define the variables and their labels for the table
+local varlist "gdp_growth ln_initial_gdp investment schooling pop_growth trade_openness"
+local labels `" "GDP growth" "Log initial GDP" "Investment" "Schooling" "Pop. growth" "Trade openness" "'
+
+* --- Open output files for all three export formats ---
+* Markdown (for the manuscript)
+tempname fh
+file open `fh' using "../tables/tbl-stata-descriptive.md", write replace
+file write `fh' "| Variable | Mean | Median | SD | IQR | Min | Max |" _n
+file write `fh' "|:---|:---:|:---:|:---:|:---:|:---:|:---:|" _n
+
+* LaTeX (for standalone use)
+tempname fh2
+file open `fh2' using "../tables/tbl-stata-descriptive.tex", write replace
+file write `fh2' "\begin{tabular}{lcccccc}" _n
+file write `fh2' "\toprule" _n
+file write `fh2' "Variable &amp; Mean &amp; Median &amp; SD &amp; IQR &amp; Min &amp; Max \\" _n
+file write `fh2' "\midrule" _n
+
+* CSV (for data reuse)
+tempname fh3
+file open `fh3' using "../tables/tbl-stata-descriptive.csv", write replace
+file write `fh3' "Variable,Mean,Median,SD,IQR,Min,Max" _n
+
+* --- Compute statistics for each variable at each time point ---
+local v = 1
+foreach var of local varlist {
+    local vlabel : word `v' of `labels'
+
+    foreach yr in 1990 2015 {
+        * Subset the data to one period and compute detailed summary statistics
+        preserve
+        quietly keep if year == `yr'
+        quietly summarize `var', detail
+        local mn  : display %7.2f r(mean)
+        local md  : display %7.2f r(p50)     // Median (50th percentile)
+        local sd  : display %7.2f r(sd)
+        local iqr : display %7.2f (r(p75) - r(p25))  // Interquartile range
+        local lo  : display %7.2f r(min)
+        local hi  : display %7.2f r(max)
+        restore
+
+        * Write one row to each output file
+        file write `fh'  "| `vlabel' (`yr') | `=trim("`mn'")' | `=trim("`md'")' | `=trim("`sd'")' | `=trim("`iqr'")' | `=trim("`lo'")' | `=trim("`hi'")' |" _n
+        file write `fh2' "`vlabel' (`yr') &amp; `=trim("`mn'")' &amp; `=trim("`md'")' &amp; `=trim("`sd'")' &amp; `=trim("`iqr'")' &amp; `=trim("`lo'")' &amp; `=trim("`hi'")' \\" _n
+        file write `fh3' "`vlabel' (`yr'),`=trim("`mn'")',`=trim("`md'")',`=trim("`sd'")',`=trim("`iqr'")',`=trim("`lo'")',`=trim("`hi'")'" _n
+    }
+    local v = `v' + 1
+}
+
+* Close all output files
+file close `fh'
+file write `fh2' "\bottomrule" _n
+file write `fh2' "\end{tabular}" _n
+file close `fh2'
+file close `fh3'
+
+* Display the Markdown table inline
+type "../tables/tbl-stata-descriptive.md"</code></pre>
+<div class="cell-output cell-output-stdout">
+<pre><code>| Variable | Mean | Median | SD | IQR | Min | Max |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| GDP growth (1990) | -0.06 | 0.79 | 2.64 | 4.44 | -4.61 | 4.09 |
+| GDP growth (2015) | 1.06 | 1.28 | 2.72 | 3.40 | -5.45 | 6.29 |
+| Log initial GDP (1990) | 7.08 | 7.00 | 1.24 | 1.50 | 4.44 | 10.02 |
+| Log initial GDP (2015) | 6.97 | 6.87 | 1.06 | 1.58 | 5.24 | 9.51 |
+| Investment (1990) | 14.11 | 14.53 | 4.28 | 4.65 | 3.54 | 22.36 |
+| Investment (2015) | 15.58 | 15.32 | 5.13 | 5.94 | 3.33 | 26.64 |
+| Schooling (1990) | 5.91 | 5.50 | 3.36 | 4.99 | -1.23 | 13.15 |
+| Schooling (2015) | 5.99 | 6.50 | 3.17 | 3.86 | -1.69 | 12.15 |
+| Pop. growth (1990) | 1.55 | 1.53 | 0.57 | 0.54 | -0.01 | 2.97 |
+| Pop. growth (2015) | 1.57 | 1.51 | 0.81 | 1.28 | 0.07 | 3.29 |
+| Trade openness (1990) | 49.74 | 48.56 | 17.75 | 22.45 | 7.84 | 85.43 |
+| Trade openness (2015) | 54.82 | 51.49 | 19.70 | 26.22 | 22.44 | 106.18 |</code></pre>
+</div>
+</div></div>
+<div id="56567817" class="cell markdown">
+<section id="gdp-growth-over-time" class="level3">
+<h3 class="anchored" data-anchor-id="gdp-growth-over-time">GDP Growth Over Time</h3>
+<p>Box plots show the distribution of GDP growth across 40 countries within each period. The box spans the interquartile range, the line inside marks the median, and the dashed line at zero separates positive from negative growth.</p>
+</section>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="740eb0b2" class="cell" data-execution_count="3">
+<pre><code>#| label: fig-stata-growth-time
+#| fig-cap: "Distribution of GDP per capita growth rates by period (Stata)."
+
+graph box gdp_growth, over(year) ///
+    box(1, fcolor("68 114 196") lcolor(black)) ///
+    yline(0, lcolor(gray) lpattern(dash) lwidth(thin)) ///
+    ytitle("GDP growth (%)") ///
+    title("") ///
+    graphregion(color(white)) plotregion(color(white))
+
+quietly graph export "../images/fig-stata-growth-time.png", replace width(1800)</code></pre>
+<div class="cell-output cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><a href="notebook-03_files/figure-html/cell-4-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="notebook-03_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div id="e5c01f42" class="cell markdown">
+<section id="convergence-growth-vs.-initial-income" class="level3">
+<h3 class="anchored" data-anchor-id="convergence-growth-vs.-initial-income">Convergence: Growth vs.&nbsp;Initial Income</h3>
+<p>The convergence hypothesis predicts a negative relationship between initial income and subsequent growth. The scatter plot shows individual observations and an OLS fit line summarizing the average relationship.</p>
+</section>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="62d48943" class="cell" data-execution_count="4">
+<pre><code>#| label: fig-stata-convergence
+#| fig-cap: "Conditional convergence: GDP growth vs. initial income level (Stata)."
+
+twoway ///
+    (scatter gdp_growth ln_initial_gdp, ///
+        msize(small) mcolor("68 114 196%50") msymbol(circle)) ///
+    (lfit gdp_growth ln_initial_gdp, ///
+        lcolor("196 78 82") lwidth(medthick)), ///
+    ytitle("GDP growth (%)") ///
+    xtitle("Log initial GDP per capita") ///
+    legend(off) ///
+    graphregion(color(white)) plotregion(color(white))
+
+quietly graph export "../images/fig-stata-convergence.png", replace width(1800)</code></pre>
+<div class="cell-output cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><a href="notebook-03_files/figure-html/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="notebook-03_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div id="a5d8ba7c" class="cell markdown">
+<section id="correlation-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="correlation-matrix">Correlation Matrix</h3>
+<p>Stata’s <code>correlate</code> command displays the pairwise correlation matrix. This helps identify which variables are most strongly associated with GDP growth and whether any regressors are highly correlated with each other (a sign of multicollinearity).</p>
+</section>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="25a4c649" class="cell" data-execution_count="5">
+<pre><code>#| label: fig-stata-correlation
+#| fig-cap: "Pairwise correlations between panel variables (Stata)."
+
+correlate gdp_growth ln_initial_gdp investment schooling pop_growth trade_openness</code></pre>
+<div class="cell-output cell-output-stdout">
+<pre><code>(obs=240)
+
+             | gdp_gr~h ln_ini~p invest~t school~g pop_gr~h trade_~s
+-------------+------------------------------------------------------
+  gdp_growth |   1.0000
+ln_initial~p |  -0.3475   1.0000
+  investment |   0.3921  -0.0609   1.0000
+   schooling |   0.2116   0.0330   0.0219   1.0000
+  pop_growth |  -0.2042   0.0545  -0.1553   0.0078   1.0000
+trade_open~s |   0.0915   0.0637   0.0778  -0.0542   0.0135   1.0000
+</code></pre>
+</div>
+</div></div>
+<div id="d34c747d" class="cell markdown">
+<section id="panel-data-regressions" class="level2">
+<h2 class="anchored" data-anchor-id="panel-data-regressions">3. Panel Data Regressions</h2>
+<p>We estimate the growth equation using Stata’s <code>reghdfe</code> package, which efficiently absorbs high-dimensional fixed effects. Unlike the standard <code>xtreg</code> command, <code>reghdfe</code> can handle multiple sets of fixed effects simultaneously.</p>
+<section id="estimation" class="level3">
+<h3 class="anchored" data-anchor-id="estimation">Estimation</h3>
+<p>We estimate four models of increasing complexity:</p>
+<ul>
+<li><strong>Model 1 (OLS):</strong> Standard linear regression — ignores the panel structure</li>
+<li><strong>Model 2 (Country FE):</strong> Absorbs country-specific intercepts via <code>absorb(country)</code></li>
+<li><strong>Model 3 (Time FE):</strong> Absorbs period-specific intercepts via <code>absorb(year)</code></li>
+<li><strong>Model 4 (Two-way FE):</strong> Absorbs both dimensions via <code>absorb(country year)</code></li>
+</ul>
+<p>In all models, standard errors are clustered by country using <code>vce(cluster country)</code>.</p>
+</section>
+</section>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="b130d43e" class="cell" data-execution_count="6">
+<pre><code>* Clear any previously stored estimation results
+eststo clear
+
+* (1) Pooled OLS — baseline without fixed effects
+*     Uses standard 'reg' (not reghdfe) since no FE are absorbed
+*     vce(cluster country) produces cluster-robust standard errors
+eststo m1: reg gdp_growth ln_initial_gdp investment schooling ///
+    pop_growth trade_openness, vce(cluster country)
+
+* (2) Country FE — absorb time-invariant country characteristics
+*     absorb(country) demeans the data within each country
+eststo m2: reghdfe gdp_growth ln_initial_gdp investment schooling ///
+    pop_growth trade_openness, absorb(country) vce(cluster country)
+
+* (3) Time FE — absorb period-specific global shocks
+eststo m3: reghdfe gdp_growth ln_initial_gdp investment schooling ///
+    pop_growth trade_openness, absorb(year) vce(cluster country)
+
+* (4) Two-way FE — absorb both country and time effects
+eststo m4: reghdfe gdp_growth ln_initial_gdp investment schooling ///
+    pop_growth trade_openness, absorb(country year) vce(cluster country)
+
+* --- Add custom scalars for table display ---
+* estadd stores user-defined information in the estimation results
+* so esttab can include "Country FE: Yes/No" rows
+quietly {
+    estimates restore m1
+    estadd local country_fe "No"
+    estadd local year_fe "No"
+    estimates restore m2
+    estadd local country_fe "Yes"
+    estadd local year_fe "No"
+    estimates restore m3
+    estadd local country_fe "No"
+    estadd local year_fe "Yes"
+    estimates restore m4
+    estadd local country_fe "Yes"
+    estadd local year_fe "Yes"
+}</code></pre>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Linear regression                               Number of obs     =        240
+                                                F(5, 39)          =      29.14
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.3323
+                                                Root MSE          =      2.136
+
+                               (Std. err. adjusted for 40 clusters in country)
+------------------------------------------------------------------------------
+             |               Robust
+  gdp_growth | Coefficient  std. err.      t    P&gt;|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+ln_initial~p |  -.7590153   .1167004    -6.50   0.000    -.9950641   -.5229665
+  investment |   .1717267    .029609     5.80   0.000     .1118368    .2316166
+   schooling |   .1873427   .0444289     4.22   0.000     .0974766    .2772087
+  pop_growth |  -.4421372   .1691034    -2.61   0.013     -.784181   -.1000933
+trade_open~s |   .0132151    .008599     1.54   0.132    -.0041779    .0306082
+       _cons |   2.680257   1.067807     2.51   0.016     .5204138      4.8401
+------------------------------------------------------------------------------
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        240
+Absorbing 1 HDFE group                            F(   5,     39) =      45.91
+Statistics robust to heteroskedasticity           Prob &gt; F        =     0.0000
+                                                  R-squared       =     0.6413
+                                                  Adj R-squared   =     0.5604
+                                                  Within R-sq.    =     0.4828
+Number of clusters (country) =         40         Root MSE        =     1.7149
+
+                               (Std. err. adjusted for 40 clusters in country)
+------------------------------------------------------------------------------
+             |               Robust
+  gdp_growth | Coefficient  std. err.      t    P&gt;|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+ln_initial~p |  -.9014956   .0878281   -10.26   0.000    -1.079145   -.7238465
+  investment |   .1995116   .0271503     7.35   0.000     .1445948    .2544283
+   schooling |   .1680528   .0374488     4.49   0.000     .0923054    .2438001
+  pop_growth |  -.4052941   .1677051    -2.42   0.020    -.7445096   -.0660786
+trade_open~s |   .0144936   .0083076     1.74   0.089      -.00231    .0312973
+       _cons |   3.243883   .8373279     3.87   0.000     1.550227    4.937538
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+     country |        40          40           0    *|
+-----------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        240
+Absorbing 1 HDFE group                            F(   5,     39) =      32.95
+Statistics robust to heteroskedasticity           Prob &gt; F        =     0.0000
+                                                  R-squared       =     0.3810
+                                                  Adj R-squared   =     0.3540
+                                                  Within R-sq.    =     0.3401
+Number of clusters (country) =         40         Root MSE        =     2.0789
+
+                               (Std. err. adjusted for 40 clusters in country)
+------------------------------------------------------------------------------
+             |               Robust
+  gdp_growth | Coefficient  std. err.      t    P&gt;|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+ln_initial~p |  -.7417741   .1085159    -6.84   0.000    -.9612682     -.52228
+  investment |   .1642926   .0282164     5.82   0.000     .1072196    .2213656
+   schooling |   .2016344   .0475956     4.24   0.000     .1053632    .2979056
+  pop_growth |  -.4541396   .1591543    -2.85   0.007    -.7760596   -.1322197
+trade_open~s |   .0154133   .0083736     1.84   0.073    -.0015239    .0323506
+       _cons |   2.499872   1.040784     2.40   0.021     .3946871    4.605057
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        year |         6           0           6     |
+-----------------------------------------------------+
+(MWFE estimator converged in 2 iterations)
+
+HDFE Linear regression                            Number of obs   =        240
+Absorbing 2 HDFE groups                           F(   5,     39) =      55.17
+Statistics robust to heteroskedasticity           Prob &gt; F        =     0.0000
+                                                  R-squared       =     0.6873
+                                                  Adj R-squared   =     0.6067
+                                                  Within R-sq.    =     0.5048
+Number of clusters (country) =         40         Root MSE        =     1.6221
+
+                               (Std. err. adjusted for 40 clusters in country)
+------------------------------------------------------------------------------
+             |               Robust
+  gdp_growth | Coefficient  std. err.      t    P&gt;|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+ln_initial~p |  -.8782007   .0841092   -10.44   0.000    -1.048328   -.7080739
+  investment |   .1903104   .0240862     7.90   0.000     .1415915    .2390293
+   schooling |   .1855433   .0360485     5.15   0.000     .1126282    .2584583
+  pop_growth |  -.4306079   .1519107    -2.83   0.007    -.7378763   -.1233394
+trade_open~s |   .0172453   .0077709     2.22   0.032     .0015272    .0329634
+       _cons |   3.022324      .8019     3.77   0.001     1.400328     4.64432
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+     country |        40          40           0    *|
+        year |         6           1           5     |
+-----------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation</code></pre>
+</div>
+</div></div>
+<div id="12aecc49" class="cell markdown">
+<section id="export-regression-tables" class="level3">
+<h3 class="anchored" data-anchor-id="export-regression-tables">Export Regression Tables</h3>
+<p>We export the regression results in three formats. The <code>esttab</code> command (from the <code>estout</code> package) handles LaTeX and CSV natively. For Markdown output, we build the table manually using <code>file write</code>.</p>
+</section>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="10f0f014" class="cell" data-execution_count="7">
+<pre><code>* --- Export LaTeX table ---
+* booktabs: professional horizontal rules (\toprule, \midrule, \bottomrule)
+* fragment: omit \begin{table} wrapper (for inclusion in other documents)
+* drop(_cons): exclude the constant from the table
+esttab m1 m2 m3 m4 using "../tables/tbl-stata-regression.tex", replace ///
+    booktabs fragment label se star(* 0.10 ** 0.05 *** 0.01) ///
+    scalars("country_fe Country FE" "year_fe Year FE" ///
+            "N Observations" "r2_a Adj. R-squared") ///
+    sfmt(%s %s %9.0f %9.3f) ///
+    mtitles("OLS" "Country FE" "Time FE" "Two-way FE") ///
+    drop(_cons)
+
+* --- Export CSV table ---
+esttab m1 m2 m3 m4 using "../tables/tbl-stata-regression.csv", replace ///
+    csv se star(* 0.10 ** 0.05 *** 0.01) ///
+    scalars("country_fe Country FE" "year_fe Year FE" ///
+            "N Observations" "r2_a Adj. R-squared") ///
+    sfmt(%s %s %9.0f %9.3f) ///
+    mtitles("OLS" "Country FE" "Time FE" "Two-way FE") ///
+    drop(_cons)</code></pre>
+<div class="cell-output cell-output-stdout">
+<pre><code>(output written to ../tables/tbl-stata-regression.tex)
+(output written to ../tables/tbl-stata-regression.csv)</code></pre>
+</div>
+</div></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="65e27ece" class="cell" data-execution_count="8">
+<pre><code>* --- Build Markdown regression table manually ---
+* esttab does not produce clean pipe-delimited Markdown, so we construct
+* the table row-by-row using file write
+
+tempname fh
+file open `fh' using "../tables/tbl-stata-regression.md", write replace
+
+* Header row with model names
+file write `fh' "| | (1) OLS | (2) Country FE | (3) Time FE | (4) Two-way FE |" _n
+file write `fh' "|:---|:---:|:---:|:---:|:---:|" _n
+
+* Define the regressors to include (excluding the constant)
+local varlist "ln_initial_gdp investment schooling pop_growth trade_openness"
+local labels `" "Log initial GDP" "Investment" "Schooling" "Pop. growth" "Trade openness" "'
+
+* Loop over variables and models to build coefficient + SE rows
+local v = 1
+foreach var of local varlist {
+    local vlabel : word `v' of `labels'
+    local coef_line "| `vlabel'"
+    local se_line "| "
+
+    forvalues m = 1/4 {
+        estimates restore m`m'         // Load stored results for model m
+        local b = _b[`var']            // Point estimate
+        local se = _se[`var']          // Standard error
+        if `se' == 0 {
+            * Variable not in model (should not happen here)
+            local coef_line "`coef_line' | "
+            local se_line "`se_line' | "
+        }
+        else {
+            * Compute t-statistic and p-value for significance stars
+            local t = `b'/`se'
+            local p = 2*ttail(e(df_r), abs(`t'))
+            local star ""
+            if `p' &lt; 0.01 local star "***"
+            else if `p' &lt; 0.05 local star "**"
+            else if `p' &lt; 0.10 local star "*"
+            local bfmt : display %7.3f `b'
+            local sfmt : display %7.3f `se'
+            local coef_line "`coef_line' | `=trim("`bfmt'")'`star'"
+            local se_line "`se_line' | (`=trim("`sfmt'")')"
+        }
+    }
+    file write `fh' "`coef_line' |" _n
+    file write `fh' "`se_line' |" _n
+    local v = `v' + 1
+}
+
+* Separator row between coefficients and metadata
+file write `fh' "| | | | | |" _n
+
+* Fixed effects indicators
+file write `fh' "| Country FE | No | Yes | No | Yes |" _n
+file write `fh' "| Year FE | No | No | Yes | Yes |" _n
+
+* Fit statistics: number of observations and adjusted R-squared
+local obs_line "| Observations"
+local r2_line "| Adj. R-squared"
+forvalues m = 1/4 {
+    estimates restore m`m'
+    local n = e(N)
+    local r2 : display %5.3f e(r2_a)
+    local obs_line "`obs_line' | `n'"
+    local r2_line "`r2_line' | `=trim("`r2'")'"
+}
+file write `fh' "`obs_line' |" _n
+file write `fh' "`r2_line' |" _n
+file close `fh'
+
+* Display the table inline
+type "../tables/tbl-stata-regression.md"</code></pre>
+<div class="cell-output cell-output-stdout">
+<pre><code>(results m1 are active now)
+(results m2 are active now)
+(results m3 are active now)
+(results m4 are active now)
+(results m1 are active now)
+(results m2 are active now)
+(results m3 are active now)
+(results m4 are active now)
+(results m1 are active now)
+(results m2 are active now)
+(results m3 are active now)
+(results m4 are active now)
+(results m1 are active now)
+(results m2 are active now)
+(results m3 are active now)
+(results m4 are active now)
+(results m1 are active now)
+(results m2 are active now)
+(results m3 are active now)
+(results m4 are active now)
+(results m1 are active now)
+(results m2 are active now)
+(results m3 are active now)
+(results m4 are active now)
+| | (1) OLS | (2) Country FE | (3) Time FE | (4) Two-way FE |
+|:---|:---:|:---:|:---:|:---:|
+| Log initial GDP | -0.759*** | -0.901*** | -0.742*** | -0.878*** |
+|  | (0.117) | (0.088) | (0.109) | (0.084) |
+| Investment | 0.172*** | 0.200*** | 0.164*** | 0.190*** |
+|  | (0.030) | (0.027) | (0.028) | (0.024) |
+| Schooling | 0.187*** | 0.168*** | 0.202*** | 0.186*** |
+|  | (0.044) | (0.037) | (0.048) | (0.036) |
+| Pop. growth | -0.442** | -0.405** | -0.454*** | -0.431*** |
+|  | (0.169) | (0.168) | (0.159) | (0.152) |
+| Trade openness | 0.013 | 0.014* | 0.015* | 0.017** |
+|  | (0.009) | (0.008) | (0.008) | (0.008) |
+| | | | | |
+| Country FE | No | Yes | No | Yes |
+| Year FE | No | No | Yes | Yes |
+| Observations | 240 | 240 | 240 | 240 |
+| Adj. R-squared | 0.318 | 0.560 | 0.354 | 0.607 |</code></pre>
+</div>
+</div></div>
+<!-- -->
+
+     </main>
+<!-- /main column -->  <script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Example of Stata Analysis"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">jupyter:</span><span class="co"> nbstata</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>This notebook provides a step-by-step introduction to **panel data analysis**</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>using Stata. It mirrors the Python analysis (notebook-01) using the same</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>synthetic Barro-style growth dataset, demonstrating that the same econometric</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>results can be reproduced across different software environments.</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>The workflow follows three stages:</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Data import** — load the panel dataset and declare its structure</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Exploratory data analysis** — descriptive statistics, visualization, and correlation analysis</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Fixed effects regression** — estimate growth equations using <span class="in">`reghdfe`</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>**Prerequisites:** Stata must be installed and the <span class="in">`nbstata`</span> kernel</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>registered. The packages <span class="in">`reghdfe`</span> and <span class="in">`estout`</span> must be installed</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>(<span class="in">`ssc install reghdfe`</span> and <span class="in">`ssc install estout`</span>).</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Data Import</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>In Stata, panel data must be explicitly declared using <span class="in">`xtset`</span>. This tells</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>Stata which variable identifies the entities (countries) and which variable</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>identifies time periods. The <span class="in">`delta(5)`</span> option indicates that observations</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>are spaced 5 years apart.</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{stata}</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="in">* Clear memory and set the random seed for reproducibility</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="in">clear all</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="in">set seed 42</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="in">* Load the panel dataset generated by the Python notebook</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="in">import delimited "../data/panel_growth.csv", clear</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="in">* Declare the panel structure: country is the entity, year is the time variable</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="in">* delta(5) tells Stata the time gap between observations is 5 years</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a><span class="in">xtset country year, delta(5)</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="in">* Inspect the dataset: variable names, types, and number of observations</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="in">describe</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Exploratory Data Analysis</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a><span class="fu">### Descriptive Statistics</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>We compare summary statistics at the beginning (1990) and end (2015) of the</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>sample period. Each variable appears twice in the table, allowing the reader</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>to see how the distribution has changed over 25 years.</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{stata}</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="in">* Define the variables and their labels for the table</span></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a><span class="in">local varlist "gdp_growth ln_initial_gdp investment schooling pop_growth trade_openness"</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="in">local labels `" "GDP growth" "Log initial GDP" "Investment" "Schooling" "Pop. growth" "Trade openness" "'</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="in">* --- Open output files for all three export formats ---</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="in">* Markdown (for the manuscript)</span></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a><span class="in">tempname fh</span></span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a><span class="in">file open `fh' using "../tables/tbl-stata-descriptive.md", write replace</span></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh' "| Variable | Mean | Median | SD | IQR | Min | Max |" _n</span></span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh' "|:---|:---:|:---:|:---:|:---:|:---:|:---:|" _n</span></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="in">* LaTeX (for standalone use)</span></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a><span class="in">tempname fh2</span></span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a><span class="in">file open `fh2' using "../tables/tbl-stata-descriptive.tex", write replace</span></span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh2' "\begin{tabular}{lcccccc}" _n</span></span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh2' "\toprule" _n</span></span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh2' "Variable &amp; Mean &amp; Median &amp; SD &amp; IQR &amp; Min &amp; Max \\" _n</span></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh2' "\midrule" _n</span></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a><span class="in">* CSV (for data reuse)</span></span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a><span class="in">tempname fh3</span></span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a><span class="in">file open `fh3' using "../tables/tbl-stata-descriptive.csv", write replace</span></span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh3' "Variable,Mean,Median,SD,IQR,Min,Max" _n</span></span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a><span class="in">* --- Compute statistics for each variable at each time point ---</span></span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a><span class="in">local v = 1</span></span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a><span class="in">foreach var of local varlist {</span></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="in">    local vlabel : word `v' of `labels'</span></span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a><span class="in">    foreach yr in 1990 2015 {</span></span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a><span class="in">        * Subset the data to one period and compute detailed summary statistics</span></span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a><span class="in">        preserve</span></span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a><span class="in">        quietly keep if year == `yr'</span></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a><span class="in">        quietly summarize `var', detail</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a><span class="in">        local mn  : display %7.2f r(mean)</span></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a><span class="in">        local md  : display %7.2f r(p50)     // Median (50th percentile)</span></span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a><span class="in">        local sd  : display %7.2f r(sd)</span></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a><span class="in">        local iqr : display %7.2f (r(p75) - r(p25))  // Interquartile range</span></span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a><span class="in">        local lo  : display %7.2f r(min)</span></span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a><span class="in">        local hi  : display %7.2f r(max)</span></span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a><span class="in">        restore</span></span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a><span class="in">        * Write one row to each output file</span></span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a><span class="in">        file write `fh'  "| `vlabel' (`yr') | `=trim("`mn'")' | `=trim("`md'")' | `=trim("`sd'")' | `=trim("`iqr'")' | `=trim("`lo'")' | `=trim("`hi'")' |" _n</span></span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a><span class="in">        file write `fh2' "`vlabel' (`yr') &amp; `=trim("`mn'")' &amp; `=trim("`md'")' &amp; `=trim("`sd'")' &amp; `=trim("`iqr'")' &amp; `=trim("`lo'")' &amp; `=trim("`hi'")' \\" _n</span></span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a><span class="in">        file write `fh3' "`vlabel' (`yr'),`=trim("`mn'")',`=trim("`md'")',`=trim("`sd'")',`=trim("`iqr'")',`=trim("`lo'")',`=trim("`hi'")'" _n</span></span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a><span class="in">    local v = `v' + 1</span></span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a><span class="in">* Close all output files</span></span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a><span class="in">file close `fh'</span></span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh2' "\bottomrule" _n</span></span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh2' "\end{tabular}" _n</span></span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a><span class="in">file close `fh2'</span></span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a><span class="in">file close `fh3'</span></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a><span class="in">* Display the Markdown table inline</span></span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a><span class="in">type "../tables/tbl-stata-descriptive.md"</span></span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a><span class="fu">### GDP Growth Over Time</span></span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a>Box plots show the distribution of GDP growth across 40 countries within</span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a>each period. The box spans the interquartile range, the line inside marks</span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a>the median, and the dashed line at zero separates positive from negative</span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a>growth.</span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a><span class="in">```{stata}</span></span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: fig-stata-growth-time</span></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a><span class="in">#| fig-cap: "Distribution of GDP per capita growth rates by period (Stata)."</span></span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a><span class="in">graph box gdp_growth, over(year) ///</span></span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a><span class="in">    box(1, fcolor("68 114 196") lcolor(black)) ///</span></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a><span class="in">    yline(0, lcolor(gray) lpattern(dash) lwidth(thin)) ///</span></span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a><span class="in">    ytitle("GDP growth (%)") ///</span></span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a><span class="in">    title("") ///</span></span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a><span class="in">    graphregion(color(white)) plotregion(color(white))</span></span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a><span class="in">quietly graph export "../images/fig-stata-growth-time.png", replace width(1800)</span></span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a><span class="fu">### Convergence: Growth vs. Initial Income</span></span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a>The convergence hypothesis predicts a negative relationship between initial</span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>income and subsequent growth. The scatter plot shows individual observations</span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a>and an OLS fit line summarizing the average relationship.</span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{stata}</span></span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: fig-stata-convergence</span></span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a><span class="in">#| fig-cap: "Conditional convergence: GDP growth vs. initial income level (Stata)."</span></span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a><span class="in">twoway ///</span></span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a><span class="in">    (scatter gdp_growth ln_initial_gdp, ///</span></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a><span class="in">        msize(small) mcolor("68 114 196%50") msymbol(circle)) ///</span></span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a><span class="in">    (lfit gdp_growth ln_initial_gdp, ///</span></span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a><span class="in">        lcolor("196 78 82") lwidth(medthick)), ///</span></span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a><span class="in">    ytitle("GDP growth (%)") ///</span></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a><span class="in">    xtitle("Log initial GDP per capita") ///</span></span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a><span class="in">    legend(off) ///</span></span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a><span class="in">    graphregion(color(white)) plotregion(color(white))</span></span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a><span class="in">quietly graph export "../images/fig-stata-convergence.png", replace width(1800)</span></span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a><span class="fu">### Correlation Matrix</span></span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a>Stata's <span class="in">`correlate`</span> command displays the pairwise correlation matrix.</span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a>This helps identify which variables are most strongly associated with</span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a>GDP growth and whether any regressors are highly correlated with each</span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a>other (a sign of multicollinearity).</span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{stata}</span></span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: fig-stata-correlation</span></span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a><span class="in">#| fig-cap: "Pairwise correlations between panel variables (Stata)."</span></span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a><span class="in">correlate gdp_growth ln_initial_gdp investment schooling pop_growth trade_openness</span></span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Panel Data Regressions</span></span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a>We estimate the growth equation using Stata's <span class="in">`reghdfe`</span> package, which</span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a>efficiently absorbs high-dimensional fixed effects. Unlike the standard</span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a><span class="in">`xtreg`</span> command, <span class="in">`reghdfe`</span> can handle multiple sets of fixed effects</span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a>simultaneously.</span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estimation</span></span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a>We estimate four models of increasing complexity:</span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Model 1 (OLS):** Standard linear regression — ignores the panel structure</span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Model 2 (Country FE):** Absorbs country-specific intercepts via <span class="in">`absorb(country)`</span></span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Model 3 (Time FE):** Absorbs period-specific intercepts via <span class="in">`absorb(year)`</span></span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Model 4 (Two-way FE):** Absorbs both dimensions via <span class="in">`absorb(country year)`</span></span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a>In all models, standard errors are clustered by country using <span class="in">`vce(cluster country)`</span>.</span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a><span class="in">```{stata}</span></span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a><span class="in">* Clear any previously stored estimation results</span></span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a><span class="in">eststo clear</span></span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a><span class="in">* (1) Pooled OLS — baseline without fixed effects</span></span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a><span class="in">*     Uses standard 'reg' (not reghdfe) since no FE are absorbed</span></span>
+<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a><span class="in">*     vce(cluster country) produces cluster-robust standard errors</span></span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a><span class="in">eststo m1: reg gdp_growth ln_initial_gdp investment schooling ///</span></span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a><span class="in">    pop_growth trade_openness, vce(cluster country)</span></span>
+<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a><span class="in">* (2) Country FE — absorb time-invariant country characteristics</span></span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a><span class="in">*     absorb(country) demeans the data within each country</span></span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a><span class="in">eststo m2: reghdfe gdp_growth ln_initial_gdp investment schooling ///</span></span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a><span class="in">    pop_growth trade_openness, absorb(country) vce(cluster country)</span></span>
+<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a><span class="in">* (3) Time FE — absorb period-specific global shocks</span></span>
+<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a><span class="in">eststo m3: reghdfe gdp_growth ln_initial_gdp investment schooling ///</span></span>
+<span id="cb15-221"><a href="#cb15-221" aria-hidden="true" tabindex="-1"></a><span class="in">    pop_growth trade_openness, absorb(year) vce(cluster country)</span></span>
+<span id="cb15-222"><a href="#cb15-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a><span class="in">* (4) Two-way FE — absorb both country and time effects</span></span>
+<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a><span class="in">eststo m4: reghdfe gdp_growth ln_initial_gdp investment schooling ///</span></span>
+<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a><span class="in">    pop_growth trade_openness, absorb(country year) vce(cluster country)</span></span>
+<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a><span class="in">* --- Add custom scalars for table display ---</span></span>
+<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a><span class="in">* estadd stores user-defined information in the estimation results</span></span>
+<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a><span class="in">* so esttab can include "Country FE: Yes/No" rows</span></span>
+<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a><span class="in">quietly {</span></span>
+<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a><span class="in">    estimates restore m1</span></span>
+<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a><span class="in">    estadd local country_fe "No"</span></span>
+<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a><span class="in">    estadd local year_fe "No"</span></span>
+<span id="cb15-234"><a href="#cb15-234" aria-hidden="true" tabindex="-1"></a><span class="in">    estimates restore m2</span></span>
+<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a><span class="in">    estadd local country_fe "Yes"</span></span>
+<span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a><span class="in">    estadd local year_fe "No"</span></span>
+<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a><span class="in">    estimates restore m3</span></span>
+<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a><span class="in">    estadd local country_fe "No"</span></span>
+<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a><span class="in">    estadd local year_fe "Yes"</span></span>
+<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a><span class="in">    estimates restore m4</span></span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a><span class="in">    estadd local country_fe "Yes"</span></span>
+<span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a><span class="in">    estadd local year_fe "Yes"</span></span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a><span class="fu">### Export Regression Tables</span></span>
+<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a>We export the regression results in three formats. The <span class="in">`esttab`</span> command</span>
+<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a>(from the <span class="in">`estout`</span> package) handles LaTeX and CSV natively. For Markdown</span>
+<span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a>output, we build the table manually using <span class="in">`file write`</span>.</span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{stata}</span></span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a><span class="in">* --- Export LaTeX table ---</span></span>
+<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a><span class="in">* booktabs: professional horizontal rules (\toprule, \midrule, \bottomrule)</span></span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a><span class="in">* fragment: omit \begin{table} wrapper (for inclusion in other documents)</span></span>
+<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a><span class="in">* drop(_cons): exclude the constant from the table</span></span>
+<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="in">esttab m1 m2 m3 m4 using "../tables/tbl-stata-regression.tex", replace ///</span></span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="in">    booktabs fragment label se star(* 0.10 ** 0.05 *** 0.01) ///</span></span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="in">    scalars("country_fe Country FE" "year_fe Year FE" ///</span></span>
+<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a><span class="in">            "N Observations" "r2_a Adj. R-squared") ///</span></span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a><span class="in">    sfmt(%s %s %9.0f %9.3f) ///</span></span>
+<span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a><span class="in">    mtitles("OLS" "Country FE" "Time FE" "Two-way FE") ///</span></span>
+<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a><span class="in">    drop(_cons)</span></span>
+<span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a><span class="in">* --- Export CSV table ---</span></span>
+<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a><span class="in">esttab m1 m2 m3 m4 using "../tables/tbl-stata-regression.csv", replace ///</span></span>
+<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a><span class="in">    csv se star(* 0.10 ** 0.05 *** 0.01) ///</span></span>
+<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a><span class="in">    scalars("country_fe Country FE" "year_fe Year FE" ///</span></span>
+<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a><span class="in">            "N Observations" "r2_a Adj. R-squared") ///</span></span>
+<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a><span class="in">    sfmt(%s %s %9.0f %9.3f) ///</span></span>
+<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a><span class="in">    mtitles("OLS" "Country FE" "Time FE" "Two-way FE") ///</span></span>
+<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a><span class="in">    drop(_cons)</span></span>
+<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a><span class="in">```{stata}</span></span>
+<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a><span class="in">* --- Build Markdown regression table manually ---</span></span>
+<span id="cb15-281"><a href="#cb15-281" aria-hidden="true" tabindex="-1"></a><span class="in">* esttab does not produce clean pipe-delimited Markdown, so we construct</span></span>
+<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a><span class="in">* the table row-by-row using file write</span></span>
+<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a><span class="in">tempname fh</span></span>
+<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a><span class="in">file open `fh' using "../tables/tbl-stata-regression.md", write replace</span></span>
+<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a><span class="in">* Header row with model names</span></span>
+<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh' "| | (1) OLS | (2) Country FE | (3) Time FE | (4) Two-way FE |" _n</span></span>
+<span id="cb15-289"><a href="#cb15-289" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh' "|:---|:---:|:---:|:---:|:---:|" _n</span></span>
+<span id="cb15-290"><a href="#cb15-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-291"><a href="#cb15-291" aria-hidden="true" tabindex="-1"></a><span class="in">* Define the regressors to include (excluding the constant)</span></span>
+<span id="cb15-292"><a href="#cb15-292" aria-hidden="true" tabindex="-1"></a><span class="in">local varlist "ln_initial_gdp investment schooling pop_growth trade_openness"</span></span>
+<span id="cb15-293"><a href="#cb15-293" aria-hidden="true" tabindex="-1"></a><span class="in">local labels `" "Log initial GDP" "Investment" "Schooling" "Pop. growth" "Trade openness" "'</span></span>
+<span id="cb15-294"><a href="#cb15-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-295"><a href="#cb15-295" aria-hidden="true" tabindex="-1"></a><span class="in">* Loop over variables and models to build coefficient + SE rows</span></span>
+<span id="cb15-296"><a href="#cb15-296" aria-hidden="true" tabindex="-1"></a><span class="in">local v = 1</span></span>
+<span id="cb15-297"><a href="#cb15-297" aria-hidden="true" tabindex="-1"></a><span class="in">foreach var of local varlist {</span></span>
+<span id="cb15-298"><a href="#cb15-298" aria-hidden="true" tabindex="-1"></a><span class="in">    local vlabel : word `v' of `labels'</span></span>
+<span id="cb15-299"><a href="#cb15-299" aria-hidden="true" tabindex="-1"></a><span class="in">    local coef_line "| `vlabel'"</span></span>
+<span id="cb15-300"><a href="#cb15-300" aria-hidden="true" tabindex="-1"></a><span class="in">    local se_line "| "</span></span>
+<span id="cb15-301"><a href="#cb15-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-302"><a href="#cb15-302" aria-hidden="true" tabindex="-1"></a><span class="in">    forvalues m = 1/4 {</span></span>
+<span id="cb15-303"><a href="#cb15-303" aria-hidden="true" tabindex="-1"></a><span class="in">        estimates restore m`m'         // Load stored results for model m</span></span>
+<span id="cb15-304"><a href="#cb15-304" aria-hidden="true" tabindex="-1"></a><span class="in">        local b = _b[`var']            // Point estimate</span></span>
+<span id="cb15-305"><a href="#cb15-305" aria-hidden="true" tabindex="-1"></a><span class="in">        local se = _se[`var']          // Standard error</span></span>
+<span id="cb15-306"><a href="#cb15-306" aria-hidden="true" tabindex="-1"></a><span class="in">        if `se' == 0 {</span></span>
+<span id="cb15-307"><a href="#cb15-307" aria-hidden="true" tabindex="-1"></a><span class="in">            * Variable not in model (should not happen here)</span></span>
+<span id="cb15-308"><a href="#cb15-308" aria-hidden="true" tabindex="-1"></a><span class="in">            local coef_line "`coef_line' | "</span></span>
+<span id="cb15-309"><a href="#cb15-309" aria-hidden="true" tabindex="-1"></a><span class="in">            local se_line "`se_line' | "</span></span>
+<span id="cb15-310"><a href="#cb15-310" aria-hidden="true" tabindex="-1"></a><span class="in">        }</span></span>
+<span id="cb15-311"><a href="#cb15-311" aria-hidden="true" tabindex="-1"></a><span class="in">        else {</span></span>
+<span id="cb15-312"><a href="#cb15-312" aria-hidden="true" tabindex="-1"></a><span class="in">            * Compute t-statistic and p-value for significance stars</span></span>
+<span id="cb15-313"><a href="#cb15-313" aria-hidden="true" tabindex="-1"></a><span class="in">            local t = `b'/`se'</span></span>
+<span id="cb15-314"><a href="#cb15-314" aria-hidden="true" tabindex="-1"></a><span class="in">            local p = 2*ttail(e(df_r), abs(`t'))</span></span>
+<span id="cb15-315"><a href="#cb15-315" aria-hidden="true" tabindex="-1"></a><span class="in">            local star ""</span></span>
+<span id="cb15-316"><a href="#cb15-316" aria-hidden="true" tabindex="-1"></a><span class="in">            if `p' &lt; 0.01 local star "***"</span></span>
+<span id="cb15-317"><a href="#cb15-317" aria-hidden="true" tabindex="-1"></a><span class="in">            else if `p' &lt; 0.05 local star "**"</span></span>
+<span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a><span class="in">            else if `p' &lt; 0.10 local star "*"</span></span>
+<span id="cb15-319"><a href="#cb15-319" aria-hidden="true" tabindex="-1"></a><span class="in">            local bfmt : display %7.3f `b'</span></span>
+<span id="cb15-320"><a href="#cb15-320" aria-hidden="true" tabindex="-1"></a><span class="in">            local sfmt : display %7.3f `se'</span></span>
+<span id="cb15-321"><a href="#cb15-321" aria-hidden="true" tabindex="-1"></a><span class="in">            local coef_line "`coef_line' | `=trim("`bfmt'")'`star'"</span></span>
+<span id="cb15-322"><a href="#cb15-322" aria-hidden="true" tabindex="-1"></a><span class="in">            local se_line "`se_line' | (`=trim("`sfmt'")')"</span></span>
+<span id="cb15-323"><a href="#cb15-323" aria-hidden="true" tabindex="-1"></a><span class="in">        }</span></span>
+<span id="cb15-324"><a href="#cb15-324" aria-hidden="true" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb15-325"><a href="#cb15-325" aria-hidden="true" tabindex="-1"></a><span class="in">    file write `fh' "`coef_line' |" _n</span></span>
+<span id="cb15-326"><a href="#cb15-326" aria-hidden="true" tabindex="-1"></a><span class="in">    file write `fh' "`se_line' |" _n</span></span>
+<span id="cb15-327"><a href="#cb15-327" aria-hidden="true" tabindex="-1"></a><span class="in">    local v = `v' + 1</span></span>
+<span id="cb15-328"><a href="#cb15-328" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-329"><a href="#cb15-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-330"><a href="#cb15-330" aria-hidden="true" tabindex="-1"></a><span class="in">* Separator row between coefficients and metadata</span></span>
+<span id="cb15-331"><a href="#cb15-331" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh' "| | | | | |" _n</span></span>
+<span id="cb15-332"><a href="#cb15-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-333"><a href="#cb15-333" aria-hidden="true" tabindex="-1"></a><span class="in">* Fixed effects indicators</span></span>
+<span id="cb15-334"><a href="#cb15-334" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh' "| Country FE | No | Yes | No | Yes |" _n</span></span>
+<span id="cb15-335"><a href="#cb15-335" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh' "| Year FE | No | No | Yes | Yes |" _n</span></span>
+<span id="cb15-336"><a href="#cb15-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-337"><a href="#cb15-337" aria-hidden="true" tabindex="-1"></a><span class="in">* Fit statistics: number of observations and adjusted R-squared</span></span>
+<span id="cb15-338"><a href="#cb15-338" aria-hidden="true" tabindex="-1"></a><span class="in">local obs_line "| Observations"</span></span>
+<span id="cb15-339"><a href="#cb15-339" aria-hidden="true" tabindex="-1"></a><span class="in">local r2_line "| Adj. R-squared"</span></span>
+<span id="cb15-340"><a href="#cb15-340" aria-hidden="true" tabindex="-1"></a><span class="in">forvalues m = 1/4 {</span></span>
+<span id="cb15-341"><a href="#cb15-341" aria-hidden="true" tabindex="-1"></a><span class="in">    estimates restore m`m'</span></span>
+<span id="cb15-342"><a href="#cb15-342" aria-hidden="true" tabindex="-1"></a><span class="in">    local n = e(N)</span></span>
+<span id="cb15-343"><a href="#cb15-343" aria-hidden="true" tabindex="-1"></a><span class="in">    local r2 : display %5.3f e(r2_a)</span></span>
+<span id="cb15-344"><a href="#cb15-344" aria-hidden="true" tabindex="-1"></a><span class="in">    local obs_line "`obs_line' | `n'"</span></span>
+<span id="cb15-345"><a href="#cb15-345" aria-hidden="true" tabindex="-1"></a><span class="in">    local r2_line "`r2_line' | `=trim("`r2'")'"</span></span>
+<span id="cb15-346"><a href="#cb15-346" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-347"><a href="#cb15-347" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh' "`obs_line' |" _n</span></span>
+<span id="cb15-348"><a href="#cb15-348" aria-hidden="true" tabindex="-1"></a><span class="in">file write `fh' "`r2_line' |" _n</span></span>
+<span id="cb15-349"><a href="#cb15-349" aria-hidden="true" tabindex="-1"></a><span class="in">file close `fh'</span></span>
+<span id="cb15-350"><a href="#cb15-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-351"><a href="#cb15-351" aria-hidden="true" tabindex="-1"></a><span class="in">* Display the table inline</span></span>
+<span id="cb15-352"><a href="#cb15-352" aria-hidden="true" tabindex="-1"></a><span class="in">type "../tables/tbl-stata-regression.md"</span></span>
+<span id="cb15-353"><a href="#cb15-353" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script> 
+  
+</body></html>

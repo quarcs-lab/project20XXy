@@ -206,7 +206,7 @@ keyword 3{]}},
 \makeatother
 \subtitle{{[}FILL: Subtitle of the paper{]}}
 \author{{[}FILL: Author One{]} \and {[}FILL: Author Two{]}}
-\date{2026-03-02}
+\date{2026-04-15}
 \begin{document}
 \maketitle
 \begin{abstract}
@@ -217,22 +217,21 @@ methods, key findings, and implications.{]}
 
 \section{Introduction}\label{sec-introduction}
 
-Regional economic disparities remain a central concern in development
-economics. Understanding the relationship between GDP per capita and
-life expectancy across regions is critical for designing
-\textbf{effective policy interventions}.
+Understanding the determinants of economic growth across countries
+remains a central question in development economics. Following the
+seminal work of Keola, Andersson, and Hall (2015), a large empirical
+literature has examined how initial conditions, physical and human
+capital accumulation, and trade affect growth trajectories.
 
-This paper uses a novel synthetic dataset to examine these patterns,
-employing both parametric and non-parametric methods (Keola, Andersson,
-and Hall 2015).
-
-Our results suggest a strong positive correlation between economic
-output and health outcomes, with significant heterogeneity across
-geographic clusters.
+This paper uses a synthetic panel dataset of 40 countries over six
+five-year periods (1990--2015) to investigate the determinants of GDP
+per capita growth. We employ panel data fixed effects methods to account
+for unobserved country-specific heterogeneity and common time shocks.
 
 This study contributes to the literature in two ways. First, we provide
-a multi-language reproducible workflow. Second, we demonstrate how
-\emph{modern tools} can enhance transparency in empirical research.
+a multi-language reproducible workflow demonstrating panel data analysis
+in Python, R, and Stata. Second, we show how modern tools can enhance
+transparency in empirical research.
 
 The rest of this article is organized as follows.
 Section~\ref{sec-literature} provides an overview of the related
@@ -242,174 +241,243 @@ Section~\ref{sec-conclusion} offers some concluding remarks.
 
 \section{Related literature}\label{sec-literature}
 
-The relationship between income and health has been extensively studied
-since the seminal work of Keola, Andersson, and Hall (2015). Recent
-advances in spatial econometrics have enabled more nuanced analyses of
-regional disparities\footnote{See also the World Bank regional
-  development reports.}.
+The relationship between initial income and subsequent growth --- the
+convergence hypothesis --- has been extensively studied since the
+seminal work of Keola, Andersson, and Hall (2015). Recent advances in
+panel data econometrics have enabled more nuanced analyses that control
+for unobserved heterogeneity across countries\footnote{See also the
+  World Bank regional development reports.}.
 
 \section{Data and methods}\label{sec-data}
 
-{[}FILL: Describe the data sources, variables, and sample.{]}
-
-{[}FILL: Explain the analytical methods and models used.{]}
-
 \subsection{Data}\label{data}
 
-{[}FILL: Describe the dataset. Include sources, time period, and key
-variables.{]}
+We use a balanced panel of 40 countries observed at five-year intervals
+from 1990 to 2015 (240 country-period observations). The dataset
+includes GDP per capita growth as the dependent variable and five
+regressors: log initial GDP per capita (capturing convergence),
+investment share, years of schooling, population growth, and trade
+openness. Full details on data construction are provided in
+\href{notebooks/notebook-01.qmd}{N1: Panel Data Analysis (Python)}.
 
-The following figure, generated in
-\href{notebooks/notebook-01.ipynb}{N1: Sample Data Exploration},
-provides an overview of the data.
+The following figure shows the distribution of GDP growth rates across
+the six time periods.
 
 \begin{figure}[H]
 
 \centering{
 
-\pandocbounded{\includegraphics[keepaspectratio]{index_files/figure-latex/notebooks-notebook-01-fig-sample-output-1.png}}
+\pandocbounded{\includegraphics[keepaspectratio]{index_files/figure-latex/notebooks-notebook-01-fig-growth-time-output-1.png}}
 
 }
 
-\caption{\label{fig-sample}Synthetic regional indicators: GDP per capita
-vs.~life expectancy across 80 simulated regions, colored by geographic
-cluster.}
+\caption{\label{fig-growth-time}Distribution of GDP per capita growth
+rates by period.}
 
 \end{figure}%
 
-The following table reports summary statistics by region.
+The convergence hypothesis predicts a negative relationship between
+initial income and subsequent growth. The following scatter plot
+illustrates this pattern in our data.
+
+\begin{figure}[H]
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{index_files/figure-latex/notebooks-notebook-01-fig-convergence-output-1.png}}
+
+}
+
+\caption{\label{fig-convergence}Conditional convergence: GDP growth
+vs.~initial income level.}
+
+\end{figure}%
+
+The correlation structure of the panel variables is summarized below,
+showing the pairwise relationships that motivate our regression
+specification.
+
+\begin{figure}[H]
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{index_files/figure-latex/notebooks-notebook-01-fig-correlation-output-1.png}}
+
+}
+
+\caption{\label{fig-correlation}Pairwise correlations between panel
+variables.}
+
+\end{figure}%
+
+The following table reports descriptive statistics at the beginning and
+end of the sample period, highlighting how the panel evolves over time.
+
+\textbf{Table 1: Descriptive statistics --- initial and final period.}
 
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0488}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1512}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1463}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1561}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1659}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1610}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1707}}@{}}
-
-\caption{\label{tbl-summary}Summary statistics by region.}
-
-\tabularnewline
-
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.3380}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1127}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1408}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0986}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0986}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0986}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1127}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
-Region
+Variable
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-GDP per capita (USD) (mean)
+Mean
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-GDP per capita (USD) (std)
+Median
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-GDP per capita (USD) (count)
+SD
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-Life expectancy (years) (mean)
+IQR
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-Life expectancy (years) (std)
+Min
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-Life expectancy (years) (count)
+Max
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-East & 15607.9 & 6499.5 & 20 & 58.1 & 3.4 & 20 \\
-North & 14709 & 6638.8 & 20 & 56.7 & 3.1 & 20 \\
-South & 16113.3 & 9541.1 & 20 & 57.5 & 2.8 & 20 \\
-West & 13787 & 5498.2 & 20 & 56.7 & 3.2 & 20 \\
-
+GDP growth (1990) & -0.06 & 0.8 & 2.64 & 4.31 & -4.61 & 4.09 \\
+GDP growth (2015) & 1.06 & 1.28 & 2.72 & 3.17 & -5.45 & 6.29 \\
+Log initial GDP (1990) & 7.08 & 7 & 1.24 & 1.45 & 4.44 & 10.02 \\
+Log initial GDP (2015) & 6.97 & 6.86 & 1.06 & 1.48 & 5.24 & 9.51 \\
+Investment (1990) & 14.11 & 14.53 & 4.28 & 4.49 & 3.54 & 22.36 \\
+Investment (2015) & 15.58 & 15.32 & 5.13 & 5.65 & 3.33 & 26.64 \\
+Schooling (1990) & 5.91 & 5.5 & 3.36 & 4.93 & -1.23 & 13.15 \\
+Schooling (2015) & 5.99 & 6.5 & 3.17 & 3.81 & -1.69 & 12.15 \\
+Pop. growth (1990) & 1.55 & 1.54 & 0.57 & 0.54 & -0.01 & 2.97 \\
+Pop. growth (2015) & 1.57 & 1.52 & 0.81 & 1.21 & 0.07 & 3.29 \\
+Trade openness (1990) & 49.74 & 48.56 & 17.75 & 21.82 & 7.84 & 85.43 \\
+Trade openness (2015) & 54.82 & 51.48 & 19.7 & 25.61 & 22.44 & 106.18 \\
 \end{longtable}
 
-The same analysis is replicated in R
-(\href{notebooks/notebook-02.ipynb}{N2: Sample R Analysis}) and Stata
-(\href{notebooks/notebook-03.ipynb}{N3: Sample Stata Analysis}) to
-demonstrate multi-language support.
-
-\begin{figure}[H]
-
-\centering{
-
-\includegraphics[width=4.375in,height=4.375in]{index_files/figure-latex/notebooks-notebook-02-fig-r-sample-output-1.png}
-
-}
-
-\caption{\label{fig-r-sample}Synthetic regional indicators: GDP per
-capita vs.~life expectancy across 80 simulated regions, colored by
-geographic cluster (R).}
-
-\end{figure}%
-
-\begin{table}
-
-\caption{\label{tbl-r-summary}Summary statistics by region (R).}
-
-\centering{
-
-\begin{verbatim}
-
-
-|Region | GDP mean|  GDP sd| Life exp. mean| Life exp. sd|  N|
-|:------|--------:|-------:|--------------:|------------:|--:|
-|East   |  11888.0|  6419.8|           56.5|          2.9| 20|
-|North  |  15443.4| 13021.0|           56.8|          3.8| 20|
-|South  |  11517.9|  5595.0|           56.6|          2.0| 20|
-|West   |  15972.3| 11548.6|           56.8|          3.5| 20|
-\end{verbatim}
-
-}
-
-\end{table}%
-
-\begin{figure}[H]
-
-\centering{
-
-\pandocbounded{\includegraphics[keepaspectratio]{index_files/figure-latex/notebooks-notebook-03-fig-stata-sample-output-1.png}}
-
-}
-
-\caption{\label{fig-stata-sample}Synthetic regional indicators: GDP per
-capita vs.~life expectancy across 80 simulated regions, colored by
-geographic cluster (Stata).}
-
-\end{figure}%
-
-\phantomsection\label{stata-summary}
-\begin{verbatim}
-
-Summary statistics: Mean, SD, N
-Group variable: region 
-
-region |  gdp_pe~a  life_e~y
--------+--------------------
-  East |   18540.3      58.2
-       |   12777.3       3.7
-       |      20.0      20.0
--------+--------------------
- North |   13941.3      57.3
-       |    6845.2       2.8
-       |      20.0      20.0
--------+--------------------
- South |   15757.6      57.4
-       |    8297.8       3.1
-       |      20.0      20.0
--------+--------------------
-  West |   21923.5      59.7
-       |   12889.5       4.3
-       |      20.0      20.0
--------+--------------------
- Total |   17540.7      58.2
-       |   10782.0       3.6
-       |      80.0      80.0
-----------------------------
-\end{verbatim}
+\emph{Note:} Summary statistics for 40 countries at two points in time
+(1990 and 2015). GDP growth in percentage points. Investment and trade
+openness as shares of GDP. IQR = interquartile range.
 
 \subsection{Methods}\label{methods}
 
-{[}FILL: Describe the econometric or statistical methods.{]}
+We estimate the following growth equation using panel data fixed
+effects:
+
+\[
+\text{Growth}_{it} = \beta_1 \ln \text{GDP}_{it} + \beta_2 \text{Investment}_{it} + \beta_3 \text{Schooling}_{it} + \beta_4 \text{PopGrowth}_{it} + \beta_5 \text{Trade}_{it} + \alpha_i + \gamma_t + \varepsilon_{it}
+\]
+
+where \(\alpha_i\) captures country fixed effects and \(\gamma_t\)
+captures time fixed effects. We report four specifications: pooled OLS,
+country FE, time FE, and two-way FE. Standard errors are clustered by
+country in all models.
 
 \section{Results and discussion}\label{sec-results}
 
-{[}FILL: Present and interpret the main findings.{]}
+The following table presents the main regression results estimated using
+Python (\texttt{pyfixest}). We progressively add fixed effects to
+control for unobserved heterogeneity.
+
+\textbf{Table 2: Determinants of economic growth --- panel fixed effects
+estimates (Python).}
+
+\begin{longtable}[]{@{}lcccc@{}}
+\toprule\noalign{}
+& (1) OLS & (2) Country FE & (3) Time FE & (4) Two-way FE \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Log initial GDP & -0.759*** & -0.901*** & -0.742*** & -0.878*** \\
+& (0.117) & (0.108) & (0.109) & (0.103) \\
+Investment & 0.172*** & 0.200*** & 0.164*** & 0.190*** \\
+& (0.030) & (0.025) & (0.028) & (0.024) \\
+Schooling & 0.187*** & 0.168*** & 0.202*** & 0.186*** \\
+& (0.044) & (0.040) & (0.048) & (0.038) \\
+Pop. growth & -0.442** & -0.405** & -0.454*** & -0.431*** \\
+& (0.169) & (0.159) & (0.159) & (0.151) \\
+Trade openness & 0.013 & 0.014** & 0.015* & 0.017*** \\
+& (0.009) & (0.006) & (0.008) & (0.006) \\
+& & & & \\
+Country FE & No & Yes & No & Yes \\
+Year FE & No & No & Yes & Yes \\
+Observations & 240 & 240 & 240 & 240 \\
+R-squared & 0.332 & 0.641 & 0.381 & 0.687 \\
+\end{longtable}
+
+\emph{Note:} Dependent variable: GDP per capita growth rate (\%). All
+regressions include a constant (not reported). Standard errors clustered
+by country in parentheses. Significance levels: * p\textless0.10, **
+p\textless0.05, *** p\textless0.01.
+
+The results are replicated in R (\href{notebooks/notebook-02.qmd}{N2})
+and Stata (\href{notebooks/notebook-03.qmd}{N3}) to demonstrate
+multi-language reproducibility.
+
+\textbf{Table 3: Determinants of economic growth --- panel fixed effects
+estimates (R).}
+
+\begin{longtable}[]{@{}lcccc@{}}
+\toprule\noalign{}
+& (1) OLS & (2) Country FE & (3) Time FE & (4) Two-way FE \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Log initial GDP & -0.759*** & -0.901*** & -0.742*** & -0.878*** \\
+& (0.117) & (0.088) & (0.109) & (0.084) \\
+Investment & 0.172*** & 0.200*** & 0.164*** & 0.190*** \\
+& (0.030) & (0.027) & (0.028) & (0.024) \\
+Schooling & 0.187*** & 0.168*** & 0.202*** & 0.186*** \\
+& (0.044) & (0.037) & (0.048) & (0.036) \\
+Pop. growth & -0.442** & -0.405** & -0.454*** & -0.431*** \\
+& (0.169) & (0.168) & (0.159) & (0.152) \\
+Trade openness & 0.013 & 0.014* & 0.015* & 0.017** \\
+& (0.009) & (0.008) & (0.008) & (0.008) \\
+& & & & \\
+Country FE & No & Yes & No & Yes \\
+Year FE & No & No & Yes & Yes \\
+Observations & 240 & 240 & 240 & 240 \\
+R-squared & 0.332 & 0.641 & 0.381 & 0.687 \\
+\end{longtable}
+
+\emph{Note:} Same specification as Table 2, estimated using R
+\texttt{fixest}. All regressions include a constant (not reported).
+Standard errors clustered by country.
+
+\textbf{Table 4: Determinants of economic growth --- panel fixed effects
+estimates (Stata).}
+
+\begin{longtable}[]{@{}lcccc@{}}
+\toprule\noalign{}
+& (1) OLS & (2) Country FE & (3) Time FE & (4) Two-way FE \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Log initial GDP & -0.759*** & -0.901*** & -0.742*** & -0.878*** \\
+& (0.117) & (0.088) & (0.109) & (0.084) \\
+Investment & 0.172*** & 0.200*** & 0.164*** & 0.190*** \\
+& (0.030) & (0.027) & (0.028) & (0.024) \\
+Schooling & 0.187*** & 0.168*** & 0.202*** & 0.186*** \\
+& (0.044) & (0.037) & (0.048) & (0.036) \\
+Pop. growth & -0.442** & -0.405** & -0.454*** & -0.431*** \\
+& (0.169) & (0.168) & (0.159) & (0.152) \\
+Trade openness & 0.013 & 0.014* & 0.015* & 0.017** \\
+& (0.009) & (0.008) & (0.008) & (0.008) \\
+& & & & \\
+Country FE & No & Yes & No & Yes \\
+Year FE & No & No & Yes & Yes \\
+Observations & 240 & 240 & 240 & 240 \\
+Adj. R-squared & 0.318 & 0.560 & 0.354 & 0.607 \\
+\end{longtable}
+
+\emph{Note:} Same specification as Table 2, estimated using Stata
+\texttt{reghdfe}. All regressions include a constant (not reported).
+Standard errors clustered by country.
 
 {[}FILL: Discuss implications and compare with existing literature.{]}
 
