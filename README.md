@@ -179,7 +179,7 @@ quarto render notebooks/notebook-01.qmd
 quarto render index.qmd --to html
 ```
 
-The render script clears caches, runs `quarto render` twice (to pick up fresh table includes), and copies LaTeX to `latex/` for Overleaf.
+The render script clears caches, runs `quarto render` twice (to pick up fresh table includes), copies LaTeX to `latex/` for Overleaf, and deploys the HTML manuscript to GitHub Pages.
 
 ```mermaid
 flowchart TD
@@ -188,6 +188,7 @@ flowchart TD
     C --> D["Pass 2: quarto render<br/>(include fresh tables in manuscript)"]
     D --> E["Outputs: HTML + PDF + Word"]
     D --> F["LaTeX staged for Overleaf"]
+    D --> G["Deploy to GitHub Pages<br/>(gh-pages branch)"]
 ```
 
 ---

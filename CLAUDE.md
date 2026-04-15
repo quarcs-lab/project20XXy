@@ -52,7 +52,7 @@ These are non-negotiable behavioral constraints.
 | `images/` | Exported figures (PNG, 300 DPI, 6×4 inches) |
 | `tables/` | Exported tables (CSV + Markdown + LaTeX) |
 | `data/rawData/` | Raw source data (never modify) |
-| `scripts/render.sh` | Two-pass clean render + Overleaf staging |
+| `scripts/render.sh` | Two-pass clean render + Overleaf staging + GitHub Pages deploy |
 | `handoffs/` | Session handoff reports |
 | `.claude/skills/` | 24 skill definitions (SKILL.md with YAML frontmatter) |
 | `.env` | API keys and secrets (gitignored, never commit) |
