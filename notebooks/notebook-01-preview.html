@@ -244,7 +244,7 @@
 <section id="setup" class="level3">
 <h3 class="anchored" data-anchor-id="setup">Setup</h3>
 <p>We begin by loading the required libraries and setting the random seed for reproducibility. The plotting theme is configured to produce clean, minimal figures similar to ggplot2’s <code>theme_minimal</code>.</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="03b18a12" class="cell" data-execution_count="1">
+<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="a9155a79" class="cell" data-execution_count="1">
 <pre><code># Core data manipulation and visualization libraries
 import random
 import numpy as np
@@ -278,13 +278,13 @@ plt.rcParams.update({
 })</code></pre>
 </div></div>
 </section>
-<div id="70fb25ae" class="cell markdown">
+<div id="b8fb2194" class="cell markdown">
 <section id="generate-synthetic-panel-data" class="level3">
 <h3 class="anchored" data-anchor-id="generate-synthetic-panel-data">Generate Synthetic Panel Data</h3>
 <p>We create a balanced panel of 40 countries observed at 5-year intervals from 1990 to 2015. The data-generating process (DGP) follows a Barro-style growth equation with known true parameters, allowing us to verify that our estimation methods recover the correct coefficients.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="45b30e03" class="cell" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="af621139" class="cell" data-execution_count="2">
 <pre><code># --- Panel dimensions ---
 rng = np.random.default_rng(42)  # Reproducible random number generator
 n_countries = 40
@@ -428,7 +428,7 @@ Years: 1990–2015</code></pre>
 </div>
 </div>
 </div></div>
-<div id="0a4c3558" class="cell markdown">
+<div id="5c878d39" class="cell markdown">
 <p>The first rows show the panel structure: each country has one observation per period, with the same set of variables measured at each point in time.</p>
 <section id="exploratory-data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis">2. Exploratory Data Analysis</h2>
@@ -439,7 +439,7 @@ Years: 1990–2015</code></pre>
 </section>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="dc87d0e2" class="cell" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="dd230664" class="cell" data-execution_count="3">
 <pre><code># Define the variables and their human-readable labels
 vars_of_interest = [
     "gdp_growth", "ln_initial_gdp", "investment",
@@ -611,7 +611,7 @@ Markdown(desc.to_markdown(index=False))</code></pre>
 </table>
 </div>
 </div></div>
-<div id="60cd24f5" class="cell markdown">
+<div id="51bd09c9" class="cell markdown">
 <section id="gdp-growth-over-time" class="level3">
 <h3 class="anchored" data-anchor-id="gdp-growth-over-time">GDP Growth Over Time</h3>
 <p>Box plots are an effective way to visualize the <strong>distribution</strong> of a variable across groups. Here, each box represents the distribution of GDP growth rates across 40 countries in a given period. The box shows the interquartile range (IQR), the line inside is the median, and the whiskers extend to 1.5 × IQR.</p>
@@ -649,7 +649,7 @@ Distribution of GDP per capita growth rates by period.
 </div>
 </div>
 </div></div>
-<div id="4a7fc1f4" class="cell markdown">
+<div id="75bb00c3" class="cell markdown">
 <section id="convergence-growth-vs.-initial-income" class="level3">
 <h3 class="anchored" data-anchor-id="convergence-growth-vs.-initial-income">Convergence: Growth vs.&nbsp;Initial Income</h3>
 <p>The <strong>convergence hypothesis</strong> is a central prediction of neoclassical growth theory: countries with lower initial income should grow faster, leading to a negative relationship between initial GDP and subsequent growth. The scatter plot below tests this prediction visually, with a linear fit line showing the overall trend.</p>
@@ -691,7 +691,7 @@ Conditional convergence: GDP growth vs.&nbsp;initial income level.
 </div>
 </div>
 </div></div>
-<div id="06d1d2fe" class="cell markdown">
+<div id="e44c974d" class="cell markdown">
 <section id="correlation-matrix" class="level3">
 <h3 class="anchored" data-anchor-id="correlation-matrix">Correlation Matrix</h3>
 <p>Before estimating regressions, it is useful to examine the <strong>pairwise correlations</strong> between all variables. This helps identify:</p>
@@ -736,7 +736,7 @@ Pairwise correlations between panel variables.
 </div>
 </div></div>
 </section>
-<div id="b899001b" class="cell markdown">
+<div id="3f6080ac" class="cell markdown">
 <section id="panel-data-regressions" class="level2">
 <h2 class="anchored" data-anchor-id="panel-data-regressions">3. Panel Data Regressions</h2>
 <p>We now estimate the growth equation using <strong>panel fixed effects</strong> methods. The key idea: by including country fixed effects, we control for all time-invariant differences across countries (institutions, geography, culture). By including time fixed effects, we control for global shocks that affect all countries in a given period (oil crises, financial crises).</p>
@@ -754,7 +754,7 @@ Pairwise correlations between panel variables.
 </section>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="f1ef4b29" class="cell" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="9093c4ca" class="cell" data-execution_count="7">
 <pre><code>import pyfixest as pf
 
 # (1) Pooled OLS — no fixed effects; must specify clustering explicitly
@@ -784,13 +784,13 @@ fe_ct = pf.feols(
     data=panel,  # Auto-clusters by first FE (country)
 )</code></pre>
 </div></div>
-<div id="7c561354" class="cell markdown">
+<div id="9d98339e" class="cell markdown">
 <section id="build-and-export-regression-table" class="level3">
 <h3 class="anchored" data-anchor-id="build-and-export-regression-table">Build and Export Regression Table</h3>
 <p>The code below constructs a publication-style regression table with coefficients, standard errors, significance stars, fixed effects indicators, and fit statistics. The table is exported in three formats: Markdown (for the manuscript), LaTeX (for standalone use), and CSV (for data reuse).</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="5c3b0fa9" class="cell" data-execution_count="8">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="a2b145b3" class="cell" data-execution_count="8">
 <pre><code># --- Configuration ---
 models = [ols, fe_c, fe_t, fe_ct]
 model_names = ["OLS", "Country FE", "Time FE", "Two-way FE"]
