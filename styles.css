@@ -1,0 +1,76 @@
+/* Professional table styling for HTML output */
+table {
+  border-collapse: collapse;
+  width: auto;
+  margin: 1em 0;
+}
+th {
+  border-top: 2px solid #333;
+  border-bottom: 1px solid #333;
+  padding: 6px 12px;
+  font-weight: 600;
+  text-align: left;
+}
+td {
+  border-bottom: none;
+  padding: 4px 12px;
+}
+tr:last-child td {
+  border-bottom: 2px solid #333;
+}
+
+/* Table notes */
+.table-notes {
+  font-size: 0.85em;
+  color: #555;
+  margin-top: -0.5em;
+}
+
+/* --- Notebook presentation --- */
+
+/* Hide Jupyter "In [N]:" cell prompts */
+div.cell-decorator,
+.cell-container > .cell-decorator,
+.cell-decorator {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Code input blocks in notebook cells */
+.cell-container .cell > pre,
+div.cell > pre {
+  background-color: #f6f8fa !important;
+  border: 1px solid #e1e4e8 !important;
+  border-left: 3px solid #4C72B0 !important;
+  border-radius: 6px !important;
+  padding: 0.8em 1em !important;
+  overflow-x: auto;
+  font-size: 0.88em;
+  line-height: 1.5;
+}
+
+/* Code output blocks (stdout, stderr, display) */
+.cell-output pre {
+  background-color: #fafbfc !important;
+  border: 1px solid #e8e8e8 !important;
+  border-left: 3px solid #d0d0d0 !important;
+  border-radius: 6px !important;
+  padding: 0.8em 1em !important;
+  font-size: 0.88em;
+  line-height: 1.5;
+}
+
+/* Code blocks on manuscript page (Pandoc sourceCode) */
+div.sourceCode {
+  background-color: #f6f8fa !important;
+  border: 1px solid #e1e4e8 !important;
+  border-left: 3px solid #4C72B0 !important;
+  border-radius: 6px !important;
+}
+div.sourceCode pre {
+  padding: 0.8em 1em;
+  font-size: 0.88em;
+  line-height: 1.5;
+}

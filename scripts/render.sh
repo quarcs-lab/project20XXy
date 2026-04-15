@@ -4,8 +4,10 @@ cd "$(dirname "$0")/.."
 
 command -v quarto >/dev/null 2>&1 || { echo "ERROR: quarto not found"; exit 1; }
 
-# Clean caches and render
+# Clean caches and render (two passes: first generates table .md files,
+# second includes them correctly in the manuscript)
 rm -rf _freeze/ _manuscript/ .quarto/
+quarto render
 quarto render
 
 # Stage LaTeX for Overleaf sync

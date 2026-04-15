@@ -11,7 +11,7 @@
 - **Multi-language notebooks** — Python, R, and Stata in the same project, using Quarto notebooks (`.qmd`) — plain-text files with clean version control.
 - **Quarto manuscript** — A single source file (`index.qmd`) that embeds figures and tables from notebooks and renders to HTML, PDF, and Word simultaneously.
 - **Overleaf collaboration** — A sync workflow that lets LaTeX-only collaborators edit the manuscript in Overleaf while you keep working in Quarto.
-- **Reproducibility by design** — Shared seed configuration, locked dependencies, and raw data protection built into the project structure.
+- **Reproducibility by design** — Locked dependencies, protected raw data, and consistent random seeds.
 - **AI-assisted workflow** — Claude Code integration with 24 skills for rendering, notebook creation, session handoffs, LaTeX sync, and more.
 
 Clone this repository, fill in the `[FILL: ...]` placeholders, and start researching.
@@ -26,8 +26,8 @@ cd [FILL: project directory]
 # 2. Install Python dependencies
 uv sync
 
-# 3. Render the manuscript (executes notebooks + builds HTML + PDF + Word)
-quarto render
+# 3. Render the manuscript (two-pass render: executes notebooks + builds HTML, PDF, Word)
+bash scripts/render.sh
 
 # 4. View the output
 open _manuscript/index.html
@@ -39,7 +39,7 @@ open _manuscript/index.html
 
 ## How It Works
 
-The diagram below shows how the pieces fit together. Notebooks produce labeled figures and tables, the manuscript embeds them, and Quarto renders everything into final outputs. Collaborators who prefer LaTeX can edit via Overleaf, and their changes sync back into the Quarto source.
+Notebooks produce figures and tables. Figures are embedded directly in the manuscript via `{{< embed >}}`. Tables are exported as Markdown files and included via `{{< include >}}`. Quarto renders everything into HTML, PDF, and Word.
 
 ```mermaid
 flowchart LR
@@ -49,49 +49,33 @@ flowchart LR
         NB3["notebook-03.qmd<br/>(Stata)"]
     end
 
-    subgraph Manuscript ["Manuscript Source"]
-        QMD["index.qmd<br/>+ references.bib"]
+    subgraph Exports ["Exported outputs"]
+        IMG["images/<br/>PNG figures"]
+        TBL["tables/<br/>CSV + MD + LaTeX"]
     end
 
-    subgraph Render ["quarto render"]
+    subgraph Manuscript ["index.qmd"]
+        EMB["Figures via<br/>embed shortcode"]
+        INC["Tables via<br/>include shortcode"]
+    end
+
+    subgraph Output ["quarto render"]
         HTML["index.html"]
         PDF["index.pdf"]
         DOCX["index.docx"]
     end
 
-    subgraph Overleaf ["Overleaf Sync"]
-        TEX["latex/index.tex"]
-    end
-
-    NB1 -- embed --> QMD
-    NB2 -- embed --> QMD
-    NB3 -- embed --> QMD
-    QMD --> HTML
-    QMD --> PDF
-    QMD --> DOCX
-    QMD -- render.sh --> TEX
-    TEX -. sync-tex .-> QMD
+    NB1 --> IMG
+    NB1 --> TBL
+    NB2 --> TBL
+    NB3 --> TBL
+    IMG --> EMB
+    TBL --> INC
+    EMB --> Output
+    INC --> Output
 ```
 
----
-
-## Customizing This Template
-
-After cloning this repository for a new project, update these files:
-
-1. **`README.md`** — Replace all `[FILL:]` placeholders (title, description, objectives, methods, data)
-2. **`index.qmd`** — Set the manuscript title, authors, affiliations, abstract, and keywords
-3. **`pyproject.toml`** — Update `name`, `description`, and `authors`
-4. **`CLAUDE.md`** — Fill in the Project Context table (title, authors, stage, data source)
-5. **`_quarto.yml`** — Update notebook titles as you add new notebooks
-
-Search for all remaining placeholders:
-
-```bash
-grep -r "\[FILL:" --include="*.md" --include="*.qmd" --include="*.toml" --include="*.tex" .
-```
-
-> **Important:** After filling in `index.qmd`, run `bash scripts/render.sh` to regenerate `latex/index.tex`. The template ships with sample-content LaTeX that will be stale once you start your own project. Do this before connecting Overleaf.
+> **Why two passes?** The `scripts/render.sh` script runs `quarto render` twice. The first pass executes notebooks (generating table `.md` files in `tables/`). The second pass picks up those fresh files via `{{< include >}}` in the manuscript. A single `quarto render` may include stale table content.
 
 ---
 
@@ -105,14 +89,14 @@ grep -r "\[FILL:" --include="*.md" --include="*.qmd" --include="*.toml" --includ
 | R | R notebooks | If using R |
 | Stata | Stata notebooks | If using Stata |
 
-Verify your setup (all commands should return version numbers):
+Verify your setup:
 
 ```bash
 quarto --version        # >= 1.4
 uv --version            # any recent version
 python3 --version       # >= 3.12
-R --version             # optional, for R notebooks
-stata -v                # optional, for Stata notebooks
+R --version             # optional
+stata -v                # optional
 ```
 
 ---
@@ -122,18 +106,15 @@ stata -v                # optional, for Stata notebooks
 ### Python Environment
 
 ```bash
-# Create virtual environment and install all dependencies
-uv sync
-
-# The Python Jupyter kernel is installed automatically
+uv sync    # Creates .venv/ with locked dependencies from uv.lock
 ```
 
-This creates a `.venv/` with locked dependencies from `uv.lock`. All Python commands should be prefixed with `uv run` to use this environment.
+This installs the core scientific stack (numpy, pandas, matplotlib, seaborn), the `pyfixest` econometrics package, and the `nbstata` Stata kernel. All Python commands should be prefixed with `uv run`.
 
 ### R Kernel (IRkernel)
 
 ```bash
-R -e "install.packages(c('IRkernel', 'ggplot2', 'knitr'), repos='https://cloud.r-project.org')"
+R -e "install.packages(c('IRkernel', 'ggplot2', 'knitr', 'fixest'), repos='https://cloud.r-project.org')"
 R -e "IRkernel::installspec()"
 ```
 
@@ -141,15 +122,13 @@ Verify: `jupyter kernelspec list` should show `ir`.
 
 ### Stata Kernel (nbstata)
 
-> **Important:** Use **nbstata**, not the legacy `stata_kernel` (which has a graph-capture bug).
+> Use **nbstata**, not the legacy `stata_kernel` (which has a graph-capture bug with Stata 19+).
 
 ```bash
-# nbstata is already in pyproject.toml — uv sync installs it
-# Just register the Jupyter kernel:
-uv run python -m nbstata.install
+uv run python -m nbstata.install    # Register the kernel
 ```
 
-Then create the configuration file at `~/.config/nbstata/nbstata.conf`:
+Create `~/.config/nbstata/nbstata.conf`:
 
 ```ini
 [nbstata]
@@ -157,41 +136,22 @@ stata_dir = /Applications/Stata
 edition = se
 ```
 
-Adjust `stata_dir` and `edition` for your OS and Stata version (`be`, `se`, or `mp`). See [notebooks/README.md](notebooks/README.md) for platform-specific paths.
+Adjust `stata_dir` and `edition` (`be`, `se`, or `mp`) for your system. Verify: `jupyter kernelspec list` should show `nbstata`.
 
-Verify: `jupyter kernelspec list` should show `nbstata`.
-
-### Installing Packages
-
-Each language has its own package manager. To ensure packages are available inside the correct notebook kernel, use the commands below.
-
-**Python** — managed by `uv`, which keeps `pyproject.toml` and `uv.lock` in sync:
-
-```bash
-uv add numpy pandas          # Add packages (updates pyproject.toml + uv.lock)
-uv remove pandas             # Remove a package
-uv sync                      # Reinstall from lockfile (e.g., after pulling)
-```
-
-All packages installed by `uv` are available in the project's `.venv/`, which is the same environment the Python Jupyter kernel uses. Never use `pip install` directly — it bypasses the lockfile.
-
-**R** — use `install.packages()` from an R session:
-
-```r
-install.packages(c("dplyr", "tidyr"), repos = "https://cloud.r-project.org")
-```
-
-R packages are installed into your system or user R library, which the IR kernel picks up automatically. For project-level isolation, consider using [renv](https://rstudio.github.io/renv/).
-
-**Stata** — packages are installed via `ssc install` or `net install` from within a Stata session or notebook cell:
+Install required Stata packages from a Stata session or notebook:
 
 ```stata
-ssc install estout
 ssc install reghdfe
-net install ftools, from("https://raw.githubusercontent.com/sergiocorreia/ftools/master/src/")
+ssc install estout
 ```
 
-Stata packages are installed into your system Stata `ado/plus/` directory, which the nbstata kernel uses directly. No additional configuration is needed.
+### Adding Packages
+
+| Language | Command | Notes |
+| -------- | ------- | ----- |
+| Python | `uv add <package>` | Updates `pyproject.toml` + `uv.lock`. Never use `pip install`. |
+| R | `install.packages("pkg")` | System-level. Use [renv](https://rstudio.github.io/renv/) for isolation. |
+| Stata | `ssc install <package>` | System-level `ado/plus/` directory. |
 
 ---
 
@@ -203,160 +163,134 @@ The manuscript lives in `index.qmd`. It uses standard Markdown with Quarto exten
 
 - **Sections** with cross-reference IDs: `## Introduction {#sec-introduction}`
 - **Citations** from `references.bib`: `@key` (narrative) or `[@key]` (parenthetical)
-- **Embedded outputs** from notebooks: `{{< embed notebooks/notebook-01.qmd#fig-sample >}}`
-
-You write prose in `index.qmd` and keep computational work in the notebooks. The embed shortcodes pull figures and tables from notebooks into the manuscript at render time.
+- **Figures** from notebooks: `{{< embed notebooks/notebook-01.qmd#fig-label >}}`
+- **Tables** from exported files: `{{< include tables/tbl-label.md >}}`
 
 ### Rendering
 
 ```bash
-# Render all formats (HTML, PDF, Word) → outputs in _manuscript/
-quarto render
-
-# Render a single format
-quarto render index.qmd --to html
-quarto render index.qmd --to pdf
-quarto render index.qmd --to docx
-
-# Clean render (clears all caches first, also stages LaTeX for Overleaf)
+# Recommended: two-pass clean render (all formats + Overleaf staging)
 bash scripts/render.sh
+
+# Quick single-notebook render (for development)
+quarto render notebooks/notebook-01.qmd
+
+# Single-format render
+quarto render index.qmd --to html
 ```
 
-The clean render script (`scripts/render.sh`) removes `_freeze/`, `_manuscript/`, and `.quarto/` before rendering, ensuring a fresh build. It also copies the generated LaTeX to `latex/` for the Overleaf workflow (skipped gracefully if PDF format is disabled).
-
-The script can be called from any directory — it automatically `cd`s to the project root.
+The render script clears caches, runs `quarto render` twice (to pick up fresh table includes), and copies LaTeX to `latex/` for Overleaf.
 
 ```mermaid
 flowchart TD
-    A["bash scripts/render.sh"] --> B["Clear caches<br/>_freeze/, _manuscript/, .quarto/"]
-    B --> C["quarto render<br/>(HTML + PDF + Word)"]
-    C --> D["_manuscript/<br/>index.html, index.pdf, index.docx"]
-    C --> E["Copy to latex/<br/>index.tex + .baseline.tex"]
+    A["bash scripts/render.sh"] --> B["Clear caches"]
+    B --> C["Pass 1: quarto render<br/>(execute notebooks, generate table .md files)"]
+    C --> D["Pass 2: quarto render<br/>(include fresh tables in manuscript)"]
+    D --> E["Outputs: HTML + PDF + Word"]
+    D --> F["LaTeX staged for Overleaf"]
 ```
 
 ---
 
 ## Notebook Workflow
 
+### Content Structure
+
+Each notebook is a **tutorial** that follows three sections:
+
+1. **Data Import** — Load data, inspect panel structure, show dimensions
+2. **Exploratory Data Analysis** — Descriptive statistics (initial vs final period), visualizations (box plots, scatter plots, correlation heatmap)
+3. **Regression Analysis** — Fixed effects models with professional multi-column tables
+
+Include pedagogical markdown text between code blocks explaining what the code does, why it matters, and how to interpret the output.
+
 ### Creating Notebooks
 
-Notebooks use Quarto's native `.qmd` format — plain-text files with YAML frontmatter and fenced code blocks. They follow sequential naming: `notebook-01.qmd`, `notebook-02.qmd`, etc.
+Use `/project:new-notebook` in Claude Code, or manually:
 
-Each notebook specifies its Jupyter kernel in the YAML frontmatter:
+1. Create `notebooks/notebook-NN.qmd` with YAML frontmatter (`title` and `jupyter` kernel)
+2. Set the random seed in the first code cell (see [Reproducibility](#reproducibility))
+3. Register in `_quarto.yml` under `manuscript.notebooks`
 
-| Notebook | Language | Kernel (`jupyter:` value) |
-| --- | --- | --- |
-| `notebook-01.qmd` | Python | `python3` |
-| `notebook-02.qmd` | R | `ir` |
-| `notebook-03.qmd` | Stata | `nbstata` |
+### Exporting Figures
 
-Example frontmatter:
+All figures: **6 inches wide x 4 inches tall**, 300 DPI.
 
-```yaml
----
-title: "N4: My Analysis"
-jupyter: python3
----
-```
+| Language | Export command |
+| -------- | ------------- |
+| Python | `fig.savefig("../images/<label>.png", dpi=300, bbox_inches="tight")` |
+| R | `ggsave("../images/<label>.png", plot = p, width = 6, height = 4, dpi = 300)` |
+| Stata | `quietly graph export "../images/<label>.png", replace width(1800)` |
 
-To create a new notebook, use the Claude Code command `/project:new-notebook`, or manually:
+### Exporting Tables
 
-1. Create a `.qmd` file with the appropriate kernel in the YAML frontmatter
-2. Add a setup cell that sets the random seed for reproducibility (see [Reproducibility](#reproducibility))
-3. Register it in `_quarto.yml` under `manuscript.notebooks` (the `project.render` wildcard `notebooks/*.qmd` picks up new notebooks automatically)
+Every table must be exported in **three formats**: CSV, Markdown, and LaTeX.
 
-### Rendering Notebooks
+| Format | Python | R | Stata |
+| ------ | ------ | - | ----- |
+| CSV | `df.to_csv("../tables/<label>.csv")` | `write.csv(result, "../tables/<label>.csv")` | `export delimited` |
+| Markdown | `df.to_markdown()` → write to `.md` | `knitr::kable(format = "pipe")` → write to `.md` | `file write` |
+| LaTeX | `df.to_latex("../tables/<label>.tex")` | `knitr::kable(format = "latex", booktabs = TRUE)` → write to `.tex` | `file write` with booktabs |
 
-Notebooks are rendered by Quarto, which handles execution automatically via `freeze: auto`:
+### Embedding in the Manuscript
 
-```bash
-# Render a single notebook
-quarto render notebooks/notebook-01.qmd
-
-# Render the full manuscript (renders all notebooks + manuscript)
-quarto render
-
-# Clean render (clears caches first)
-bash scripts/render.sh
-```
-
-### Embedding Outputs in the Manuscript
-
-To embed a figure or table from a notebook into `index.qmd`, you need two things:
-
-**1. A labeled cell in the notebook:**
-
-All languages use the `#|` (hash-pipe) prefix for cell options in `.qmd` fenced code blocks:
-
-```python
-#| label: fig-my-plot
-#| fig-cap: "Descriptive caption for the figure"
-import matplotlib.pyplot as plt
-plt.plot(x, y)
-plt.show()
-```
-
-> **Stata restriction:** Do NOT use the `tbl-` label prefix for Stata cells that produce text output (e.g., `tabstat`, `summarize`). The `tbl-` prefix triggers Quarto's table parser, which crashes on Stata's plain-text output. Use a plain label instead (e.g., `stata-summary`).
-
-**2. An embed shortcode in `index.qmd`:**
+**Figures** use `{{< embed >}}` — Quarto extracts the figure output from the notebook:
 
 ```markdown
-{{< embed notebooks/notebook-01.qmd#fig-my-plot >}}
+{{< embed notebooks/notebook-01.qmd#fig-convergence >}}
 ```
 
-The label after `#` must match the cell label exactly.
+**Tables** use `{{< include >}}` — Quarto includes the exported Markdown file:
 
-```mermaid
-flowchart LR
-    A["Notebook cell<br/>label: fig-sample"] --> B["quarto render"]
-    B --> C["Output cached<br/>in _freeze/"]
-    C --> D["Embed shortcode<br/>in index.qmd"]
-    D --> E["quarto render<br/>Figure in manuscript"]
+```markdown
+**Table 1: Descriptive statistics.**
+
+{{< include tables/tbl-descriptive.md >}}
+
+::: {.table-notes}
+*Note:* Explanation of variables, units, and data source.
+:::
 ```
+
+> **Why different methods?** Quarto's `{{< embed >}}` works well for figures (image outputs) but cannot reliably extract markdown display outputs from notebook cells. Tables are exported as `.md` files and included directly, which renders correctly in HTML, PDF, and Word.
+
+### Regression Tables
+
+Build multi-column regression tables **manually as pipe-delimited Markdown**. Do not use `pf.etable(type="md")`, `etable(markdown=TRUE)`, or `esttab md` — their output does not render correctly in the Quarto manuscript.
+
+A typical regression table includes:
+
+- Header row with column numbers and model names
+- Coefficient with significance stars (\*\*\* p<0.01, \*\* p<0.05, \* p<0.10)
+- Standard errors in parentheses
+- Separator row between coefficients and metadata
+- Fixed effects indicators (Yes/No)
+- Observations and R-squared
+- Table notes explaining clustering and significance conventions
+
+See the existing notebooks for complete working examples.
 
 ---
 
 ## Overleaf Collaboration
 
-For collaborators who prefer editing in LaTeX, the project supports a sync workflow with [Overleaf](https://www.overleaf.com/) via GitHub integration.
-
-### Workflow Overview
+For collaborators who prefer LaTeX, the project supports a sync workflow with [Overleaf](https://www.overleaf.com/) via GitHub integration.
 
 ```mermaid
 flowchart TD
-    A["1. Render locally<br/>bash scripts/render.sh"] --> B["latex/index.tex + .baseline.tex<br/>created"]
+    A["1. Render locally<br/>bash scripts/render.sh"] --> B["latex/index.tex created"]
     B --> C["2. Push to GitHub<br/>Overleaf pulls index.tex"]
-    C --> D["3. Collaborator edits<br/>prose in Overleaf"]
-    D --> E["4. Pull changes<br/>from GitHub"]
-    E --> F["5. Run sync-tex<br/>Diff baseline vs edited"]
-    F --> G["6. Re-render to verify<br/>quarto render"]
+    C --> D["3. Collaborator edits in Overleaf"]
+    D --> E["4. Pull changes from GitHub"]
+    E --> F["5. Run /project:sync-tex<br/>Diff and apply to index.qmd"]
+    F --> G["6. Re-render to verify"]
 ```
-
-### Step by Step
-
-1. **Render** — Run `bash scripts/render.sh` to generate `latex/index.tex` (the file Overleaf will use) and `latex/.baseline.tex` (a local-only snapshot for diffing later).
-2. **Push** — Push to GitHub. Overleaf's GitHub sync pulls `latex/index.tex`.
-3. **Collaborator edits** — Your collaborator edits the manuscript body in Overleaf.
-4. **Pull** — After the collaborator pushes from Overleaf, pull the changes back to your local repo.
-5. **Transfer** — Run `/project:sync-tex` (Claude Code command) to diff the baseline against the edited file and apply prose changes to `index.qmd`. LaTeX formatting is automatically converted:
-
-   | LaTeX | Quarto Markdown |
-   | ----- | --------------- |
-   | `\textbf{text}` | `**text**` |
-   | `\emph{text}` | `*text*` |
-   | `\citep{key}` | `[@key]` |
-   | `\citet{key}` | `@key` |
-   | `\footnote{text}` | `^[text]` |
-   | `\href{url}{text}` | `[text](url)` |
-
-6. **Re-render** — Run `quarto render` to verify everything renders cleanly.
 
 ### Constraints
 
-- **Prose only** — Only text edits in the manuscript body are transferred. `{{< embed >}}` shortcodes are preserved exactly as-is.
-- **Captions are not synced** — Figure and table captions live in notebook cells and cannot be recovered from the compiled LaTeX.
-- **Preamble is ignored** — Everything before `\begin{document}` is auto-generated by Quarto. Collaborator edits to the preamble are discarded.
-- **Baseline is local** — `latex/.baseline.tex` is gitignored. Each collaborator diffs against their own last render.
+- **Prose only** — Only text edits are transferred. `{{< embed >}}` shortcodes are preserved.
+- **Captions are not synced** — Figure/table captions live in notebook cells.
+- **Preamble is ignored** — Everything before `\begin{document}` is auto-generated by Quarto.
 
 ---
 
@@ -364,63 +298,23 @@ flowchart TD
 
 ### Seeds
 
-Every notebook should set the random seed in its first cell to ensure reproducible results:
+Set the random seed in the first code cell of every notebook:
 
-**Python:**
-
-```python
-import random
-import numpy as np
-random.seed(42)
-np.random.seed(42)
-```
-
-**R:**
-
-```r
-set.seed(42)
-```
-
-**Stata:**
-
-```stata
-clear all
-set seed 42
-```
+| Language | Code |
+| -------- | ---- |
+| Python | `random.seed(42)` and `np.random.seed(42)` |
+| R | `set.seed(42)` |
+| Stata | `set seed 42` |
 
 ### Dependencies
 
-Python dependencies are locked via `uv` (`pyproject.toml` + `uv.lock`), R packages use the system library (or `renv` for isolation), and Stata packages are installed into the system `ado/` directory. See [Installing Packages](#installing-packages) for commands.
+- **Python:** Locked via `uv` (`pyproject.toml` + `uv.lock`)
+- **R:** System library or [renv](https://rstudio.github.io/renv/) for isolation
+- **Stata:** System `ado/` directory
 
 ### Credentials
 
-API keys and secrets go in `.env` (gitignored). Never store secrets anywhere else. Never commit `.env` to git.
-
----
-
-## References and Citations
-
-References are managed with [Zotero](https://www.zotero.org/) and exported to `references.bib` at the project root.
-
-In `index.qmd`, cite with standard Pandoc syntax:
-
-```markdown
-As shown by @key            # narrative: "As shown by Author (2024)"
-As shown in the data [@key] # parenthetical: "As shown in the data (Author, 2024)"
-```
-
-Annotation notes on papers can be stored as Markdown files in `references/`.
-
----
-
-## Presentations
-
-Slide decks are built with Quarto (revealjs format) in the `slides/` directory. See [slides/README.md](slides/README.md) for the style guide, color conventions, and naming patterns.
-
-```bash
-# Render a presentation
-quarto render slides/your-presentation.qmd
-```
+API keys and secrets go in `.env` (gitignored). Never commit `.env` to git.
 
 ---
 
@@ -428,119 +322,88 @@ quarto render slides/your-presentation.qmd
 
 ### Directories
 
-| Directory | Purpose | Key Contents |
-| --------- | ------- | ------------ |
-| `notebooks/` | Computational notebooks | Quarto notebooks (`.qmd`) in Python, R, and Stata. Outputs are embedded in the manuscript via `{{< embed >}}`. |
-| `data/` | Processed datasets | Transformed data produced by notebooks or scripts. |
-| `data/rawData/` | Raw source data | **Never modify these files.** This is the source of truth for all analyses. |
-| `code/` | Standalone scripts | R, Python, or Stata scripts that run outside notebooks. |
-| `images/` | Figures and plots | Output figures. Naming convention: `fig01-description.png`. |
-| `tables/` | Output tables | LaTeX, CSV, or other table formats. Naming: `tab01-description.csv`. |
-| `latex/` | Overleaf sync staging | `index.tex` (tracked, shared with Overleaf) + `.baseline.tex` (gitignored, for diffing). See [Overleaf Collaboration](#overleaf-collaboration). |
-| `slides/` | Quarto presentations | Revealjs slide decks. See [slides/README.md](slides/README.md). |
-| `references/` | Annotated bibliography | Markdown notes on papers cited in the project. |
-| `notes/` | Research notes | Brainstorming, ideas, meeting notes. |
-| `templates/` | Project templates | User templates and resources. |
-| `scripts/` | Build utilities | `render.sh` — clean render pipeline with Overleaf staging. |
-| `handoffs/` | Session logs | Timestamped Markdown reports (`YYYYMMDD_HHMM.md`) for cross-session continuity. |
-| `legacy/` | Archived materials | Old versions of files moved here instead of being deleted. |
-| `_manuscript/` | Rendered outputs | **Auto-generated** (gitignored). Contains HTML, PDF, Word, and notebook preview pages. |
-| `.claude/skills/` | Claude Code skills | 24 skills organized by category (build, creation, writing, references, audits, session). Each has a `SKILL.md` with YAML frontmatter. See [Available Skills](#available-skills). |
+| Directory | Purpose |
+| --------- | ------- |
+| `notebooks/` | Quarto notebooks (`.qmd`) in Python, R, and Stata |
+| `data/` | Datasets (`panel_growth.csv` is the sample panel dataset) |
+| `data/rawData/` | Raw source data — **never modify** |
+| `images/` | Exported figures (PNG, 6x4 inches, 300 DPI) |
+| `tables/` | Exported tables (CSV + Markdown + LaTeX) |
+| `code/` | Standalone scripts outside notebooks |
+| `latex/` | Overleaf sync staging (`index.tex` + `.baseline.tex`) |
+| `slides/` | Quarto revealjs presentations |
+| `references/` | Annotated bibliography notes |
+| `notes/` | Research notes and brainstorming |
+| `scripts/` | Build utilities (`render.sh`) |
+| `handoffs/` | Session handoff reports (`YYYYMMDD_HHMM.md`) |
+| `legacy/` | Archived old files (never deleted, always moved here) |
+| `_manuscript/` | Rendered outputs — **auto-generated**, gitignored |
 
 ### Root-Level Files
 
-| File | What It Does | When to Edit |
-| ---- | ------------ | ------------ |
-| `index.qmd` | Main manuscript source — prose, section structure, embed shortcodes, bibliography | When writing or editing the manuscript |
-| `_quarto.yml` | Quarto project configuration — output formats, notebook registrations, render settings | When adding new notebooks or changing output settings |
-| `references.bib` | BibTeX bibliography (exported from Zotero) | When adding or updating references |
-| `pyproject.toml` | Python project metadata and dependencies | When adding Python packages (`uv add`) |
-| `uv.lock` | Locked dependency versions (auto-generated by `uv`) | Never edit manually — updated by `uv sync` / `uv add` |
-| `.python-version` | Pins Python to 3.12 for `uv` | Only if upgrading Python |
-| `.gitignore` | Git ignore rules | When adding new file types to exclude |
-| `.env` | API keys and secrets (**gitignored**) | When adding credentials (never commit this file) |
-| `CLAUDE.md` | Instructions for Claude Code AI assistant | When updating project context or AI workflow rules |
+| File | Purpose |
+| ---- | ------- |
+| `index.qmd` | Main manuscript source |
+| `_quarto.yml` | Quarto config (formats, notebooks, theme: `cosmo`, highlight: `github`) |
+| `styles.css` | Custom HTML styling (tables, code blocks, notebook layout) |
+| `references.bib` | BibTeX bibliography (from Zotero) |
+| `pyproject.toml` | Python dependencies (includes `pyfixest`, `nbstata`) |
+| `uv.lock` | Locked dependency versions (auto-generated) |
+| `.python-version` | Pins Python to 3.12 |
+| `.gitignore` | Git ignore rules |
+| `.env` | API keys and secrets (**gitignored**) |
+| `CLAUDE.md` | Instructions for Claude Code AI assistant |
 
 ---
 
-## Data
+## Customizing This Template
 
-[FILL: Describe the data sources, how to obtain them, and where to place raw files in `data/rawData/`.]
+After cloning for a new project:
+
+1. **`README.md`** — Replace all `[FILL:]` placeholders
+2. **`index.qmd`** — Set title, authors, abstract, keywords
+3. **`pyproject.toml`** — Update `name`, `description`, `authors`
+4. **`CLAUDE.md`** — Fill in the Project Context table
+5. **`_quarto.yml`** — Update notebook titles as you add new notebooks
+
+Search for remaining placeholders:
+
+```bash
+grep -r "\[FILL:" --include="*.md" --include="*.qmd" --include="*.toml" .
+```
+
+### Theme and Styling
+
+The HTML output uses the `cosmo` Bootstrap theme with `github` syntax highlighting. To change:
+
+```yaml
+# In _quarto.yml
+format:
+  html:
+    theme: cosmo              # Try: flatly, journal, lux, simplex
+    highlight-style: github    # Try: atom-one, dracula, nord, monokai
+    css: styles.css            # Custom table and code block styling
+```
 
 ---
 
 ## Workflow with Claude Code
 
-This template includes [Claude Code](https://claude.com/claude-code) integration for AI-assisted research workflows. The `CLAUDE.md` file provides project context and behavioral rules for the AI assistant.
+This template includes [Claude Code](https://claude.com/claude-code) integration with 24 skills. Type `/project:<name>` to invoke.
 
 ### Available Skills
 
-Skills are defined in [`.claude/skills/`](.claude/skills/). Each skill lives in its own directory with a `SKILL.md` file containing instructions and YAML frontmatter (description, allowed tools, argument hints). Type `/project:<name>` in Claude Code to invoke a skill.
+| Category | Skills |
+| -------- | ------ |
+| **Build & Execution** | `/project:render`, `/project:execute`, `/project:init`, `/project:sync-tex` |
+| **Notebook Creation** | `/project:new-notebook`, `/project:new-analysis`, `/project:new-slide-deck` |
+| **Writing & Results** | `/project:draft-section`, `/project:abstract`, `/project:interpret-results`, `/project:regression-table`, `/project:robustness-table`, `/project:referee-response` |
+| **References & Data** | `/project:cite`, `/project:literature-note`, `/project:codebook` |
+| **Quality Checks** | `/project:bib-check`, `/project:data-audit`, `/project:freeze-check`, `/project:check-env`, `/project:submission-prep`, `/project:figures-gallery` |
+| **Session Management** | `/project:handoff`, `/project:env-snapshot` |
 
-#### Build & Execution
-
-These skills have side effects (running pipelines, modifying files) and can only be invoked manually.
-
-| Skill | What It Does | Definition |
-| ----- | ------------ | ---------- |
-| `/project:render` | Clean render of the manuscript (HTML + PDF + Word) via `scripts/render.sh` | [SKILL.md](.claude/skills/render/SKILL.md) |
-| `/project:execute` | Execute all registered notebooks via Quarto | [SKILL.md](.claude/skills/execute/SKILL.md) |
-| `/project:init` | Fill all `[FILL:]` placeholders across the template for a new project | [SKILL.md](.claude/skills/init/SKILL.md) |
-| `/project:sync-tex` | Transfer collaborator LaTeX edits from Overleaf back into `index.qmd` | [SKILL.md](.claude/skills/sync-tex/SKILL.md) |
-
-#### Notebook & Presentation Creation
-
-These skills create new files. They accept arguments (shown when you type the command).
-
-| Skill | What It Does | Definition |
-| ----- | ------------ | ---------- |
-| `/project:new-notebook` | Create a Quarto notebook (`.qmd`) and register it in `_quarto.yml` | [SKILL.md](.claude/skills/new-notebook/SKILL.md) |
-| `/project:new-analysis` | Scaffold a method-specific analysis notebook (DiD, IV, RDD, LASSO, Panel FE) | [SKILL.md](.claude/skills/new-analysis/SKILL.md) |
-| `/project:new-slide-deck` | Create a revealjs slide deck in `slides/` with the project style guide | [SKILL.md](.claude/skills/new-slide-deck/SKILL.md) |
-
-#### Writing & Results
-
-Skills for drafting prose, interpreting output, and formatting tables.
-
-| Skill | What It Does | Definition |
-| ----- | ------------ | ---------- |
-| `/project:draft-section` | Draft manuscript section prose from bullet points or an outline | [SKILL.md](.claude/skills/draft-section/SKILL.md) |
-| `/project:abstract` | Generate a structured abstract from the current manuscript content | [SKILL.md](.claude/skills/abstract/SKILL.md) |
-| `/project:interpret-results` | Write academic prose interpreting regression output for `index.qmd` | [SKILL.md](.claude/skills/interpret-results/SKILL.md) |
-| `/project:regression-table` | Format estimation output as a publication-quality regression table | [SKILL.md](.claude/skills/regression-table/SKILL.md) |
-| `/project:robustness-table` | Generate robustness check code and format a combined results table | [SKILL.md](.claude/skills/robustness-table/SKILL.md) |
-| `/project:referee-response` | Draft a point-by-point response letter to referee comments | [SKILL.md](.claude/skills/referee-response/SKILL.md) |
-
-#### References & Data
-
-Skills for managing citations, literature notes, and data documentation.
-
-| Skill | What It Does | Definition |
-| ----- | ------------ | ---------- |
-| `/project:cite` | Find a paper, add BibTeX entry to `references.bib`, show citation syntax | [SKILL.md](.claude/skills/cite/SKILL.md) |
-| `/project:literature-note` | Create a structured annotation note for a paper in `references/` | [SKILL.md](.claude/skills/literature-note/SKILL.md) |
-| `/project:codebook` | Auto-generate a variable codebook from a dataset | [SKILL.md](.claude/skills/codebook/SKILL.md) |
-
-#### Quality Checks & Audits
-
-Read-only skills that scan files and report findings. Claude can invoke these automatically when relevant.
-
-| Skill | What It Does | Definition |
-| ----- | ------------ | ---------- |
-| `/project:bib-check` | Audit citations in `index.qmd` against `references.bib` for mismatches | [SKILL.md](.claude/skills/bib-check/SKILL.md) |
-| `/project:data-audit` | Scan notebooks for data file references and verify paths exist on disk | [SKILL.md](.claude/skills/data-audit/SKILL.md) |
-| `/project:freeze-check` | Verify all registered notebooks have current outputs before rendering | [SKILL.md](.claude/skills/freeze-check/SKILL.md) |
-| `/project:check-env` | Verify all required tools, kernels, and dependencies are installed | [SKILL.md](.claude/skills/check-env/SKILL.md) |
-| `/project:submission-prep` | Run pre-submission checks and generate a journal submission checklist | [SKILL.md](.claude/skills/submission-prep/SKILL.md) |
-| `/project:figures-gallery` | Generate an HTML gallery page of all project figures with captions | [SKILL.md](.claude/skills/figures-gallery/SKILL.md) |
-
-#### Session Management
-
-| Skill | What It Does | Definition |
-| ----- | ------------ | ---------- |
-| `/project:handoff` | Write a session handoff report to `handoffs/` | [SKILL.md](.claude/skills/handoff/SKILL.md) |
-| `/project:env-snapshot` | Save a full environment snapshot to `notes/` for reproducibility | [SKILL.md](.claude/skills/env-snapshot/SKILL.md) |
+Skills are defined in [`.claude/skills/`](.claude/skills/). Each has a `SKILL.md` with instructions and YAML frontmatter.
 
 ### Session Continuity
 
-Handoff reports in `handoffs/` preserve context across sessions. Each report includes the project state, work completed, decisions made, and next steps. Claude reads the most recent handoff at the start of every session to pick up where the last session left off.
+Handoff reports in `handoffs/` preserve context across sessions. Each report includes the project state, work completed, decisions made, and next steps. Claude reads the most recent handoff at the start of every session.

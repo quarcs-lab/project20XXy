@@ -33,69 +33,85 @@ bibliography: references.bib
 
 ## Introduction {#sec-introduction}
 
-Regional economic disparities remain a central concern in development economics.
-Understanding the relationship between GDP per capita and life expectancy
-across regions is critical for designing **effective policy interventions**.
+Understanding the determinants of economic growth across countries remains a central question in development economics. Following the seminal work of @keola2015monitoring, a large empirical literature has examined how initial conditions, physical and human capital accumulation, and trade affect growth trajectories.
 
-This paper uses a novel synthetic dataset to examine these patterns,
-employing both parametric and non-parametric methods [@keola2015monitoring].
+This paper uses a synthetic panel dataset of 40 countries over six five-year periods (1990--2015) to investigate the determinants of GDP per capita growth. We employ panel data fixed effects methods to account for unobserved country-specific heterogeneity and common time shocks.
 
-Our results suggest a strong positive correlation between economic output
-and health outcomes, with significant heterogeneity across geographic clusters.
+This study contributes to the literature in two ways. First, we provide a multi-language reproducible workflow demonstrating panel data analysis in Python, R, and Stata. Second, we show how modern tools can enhance transparency in empirical research.
 
-This study contributes to the literature in two ways. First, we provide
-a multi-language reproducible workflow. Second, we demonstrate how
-*modern tools* can enhance transparency in empirical research.
-
-The rest of this article is organized as follows.
-@sec-literature provides an overview of the related literature.
-@sec-data introduces the data and methods.
-@sec-results presents the results and discussion.
-Finally, @sec-conclusion offers some concluding remarks.
+The rest of this article is organized as follows. @sec-literature provides an overview of the related literature. @sec-data introduces the data and methods. @sec-results presents the results and discussion. Finally, @sec-conclusion offers some concluding remarks.
 
 ## Related literature {#sec-literature}
 
-The relationship between income and health has been extensively studied
-since the seminal work of @keola2015monitoring. Recent advances
-in spatial econometrics have enabled more nuanced analyses of regional
-disparities^[See also the World Bank regional development reports.].
+The relationship between initial income and subsequent growth --- the convergence hypothesis --- has been extensively studied since the seminal work of @keola2015monitoring. Recent advances in panel data econometrics have enabled more nuanced analyses that control for unobserved heterogeneity across countries^[See also the World Bank regional development reports.].
 
 ## Data and methods {#sec-data}
 
-[FILL: Describe the data sources, variables, and sample.]
-
-[FILL: Explain the analytical methods and models used.]
-
 ### Data
 
-[FILL: Describe the dataset. Include sources, time period, and key variables.]
+We use a balanced panel of 40 countries observed at five-year intervals from 1990 to 2015 (240 country-period observations). The dataset includes GDP per capita growth as the dependent variable and five regressors: log initial GDP per capita (capturing convergence), investment share, years of schooling, population growth, and trade openness. Full details on data construction are provided in [N1: Panel Data Analysis (Python)](notebooks/notebook-01.qmd).
 
-The following figure, generated in [N1: Sample Data Exploration](notebooks/notebook-01.qmd), provides an overview of the data.
+The following figure shows the distribution of GDP growth rates across the six time periods.
 
-{{< embed notebooks/notebook-01.qmd#fig-sample >}}
+{{< embed notebooks/notebook-01.qmd#fig-growth-time >}}
 
-The following table reports summary statistics by region.
+The convergence hypothesis predicts a negative relationship between initial income and subsequent growth. The following scatter plot illustrates this pattern in our data.
 
-{{< embed notebooks/notebook-01.qmd#tbl-summary >}}
+{{< embed notebooks/notebook-01.qmd#fig-convergence >}}
 
-The same analysis is replicated in R ([N2: Sample R Analysis](notebooks/notebook-02.qmd)) and Stata ([N3: Sample Stata Analysis](notebooks/notebook-03.qmd)) to
-demonstrate multi-language support.
+The correlation structure of the panel variables is summarized below, showing the pairwise relationships that motivate our regression specification.
 
-{{< embed notebooks/notebook-02.qmd#fig-r-sample >}}
+{{< embed notebooks/notebook-01.qmd#fig-correlation >}}
 
-{{< embed notebooks/notebook-02.qmd#tbl-r-summary >}}
+The following table reports descriptive statistics at the beginning and end of the sample period, highlighting how the panel evolves over time.
 
-{{< embed notebooks/notebook-03.qmd#fig-stata-sample >}}
+**Table 1: Descriptive statistics — initial and final period.**
 
-{{< embed notebooks/notebook-03.qmd#stata-summary >}}
+{{< include tables/tbl-descriptive.md >}}
+
+::: {.table-notes}
+*Note:* Summary statistics for 40 countries at two points in time (1990 and 2015). GDP growth in percentage points. Investment and trade openness as shares of GDP. IQR = interquartile range.
+:::
 
 ### Methods
 
-[FILL: Describe the econometric or statistical methods.]
+We estimate the following growth equation using panel data fixed effects:
+
+$$
+\text{Growth}_{it} = \beta_1 \ln \text{GDP}_{it} + \beta_2 \text{Investment}_{it} + \beta_3 \text{Schooling}_{it} + \beta_4 \text{PopGrowth}_{it} + \beta_5 \text{Trade}_{it} + \alpha_i + \gamma_t + \varepsilon_{it}
+$$
+
+where $\alpha_i$ captures country fixed effects and $\gamma_t$ captures time fixed effects. We report four specifications: pooled OLS, country FE, time FE, and two-way FE. Standard errors are clustered by country in all models.
 
 ## Results and discussion {#sec-results}
 
-[FILL: Present and interpret the main findings.]
+The following table presents the main regression results estimated using Python (`pyfixest`). We progressively add fixed effects to control for unobserved heterogeneity.
+
+**Table 2: Determinants of economic growth — panel fixed effects estimates (Python).**
+
+{{< include tables/tbl-regression.md >}}
+
+::: {.table-notes}
+*Note:* Dependent variable: GDP per capita growth rate (%). All regressions include a constant (not reported). Standard errors clustered by country in parentheses. Significance levels: \* p<0.10, \*\* p<0.05, \*\*\* p<0.01.
+:::
+
+The results are replicated in R ([N2](notebooks/notebook-02.qmd)) and Stata ([N3](notebooks/notebook-03.qmd)) to demonstrate multi-language reproducibility.
+
+**Table 3: Determinants of economic growth — panel fixed effects estimates (R).**
+
+{{< include tables/tbl-r-regression.md >}}
+
+::: {.table-notes}
+*Note:* Same specification as Table 2, estimated using R `fixest`. All regressions include a constant (not reported). Standard errors clustered by country.
+:::
+
+**Table 4: Determinants of economic growth — panel fixed effects estimates (Stata).**
+
+{{< include tables/tbl-stata-regression.md >}}
+
+::: {.table-notes}
+*Note:* Same specification as Table 2, estimated using Stata `reghdfe`. All regressions include a constant (not reported). Standard errors clustered by country.
+:::
 
 [FILL: Discuss implications and compare with existing literature.]
 

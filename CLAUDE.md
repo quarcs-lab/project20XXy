@@ -43,12 +43,16 @@ These are non-negotiable behavioral constraints.
 | Path | Purpose |
 | ---- | ------- |
 | `index.qmd` | Main manuscript source |
-| `_quarto.yml` | Quarto config (formats, notebook registrations) |
+| `_quarto.yml` | Quarto config (formats, notebook registrations, theme) |
+| `styles.css` | Custom HTML styling (tables, code blocks, notebook layout) |
 | `references.bib` | Bibliography (from Zotero) |
-| `pyproject.toml` / `uv.lock` | Python dependencies |
-| `notebooks/` | Quarto notebooks (`.qmd`) |
+| `pyproject.toml` / `uv.lock` | Python dependencies (includes `pyfixest`) |
+| `notebooks/` | Quarto notebooks (`.qmd`) — Python, R, Stata |
+| `data/panel_growth.csv` | Synthetic panel dataset (40 countries × 6 periods) |
+| `images/` | Exported figures (PNG, 300 DPI, 6×4 inches) |
+| `tables/` | Exported tables (CSV + Markdown + LaTeX) |
 | `data/rawData/` | Raw source data (never modify) |
-| `scripts/render.sh` | Clean render + Overleaf staging |
+| `scripts/render.sh` | Two-pass clean render + Overleaf staging |
 | `handoffs/` | Session handoff reports |
 | `.claude/skills/` | 24 skill definitions (SKILL.md with YAML frontmatter) |
 | `.env` | API keys and secrets (gitignored, never commit) |
@@ -107,10 +111,104 @@ Invoke with `/project:<name>`. See `README.md` § Available Skills for full desc
 See `README.md` § Manuscript Workflow and § Notebook Workflow for full details.
 
 ```bash
-bash scripts/render.sh                                      # clean render (all formats)
+bash scripts/render.sh                                      # two-pass clean render (all formats)
 quarto render notebooks/<file>.qmd                           # render individual notebook
 uv add <package>                                             # add Python package (NEVER use pip)
 ```
+
+---
+
+## Notebook Conventions
+
+Every notebook must follow these patterns. See existing notebooks for reference.
+
+### Content Structure
+
+Each notebook is a **tutorial** that follows three sections:
+
+1. **Data Import** -- Load data, show panel structure, verify dimensions
+2. **Exploratory Data Analysis** -- Descriptive statistics table (compare initial vs final period), visualizations (box plots, scatter plots, correlation heatmap)
+3. **Panel Data Regressions** -- Fixed effects models (OLS, Country FE, Time FE, Two-way FE)
+
+Include **pedagogical markdown text** between code blocks explaining:
+- What the code does and why
+- How to interpret the output
+- Key methodological concepts (convergence, fixed effects, clustering)
+
+### Kernel and Seed
+
+Each `.qmd` notebook has YAML frontmatter with `title` and `jupyter` kernel:
+
+- **Python:** `` ```{python} `` with `jupyter: python3`
+- **R:** `` ```{r} `` with `jupyter: ir`
+- **Stata:** `` ```{stata} `` with `jupyter: nbstata`
+
+Set the random seed in the first code cell:
+
+- **Python:** `random.seed(42)` and `np.random.seed(42)`
+- **R:** `set.seed(42)`
+- **Stata:** `set seed 42`
+
+### Exporting Figures
+
+All figures: **6 inches wide × 4 inches tall**, 300 DPI, exported to `../images/`:
+
+- **Python:** `fig, ax = plt.subplots(figsize=(6, 4))` then `fig.savefig("../images/<label>.png", dpi=300, bbox_inches="tight")`
+- **R:** `ggsave("../images/<label>.png", plot = p, width = 6, height = 4, dpi = 300)`
+- **Stata:** `quietly graph export "../images/<label>.png", replace width(1800)`
+
+### Exporting Tables
+
+Export every table to `../tables/` in **three formats** (CSV + Markdown + LaTeX):
+
+- **Python:**
+  ```
+  df.to_csv("../tables/<label>.csv", index=False)
+  with open("../tables/<label>.md", "w") as f:
+      f.write(df.to_markdown(index=False))
+  df.to_latex("../tables/<label>.tex", index=False, float_format="%.2f")
+  ```
+- **R:**
+  ```
+  write.csv(result, "../tables/<label>.csv", row.names = FALSE)
+  writeLines(knitr::kable(result, format = "pipe"), "../tables/<label>.md")
+  writeLines(knitr::kable(result, format = "latex", booktabs = TRUE), "../tables/<label>.tex")
+  ```
+- **Stata:** Use `export delimited` for CSV, `file write` for Markdown and LaTeX (with booktabs)
+
+### Regression Tables
+
+Build multi-column regression tables **manually** as pipe-delimited Markdown. Do NOT rely on `pf.etable(type="md")` or `etable(markdown=TRUE)` or `esttab md` — their output doesn't render correctly in Quarto manuscripts. Instead, extract coefficients, SEs, and p-values from model objects and construct the table row by row.
+
+Each regression table should include:
+- Coefficient + significance stars (*** p<0.01, ** p<0.05, * p<0.10)
+- Standard errors in parentheses
+- Separator row between coefficients and metadata
+- Fixed effects indicators (Yes/No)
+- Observations and R-squared
+- Table notes explaining clustering and significance levels
+
+### Embedding in Manuscript
+
+**Figures** use `{{< embed >}}` shortcodes in `index.qmd`:
+
+```markdown
+{{< embed notebooks/notebook-01.qmd#fig-growth-time >}}
+```
+
+**Tables** use `{{< include >}}` to pull the exported Markdown file:
+
+```markdown
+**Table 1: Caption text.**
+
+{{< include tables/tbl-descriptive.md >}}
+
+::: {.table-notes}
+*Note:* Explanation text here.
+:::
+```
+
+Do NOT use `{{< embed >}}` for tables — Quarto cannot extract markdown display outputs from notebook cells. Do NOT use `#| label: tbl-*` on table cells in notebooks — it conflicts with the `{{< include >}}` approach.
 
 ---
 
@@ -118,9 +216,10 @@ uv add <package>                                             # add Python packag
 
 These are non-obvious pitfalls. See `README.md` for full context.
 
+- **Two-pass render required** -- `scripts/render.sh` runs `quarto render` twice. The first pass executes notebooks (generating table `.md` files); the second pass includes the fresh files in the manuscript via `{{< include >}}`
 - **Register new notebooks** in `_quarto.yml` under `manuscript.notebooks`
 - **All languages use `#|`** for cell options in `.qmd` fenced code blocks (including Stata)
-- **Never use `tbl-` prefix** for Stata text output cells -- it triggers Quarto's table parser and crashes. Use a plain label (e.g., `stata-summary`)
+- **Never use `tbl-` prefix** for Stata text output cells (e.g., `tabstat`, `summarize`) -- it triggers Quarto's table parser and crashes. This does NOT apply to properly formatted markdown tables
 - **Never use `pip install`** -- it bypasses the lockfile. Always use `uv add`
-- **Avoid `@fig-`/`@tbl-` cross-refs** to `{{< embed >}}`-ed notebook content -- use plain prose instead (avoids "Unable to resolve crossref" warnings)
-- **Credentials** go in `.env` only. Never commit secrets to git.
+- **HTML theme** -- `cosmo` theme with `github` syntax highlighting, configured in `_quarto.yml`
+- **Credentials** go in `.env` only. Never commit secrets to git

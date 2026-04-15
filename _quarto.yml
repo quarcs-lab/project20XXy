@@ -10,20 +10,23 @@ manuscript:
   article: index.qmd
   notebooks:
     - notebook: notebooks/notebook-01.qmd
-      title: "N1: Sample Data Exploration"
+      title: "Example of Python Analysis"
     - notebook: notebooks/notebook-02.qmd
-      title: "N2: Sample R Analysis"
+      title: "Example of R Analysis"
     - notebook: notebooks/notebook-03.qmd
-      title: "N3: Sample Stata Analysis"
+      title: "Example of Stata Analysis"
 
 format:
   html:
+    theme: cosmo
+    highlight-style: github
     toc: true
     toc-depth: 3
     code-fold: false
     code-tools: true
     lightbox: true
     citation-location: document
+    css: styles.css
 
   pdf:
     documentclass: scrartcl

@@ -13,6 +13,8 @@ dependencies = [
     "pandas>=2.2.0",
     "matplotlib>=3.8.2",
     "seaborn>=0.13.2",
+    # Econometrics
+    "pyfixest>=0.25.0",
     # Stata kernel
     "nbstata>=0.8.6",
 ]
