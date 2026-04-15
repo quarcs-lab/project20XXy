@@ -24,6 +24,7 @@ _manuscript/*
 !_manuscript/index.html
 !_manuscript/index.pdf
 !_manuscript/index.docx
+!_manuscript/index.llms.md
 !_manuscript/notebooks/
 _manuscript/notebooks/*
 !_manuscript/notebooks/*-preview.html

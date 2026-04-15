@@ -10,6 +10,9 @@ rm -rf _freeze/ _manuscript/ .quarto/
 quarto render
 quarto render
 
+# Generate LLM-friendly markdown (clean text from LaTeX, no HTML artifacts)
+quarto pandoc _manuscript/_tex/index.tex -f latex -t gfm-raw_html -o _manuscript/index.llms.md --wrap=none
+
 # Stage LaTeX for Overleaf sync
 mkdir -p latex
 if [ -f "_manuscript/_tex/index.tex" ]; then
