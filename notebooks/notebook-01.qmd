@@ -33,6 +33,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# Inline/embedded figures emit both SVG (HTML — no browser-side raster
+# downsampling, crisp at any zoom) and retina PNG (PDF/DOCX fallback; Quarto's
+# PDF pipeline picks the PNG since SVG → PDF would require rsvg-convert).
+# The ../images/*.png savefig outputs (300 DPI raster) are unaffected.
+%config InlineBackend.figure_formats = ["svg", "png"]
+%config InlineBackend.print_figure_kwargs = {"bbox_inches": "tight"}
+
 # Set seeds for reproducibility across all random number generators
 random.seed(42)
 np.random.seed(42)
@@ -57,10 +64,6 @@ plt.rcParams.update({
     "axes.labelsize": 10,
     "figure.facecolor": "white",
     "axes.facecolor": "white",
-    "figure.dpi": 150,              # Higher inline/embedded DPI so text doesn't
-                                    # alias into visible horizontal halos at
-                                    # default ~100 DPI (savefig still uses its
-                                    # own dpi=300 kwarg).
 })
 ```
 
