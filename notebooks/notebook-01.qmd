@@ -37,15 +37,16 @@ import seaborn as sns
 random.seed(42)
 np.random.seed(42)
 
-# Configure a minimal plotting theme: no spines, light gridlines, white background
+# Configure a minimal plotting theme: no spines, light gridlines, white background.
+# Gridlines are OFF by default and opted into per-plot with ax.grid(...) — a global
+# "axes.grid: True" bled horizontal lines through the correlation heatmap's cells.
 plt.rcParams.update({
     "axes.spines.top": False,       # Remove top border
     "axes.spines.right": False,     # Remove right border
     "axes.spines.left": False,      # Remove left border
     "axes.spines.bottom": False,    # Remove bottom border
-    "axes.grid": True,              # Show gridlines
-    "axes.grid.axis": "y",          # Gridlines on y-axis only (by default)
-    "grid.color": "#E0E0E0",        # Light gray gridlines
+    "axes.grid": False,             # Off by default; enable explicitly per Axes
+    "grid.color": "#E0E0E0",        # Light gray gridlines (when enabled)
     "grid.linewidth": 0.5,
     "axes.edgecolor": "#333333",
     "axes.linewidth": 0.5,
@@ -205,6 +206,7 @@ sns.boxplot(
     ax=ax,
 )
 ax.axhline(y=0, color="#999999", linewidth=0.4, linestyle="--")  # Zero-growth reference
+ax.grid(axis="y", color="#E0E0E0", linewidth=0.5)  # Horizontal reference lines
 ax.set_xlabel("Year")
 ax.set_ylabel("GDP growth (%)")
 plt.tight_layout()

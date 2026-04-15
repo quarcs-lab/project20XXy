@@ -37,6 +37,44 @@ open _manuscript/index.html
 
 ---
 
+## Using This Template
+
+If you've just forked or cloned this repo and want to turn it into your own project, run through the checklist below in order. Each step links to a deeper section if you need details.
+
+1. **Install the toolchain.** Quarto >= 1.9, `uv`, Python 3.12, and (optionally) R + Stata. See [Requirements](#requirements).
+2. **Install Python deps.** `uv sync`. See [Python Environment](#python-environment).
+3. **Install kernels you'll use.** [R kernel](#r-kernel-irkernel) and/or [Stata kernel](#stata-kernel-nbstata). Skip either if you don't need it — the pipeline runs with Python alone.
+4. **Verify the environment.** In Claude Code, run `/project:check-env` to confirm every required tool and kernel is reachable.
+5. **Render once from a clean clone** to confirm everything works end-to-end:
+
+   ```bash
+   bash scripts/render.sh
+   open _manuscript/index.html
+   ```
+
+   You should see the demo manuscript render with all figures and tables.
+
+6. **Fill in your project metadata.** Run `/project:init`, or edit by hand:
+   - `README.md` — replace `[FILL: …]` placeholders at the top
+   - `index.qmd` — set title, authors, abstract, keywords in the YAML header
+   - `CLAUDE.md` — complete the **Project Context** table (Title, Authors, Stage, Data source)
+   - `pyproject.toml` — update `name`, `description`, `authors`
+
+   Find remaining placeholders at any time:
+
+   ```bash
+   grep -r "\[FILL:" --include="*.md" --include="*.qmd" --include="*.toml" .
+   ```
+
+7. **Bring in your data.** Put raw inputs in `data/rawData/` (never modified afterwards per CLAUDE.md rule #3) and document provenance in `data/rawData/README.md`. The demo `data/panel_growth.csv` is synthetic — move it to `legacy/` when you replace it.
+8. **Replace or repurpose the sample notebooks.** The three notebooks in `notebooks/` are a panel-FE tutorial in Python, R, and Stata against the synthetic panel. Keep them as a reference, replace them with your analyses via `/project:new-notebook` or `/project:new-analysis`, and register anything new in `_quarto.yml` under `manuscript.notebooks`.
+9. **Clear the template's session history.** Archive or delete everything in `handoffs/` so forkers start with their own context.
+10. **Populate `references.bib`** from Zotero (or add entries one at a time with `/project:cite`). Run `/project:bib-check` to catch orphan / missing citations.
+
+Once these are done, the remaining sections below (Manuscript Workflow, Notebook Workflow, Overleaf Collaboration, Reproducibility) describe the day-to-day loop.
+
+---
+
 ## How It Works
 
 Notebooks produce figures and tables. Figures are embedded directly in the manuscript via `{{< embed >}}`. Tables are exported as Markdown files and included via `{{< include >}}`. Quarto renders everything into HTML, PDF, and Word.
