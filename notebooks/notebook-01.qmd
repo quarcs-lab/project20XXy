@@ -57,6 +57,10 @@ plt.rcParams.update({
     "axes.labelsize": 10,
     "figure.facecolor": "white",
     "axes.facecolor": "white",
+    "figure.dpi": 150,              # Higher inline/embedded DPI so text doesn't
+                                    # alias into visible horizontal halos at
+                                    # default ~100 DPI (savefig still uses its
+                                    # own dpi=300 kwarg).
 })
 ```
 
@@ -273,9 +277,12 @@ sns.heatmap(
     linewidths=0, cbar_kws={"shrink": 0.8},
     ax=ax,
 )
-# seaborn.heatmap re-enables the grid on its Axes regardless of rcParams,
-# so we have to disable it explicitly here or horizontal lines bleed through.
+# Kill two distinct sources of horizontal lines through cells:
+# (1) seaborn.heatmap re-enables the Axes grid regardless of rcParams.
+# (2) QuadMesh anti-aliasing leaves sub-pixel gaps between cells at low DPI
+#     (visible in the inline/embedded figure, not the 300-DPI savefig).
 ax.grid(False)
+ax.collections[0].set_edgecolor("face")
 ax.tick_params(axis="both", length=0)
 ax.set_xticklabels(labels, rotation=45, ha="right")
 plt.tight_layout()

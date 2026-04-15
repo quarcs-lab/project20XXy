@@ -245,7 +245,7 @@
 <section id="data-import" class="level2">
 <h2 class="anchored" data-anchor-id="data-import">1. Data Import</h2>
 <p>In Stata, panel data must be explicitly declared using <code>xtset</code>. This tells Stata which variable identifies the entities (countries) and which variable identifies time periods. The <code>delta(5)</code> option indicates that observations are spaced 5 years apart.</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="1536d82b" class="cell" data-execution_count="1">
+<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="66116e2e" class="cell" data-execution_count="1">
 <pre><code>* Clear memory and set the random seed for reproducibility
 clear all
 set seed 42
@@ -291,7 +291,7 @@ Sorted by: country  year
 </div>
 </div></div>
 </section>
-<div id="65aac80a" class="cell markdown">
+<div id="e629c987" class="cell markdown">
 <section id="exploratory-data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis">2. Exploratory Data Analysis</h2>
 <section id="descriptive-statistics" class="level3">
@@ -300,7 +300,7 @@ Sorted by: country  year
 </section>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="d01df146" class="cell" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="c49e0347" class="cell" data-execution_count="2">
 <pre><code>* Define the variables and their labels for the table
 local varlist "gdp_growth ln_initial_gdp investment schooling pop_growth trade_openness"
 local labels `" "GDP growth" "Log initial GDP" "Investment" "Schooling" "Pop. growth" "Trade openness" "'
@@ -377,13 +377,13 @@ type "../tables/tbl-stata-descriptive.md"</code></pre>
 | Trade openness (2015) | 54.82 | 51.49 | 19.70 | 26.22 | 22.44 | 106.18 |</code></pre>
 </div>
 </div></div>
-<div id="08ae5af0" class="cell markdown">
+<div id="ca7f0fc3" class="cell markdown">
 <section id="gdp-growth-over-time" class="level3">
 <h3 class="anchored" data-anchor-id="gdp-growth-over-time">GDP Growth Over Time</h3>
 <p>Box plots show the distribution of GDP growth across 40 countries within each period. The box spans the interquartile range, the line inside marks the median, and the dashed line at zero separates positive from negative growth.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="74502608" class="cell" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="9dbef9bf" class="cell" data-execution_count="3">
 <pre><code>#| label: fig-stata-growth-time
 #| fig-cap: "Distribution of GDP per capita growth rates by period (Stata)."
 
@@ -403,13 +403,13 @@ quietly graph export "../images/fig-stata-growth-time.png", replace width(1800)<
 </div>
 </div>
 </div></div>
-<div id="10205009" class="cell markdown">
+<div id="ffd1c813" class="cell markdown">
 <section id="convergence-growth-vs.-initial-income" class="level3">
 <h3 class="anchored" data-anchor-id="convergence-growth-vs.-initial-income">Convergence: Growth vs.&nbsp;Initial Income</h3>
 <p>The convergence hypothesis predicts a negative relationship between initial income and subsequent growth. The scatter plot shows individual observations and an OLS fit line summarizing the average relationship.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="44758286" class="cell" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="ab2924a2" class="cell" data-execution_count="4">
 <pre><code>#| label: fig-stata-convergence
 #| fig-cap: "Conditional convergence: GDP growth vs. initial income level (Stata)."
 
@@ -432,13 +432,13 @@ quietly graph export "../images/fig-stata-convergence.png", replace width(1800)<
 </div>
 </div>
 </div></div>
-<div id="b437864b" class="cell markdown">
+<div id="b4d5f2d1" class="cell markdown">
 <section id="correlation-matrix" class="level3">
 <h3 class="anchored" data-anchor-id="correlation-matrix">Correlation Matrix</h3>
 <p>Stata’s <code>correlate</code> command displays the pairwise correlation matrix. This helps identify which variables are most strongly associated with GDP growth and whether any regressors are highly correlated with each other (a sign of multicollinearity).</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="34738999" class="cell" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="83104ade" class="cell" data-execution_count="5">
 <pre><code>#| label: fig-stata-correlation
 #| fig-cap: "Pairwise correlations between panel variables (Stata)."
 
@@ -457,7 +457,7 @@ trade_open~s |   0.0915   0.0637   0.0778  -0.0542   0.0135   1.0000
 </code></pre>
 </div>
 </div></div>
-<div id="8718c193" class="cell markdown">
+<div id="da758dc2" class="cell markdown">
 <section id="panel-data-regressions" class="level2">
 <h2 class="anchored" data-anchor-id="panel-data-regressions">3. Panel Data Regressions</h2>
 <p>We estimate the growth equation using Stata’s <code>reghdfe</code> package, which efficiently absorbs high-dimensional fixed effects. Unlike the standard <code>xtreg</code> command, <code>reghdfe</code> can handle multiple sets of fixed effects simultaneously.</p>
@@ -474,7 +474,7 @@ trade_open~s |   0.0915   0.0637   0.0778  -0.0542   0.0135   1.0000
 </section>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="45fa1298" class="cell" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="50229c26" class="cell" data-execution_count="6">
 <pre><code>* Clear any previously stored estimation results
 eststo clear
 
@@ -626,13 +626,13 @@ Absorbed degrees of freedom:
 * = FE nested within cluster; treated as redundant for DoF computation</code></pre>
 </div>
 </div></div>
-<div id="ef73fad9" class="cell markdown">
+<div id="da11423b" class="cell markdown">
 <section id="export-regression-tables" class="level3">
 <h3 class="anchored" data-anchor-id="export-regression-tables">Export Regression Tables</h3>
 <p>We export the regression results in three formats. The <code>esttab</code> command (from the <code>estout</code> package) handles LaTeX and CSV natively. For Markdown output, we build the table manually using <code>file write</code>.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="69d9e0e9" class="cell" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="0fa0dd7e" class="cell" data-execution_count="7">
 <pre><code>* --- Export LaTeX table ---
 * booktabs: professional horizontal rules (\toprule, \midrule, \bottomrule)
 * fragment: omit \begin{table} wrapper (for inclusion in other documents)
@@ -658,7 +658,7 @@ esttab m1 m2 m3 m4 using "../tables/tbl-stata-regression.csv", replace ///
 (output written to ../tables/tbl-stata-regression.csv)</code></pre>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="8c2b54a5" class="cell" data-execution_count="8">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="326ef21b" class="cell" data-execution_count="8">
 <pre><code>* --- Build Markdown regression table manually ---
 * esttab does not produce clean pipe-delimited Markdown, so we construct
 * the table row-by-row using file write
