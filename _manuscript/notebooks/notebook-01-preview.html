@@ -246,7 +246,7 @@
 <section id="setup" class="level3">
 <h3 class="anchored" data-anchor-id="setup">Setup</h3>
 <p>We begin by loading the required libraries and setting the random seed for reproducibility. The plotting theme is configured to produce clean, minimal figures similar to ggplot2’s <code>theme_minimal</code>.</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="18c307ec" class="cell" data-execution_count="1">
+<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="bfb438be" class="cell" data-execution_count="1">
 <pre><code># Core data manipulation and visualization libraries
 import random
 import numpy as np
@@ -281,13 +281,13 @@ plt.rcParams.update({
 })</code></pre>
 </div></div>
 </section>
-<div id="60f64a13" class="cell markdown">
+<div id="439e55b9" class="cell markdown">
 <section id="generate-synthetic-panel-data" class="level3">
 <h3 class="anchored" data-anchor-id="generate-synthetic-panel-data">Generate Synthetic Panel Data</h3>
 <p>We create a balanced panel of 40 countries observed at 5-year intervals from 1990 to 2015. The data-generating process (DGP) follows a Barro-style growth equation with known true parameters, allowing us to verify that our estimation methods recover the correct coefficients.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="2d4a5720" class="cell" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="0bd1884a" class="cell" data-execution_count="2">
 <pre><code># --- Panel dimensions ---
 rng = np.random.default_rng(42)  # Reproducible random number generator
 n_countries = 40
@@ -431,7 +431,7 @@ Years: 1990–2015</code></pre>
 </div>
 </div>
 </div></div>
-<div id="fd6b1397" class="cell markdown">
+<div id="f22e3842" class="cell markdown">
 <p>The first rows show the panel structure: each country has one observation per period, with the same set of variables measured at each point in time.</p>
 <section id="exploratory-data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis">2. Exploratory Data Analysis</h2>
@@ -442,7 +442,7 @@ Years: 1990–2015</code></pre>
 </section>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="dcc01353" class="cell" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="65ffa533" class="cell" data-execution_count="3">
 <pre><code># Define the variables and their human-readable labels
 vars_of_interest = [
     "gdp_growth", "ln_initial_gdp", "investment",
@@ -614,7 +614,7 @@ Markdown(desc.to_markdown(index=False))</code></pre>
 </table>
 </div>
 </div></div>
-<div id="482c3c0f" class="cell markdown">
+<div id="51799e11" class="cell markdown">
 <section id="gdp-growth-over-time" class="level3">
 <h3 class="anchored" data-anchor-id="gdp-growth-over-time">GDP Growth Over Time</h3>
 <p>Box plots are an effective way to visualize the <strong>distribution</strong> of a variable across groups. Here, each box represents the distribution of GDP growth rates across 40 countries in a given period. The box shows the interquartile range (IQR), the line inside is the median, and the whiskers extend to 1.5 × IQR.</p>
@@ -653,7 +653,7 @@ Distribution of GDP per capita growth rates by period.
 </div>
 </div>
 </div></div>
-<div id="aab33ad0" class="cell markdown">
+<div id="9c12df49" class="cell markdown">
 <section id="convergence-growth-vs.-initial-income" class="level3">
 <h3 class="anchored" data-anchor-id="convergence-growth-vs.-initial-income">Convergence: Growth vs.&nbsp;Initial Income</h3>
 <p>The <strong>convergence hypothesis</strong> is a central prediction of neoclassical growth theory: countries with lower initial income should grow faster, leading to a negative relationship between initial GDP and subsequent growth. The scatter plot below tests this prediction visually, with a linear fit line showing the overall trend.</p>
@@ -695,7 +695,7 @@ Conditional convergence: GDP growth vs.&nbsp;initial income level.
 </div>
 </div>
 </div></div>
-<div id="a8498ab8" class="cell markdown">
+<div id="f1895917" class="cell markdown">
 <section id="correlation-matrix" class="level3">
 <h3 class="anchored" data-anchor-id="correlation-matrix">Correlation Matrix</h3>
 <p>Before estimating regressions, it is useful to examine the <strong>pairwise correlations</strong> between all variables. This helps identify:</p>
@@ -721,6 +721,9 @@ sns.heatmap(
     linewidths=0, cbar_kws={"shrink": 0.8},
     ax=ax,
 )
+# seaborn.heatmap re-enables the grid on its Axes regardless of rcParams,
+# so we have to disable it explicitly here or horizontal lines bleed through.
+ax.grid(False)
 ax.tick_params(axis="both", length=0)
 ax.set_xticklabels(labels, rotation=45, ha="right")
 plt.tight_layout()
@@ -740,7 +743,7 @@ Pairwise correlations between panel variables.
 </div>
 </div></div>
 </section>
-<div id="2ed3da26" class="cell markdown">
+<div id="9ed92021" class="cell markdown">
 <section id="panel-data-regressions" class="level2">
 <h2 class="anchored" data-anchor-id="panel-data-regressions">3. Panel Data Regressions</h2>
 <p>We now estimate the growth equation using <strong>panel fixed effects</strong> methods. The key idea: by including country fixed effects, we control for all time-invariant differences across countries (institutions, geography, culture). By including time fixed effects, we control for global shocks that affect all countries in a given period (oil crises, financial crises).</p>
@@ -758,7 +761,7 @@ Pairwise correlations between panel variables.
 </section>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="f94ae59f" class="cell" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="290c6960" class="cell" data-execution_count="7">
 <pre><code>import pyfixest as pf
 
 # (1) Pooled OLS — no fixed effects; must specify clustering explicitly
@@ -788,13 +791,13 @@ fe_ct = pf.feols(
     data=panel,  # Auto-clusters by first FE (country)
 )</code></pre>
 </div></div>
-<div id="b12daa87" class="cell markdown">
+<div id="b5b25f10" class="cell markdown">
 <section id="build-and-export-regression-table" class="level3">
 <h3 class="anchored" data-anchor-id="build-and-export-regression-table">Build and Export Regression Table</h3>
 <p>The code below constructs a publication-style regression table with coefficients, standard errors, significance stars, fixed effects indicators, and fit statistics. The table is exported in three formats: Markdown (for the manuscript), LaTeX (for standalone use), and CSV (for data reuse).</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="36dea1bc" class="cell" data-execution_count="8">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="3c42f37e" class="cell" data-execution_count="8">
 <pre><code># --- Configuration ---
 models = [ols, fe_c, fe_t, fe_ct]
 model_names = ["OLS", "Country FE", "Time FE", "Two-way FE"]
@@ -1714,147 +1717,150 @@ Markdown(md_out)</code></pre>
 <span id="cb10-285"><a href="#cb10-285" aria-hidden="true" tabindex="-1"></a>    linewidths<span class="op">=</span><span class="dv">0</span>, cbar_kws<span class="op">=</span>{<span class="st">"shrink"</span>: <span class="fl">0.8</span>},</span>
 <span id="cb10-286"><a href="#cb10-286" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax,</span>
 <span id="cb10-287"><a href="#cb10-287" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-288"><a href="#cb10-288" aria-hidden="true" tabindex="-1"></a>ax.tick_params(axis<span class="op">=</span><span class="st">"both"</span>, length<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb10-289"><a href="#cb10-289" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(labels, rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">"right"</span>)</span>
-<span id="cb10-290"><a href="#cb10-290" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb10-291"><a href="#cb10-291" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">"../images/fig-correlation.png"</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
-<span id="cb10-292"><a href="#cb10-292" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb10-293"><a href="#cb10-293" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-294"><a href="#cb10-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-295"><a href="#cb10-295" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Panel Data Regressions</span></span>
-<span id="cb10-296"><a href="#cb10-296" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-297"><a href="#cb10-297" aria-hidden="true" tabindex="-1"></a>We now estimate the growth equation using **panel fixed effects** methods.</span>
-<span id="cb10-298"><a href="#cb10-298" aria-hidden="true" tabindex="-1"></a>The key idea: by including country fixed effects, we control for all</span>
-<span id="cb10-299"><a href="#cb10-299" aria-hidden="true" tabindex="-1"></a>time-invariant differences across countries (institutions, geography,</span>
-<span id="cb10-300"><a href="#cb10-300" aria-hidden="true" tabindex="-1"></a>culture). By including time fixed effects, we control for global shocks</span>
-<span id="cb10-301"><a href="#cb10-301" aria-hidden="true" tabindex="-1"></a>that affect all countries in a given period (oil crises, financial crises).</span>
-<span id="cb10-302"><a href="#cb10-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-303"><a href="#cb10-303" aria-hidden="true" tabindex="-1"></a>We compare four specifications:</span>
-<span id="cb10-304"><a href="#cb10-304" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-305"><a href="#cb10-305" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Pooled OLS** — ignores the panel structure (baseline)</span>
-<span id="cb10-306"><a href="#cb10-306" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Country FE** — absorbs country-specific intercepts</span>
-<span id="cb10-307"><a href="#cb10-307" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Time FE** — absorbs period-specific intercepts</span>
-<span id="cb10-308"><a href="#cb10-308" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Two-way FE** — absorbs both country and time effects</span>
-<span id="cb10-309"><a href="#cb10-309" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-310"><a href="#cb10-310" aria-hidden="true" tabindex="-1"></a>In all models, standard errors are **clustered by country** to account</span>
-<span id="cb10-311"><a href="#cb10-311" aria-hidden="true" tabindex="-1"></a>for serial correlation within countries over time.</span>
+<span id="cb10-288"><a href="#cb10-288" aria-hidden="true" tabindex="-1"></a><span class="co"># seaborn.heatmap re-enables the grid on its Axes regardless of rcParams,</span></span>
+<span id="cb10-289"><a href="#cb10-289" aria-hidden="true" tabindex="-1"></a><span class="co"># so we have to disable it explicitly here or horizontal lines bleed through.</span></span>
+<span id="cb10-290"><a href="#cb10-290" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">False</span>)</span>
+<span id="cb10-291"><a href="#cb10-291" aria-hidden="true" tabindex="-1"></a>ax.tick_params(axis<span class="op">=</span><span class="st">"both"</span>, length<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb10-292"><a href="#cb10-292" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(labels, rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">"right"</span>)</span>
+<span id="cb10-293"><a href="#cb10-293" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb10-294"><a href="#cb10-294" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">"../images/fig-correlation.png"</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
+<span id="cb10-295"><a href="#cb10-295" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb10-296"><a href="#cb10-296" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-297"><a href="#cb10-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-298"><a href="#cb10-298" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Panel Data Regressions</span></span>
+<span id="cb10-299"><a href="#cb10-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-300"><a href="#cb10-300" aria-hidden="true" tabindex="-1"></a>We now estimate the growth equation using **panel fixed effects** methods.</span>
+<span id="cb10-301"><a href="#cb10-301" aria-hidden="true" tabindex="-1"></a>The key idea: by including country fixed effects, we control for all</span>
+<span id="cb10-302"><a href="#cb10-302" aria-hidden="true" tabindex="-1"></a>time-invariant differences across countries (institutions, geography,</span>
+<span id="cb10-303"><a href="#cb10-303" aria-hidden="true" tabindex="-1"></a>culture). By including time fixed effects, we control for global shocks</span>
+<span id="cb10-304"><a href="#cb10-304" aria-hidden="true" tabindex="-1"></a>that affect all countries in a given period (oil crises, financial crises).</span>
+<span id="cb10-305"><a href="#cb10-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-306"><a href="#cb10-306" aria-hidden="true" tabindex="-1"></a>We compare four specifications:</span>
+<span id="cb10-307"><a href="#cb10-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-308"><a href="#cb10-308" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Pooled OLS** — ignores the panel structure (baseline)</span>
+<span id="cb10-309"><a href="#cb10-309" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Country FE** — absorbs country-specific intercepts</span>
+<span id="cb10-310"><a href="#cb10-310" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Time FE** — absorbs period-specific intercepts</span>
+<span id="cb10-311"><a href="#cb10-311" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Two-way FE** — absorbs both country and time effects</span>
 <span id="cb10-312"><a href="#cb10-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-313"><a href="#cb10-313" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estimation</span></span>
-<span id="cb10-314"><a href="#cb10-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-315"><a href="#cb10-315" aria-hidden="true" tabindex="-1"></a>We use the <span class="in">`pyfixest`</span> package, which provides R-style formula syntax.</span>
-<span id="cb10-316"><a href="#cb10-316" aria-hidden="true" tabindex="-1"></a>Fixed effects are specified after the <span class="in">`|`</span> operator (e.g., <span class="in">`| country`</span>).</span>
-<span id="cb10-317"><a href="#cb10-317" aria-hidden="true" tabindex="-1"></a>When FE are present, <span class="in">`pyfixest`</span> automatically clusters standard errors</span>
-<span id="cb10-318"><a href="#cb10-318" aria-hidden="true" tabindex="-1"></a>by the first fixed effect.</span>
-<span id="cb10-319"><a href="#cb10-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-322"><a href="#cb10-322" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb10-323"><a href="#cb10-323" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyfixest <span class="im">as</span> pf</span>
-<span id="cb10-324"><a href="#cb10-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-325"><a href="#cb10-325" aria-hidden="true" tabindex="-1"></a><span class="co"># (1) Pooled OLS — no fixed effects; must specify clustering explicitly</span></span>
-<span id="cb10-326"><a href="#cb10-326" aria-hidden="true" tabindex="-1"></a>ols <span class="op">=</span> pf.feols(</span>
-<span id="cb10-327"><a href="#cb10-327" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gdp_growth ~ ln_initial_gdp + investment + schooling + pop_growth + trade_openness"</span>,</span>
-<span id="cb10-328"><a href="#cb10-328" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>panel,</span>
-<span id="cb10-329"><a href="#cb10-329" aria-hidden="true" tabindex="-1"></a>    vcov<span class="op">=</span>{<span class="st">"CRV1"</span>: <span class="st">"country"</span>},  <span class="co"># Cluster-robust variance by country</span></span>
-<span id="cb10-330"><a href="#cb10-330" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-331"><a href="#cb10-331" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-332"><a href="#cb10-332" aria-hidden="true" tabindex="-1"></a><span class="co"># (2) Country FE — controls for time-invariant country characteristics</span></span>
-<span id="cb10-333"><a href="#cb10-333" aria-hidden="true" tabindex="-1"></a><span class="co">#     The "| country" syntax absorbs country dummies via demeaning</span></span>
-<span id="cb10-334"><a href="#cb10-334" aria-hidden="true" tabindex="-1"></a>fe_c <span class="op">=</span> pf.feols(</span>
-<span id="cb10-335"><a href="#cb10-335" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gdp_growth ~ ln_initial_gdp + investment + schooling + pop_growth + trade_openness | country"</span>,</span>
-<span id="cb10-336"><a href="#cb10-336" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>panel,  <span class="co"># Auto-clusters by first FE (country)</span></span>
-<span id="cb10-337"><a href="#cb10-337" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-338"><a href="#cb10-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-339"><a href="#cb10-339" aria-hidden="true" tabindex="-1"></a><span class="co"># (3) Time FE — controls for period-specific global shocks</span></span>
-<span id="cb10-340"><a href="#cb10-340" aria-hidden="true" tabindex="-1"></a>fe_t <span class="op">=</span> pf.feols(</span>
-<span id="cb10-341"><a href="#cb10-341" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gdp_growth ~ ln_initial_gdp + investment + schooling + pop_growth + trade_openness | year"</span>,</span>
-<span id="cb10-342"><a href="#cb10-342" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>panel,</span>
-<span id="cb10-343"><a href="#cb10-343" aria-hidden="true" tabindex="-1"></a>    vcov<span class="op">=</span>{<span class="st">"CRV1"</span>: <span class="st">"country"</span>},  <span class="co"># Cluster by country (not year)</span></span>
-<span id="cb10-344"><a href="#cb10-344" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-345"><a href="#cb10-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-346"><a href="#cb10-346" aria-hidden="true" tabindex="-1"></a><span class="co"># (4) Two-way FE — controls for both country and time effects</span></span>
-<span id="cb10-347"><a href="#cb10-347" aria-hidden="true" tabindex="-1"></a>fe_ct <span class="op">=</span> pf.feols(</span>
-<span id="cb10-348"><a href="#cb10-348" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gdp_growth ~ ln_initial_gdp + investment + schooling + pop_growth + trade_openness | country + year"</span>,</span>
-<span id="cb10-349"><a href="#cb10-349" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>panel,  <span class="co"># Auto-clusters by first FE (country)</span></span>
-<span id="cb10-350"><a href="#cb10-350" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-351"><a href="#cb10-351" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-352"><a href="#cb10-352" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-353"><a href="#cb10-353" aria-hidden="true" tabindex="-1"></a><span class="fu">### Build and Export Regression Table</span></span>
-<span id="cb10-354"><a href="#cb10-354" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-355"><a href="#cb10-355" aria-hidden="true" tabindex="-1"></a>The code below constructs a publication-style regression table with</span>
-<span id="cb10-356"><a href="#cb10-356" aria-hidden="true" tabindex="-1"></a>coefficients, standard errors, significance stars, fixed effects indicators,</span>
-<span id="cb10-357"><a href="#cb10-357" aria-hidden="true" tabindex="-1"></a>and fit statistics. The table is exported in three formats: Markdown</span>
-<span id="cb10-358"><a href="#cb10-358" aria-hidden="true" tabindex="-1"></a>(for the manuscript), LaTeX (for standalone use), and CSV (for data reuse).</span>
-<span id="cb10-359"><a href="#cb10-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-362"><a href="#cb10-362" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb10-363"><a href="#cb10-363" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Configuration ---</span></span>
-<span id="cb10-364"><a href="#cb10-364" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [ols, fe_c, fe_t, fe_ct]</span>
-<span id="cb10-365"><a href="#cb10-365" aria-hidden="true" tabindex="-1"></a>model_names <span class="op">=</span> [<span class="st">"OLS"</span>, <span class="st">"Country FE"</span>, <span class="st">"Time FE"</span>, <span class="st">"Two-way FE"</span>]</span>
-<span id="cb10-366"><a href="#cb10-366" aria-hidden="true" tabindex="-1"></a>varnames <span class="op">=</span> [<span class="st">"ln_initial_gdp"</span>, <span class="st">"investment"</span>, <span class="st">"schooling"</span>, <span class="st">"pop_growth"</span>, <span class="st">"trade_openness"</span>]</span>
-<span id="cb10-367"><a href="#cb10-367" aria-hidden="true" tabindex="-1"></a>reg_labels <span class="op">=</span> [<span class="st">"Log initial GDP"</span>, <span class="st">"Investment"</span>, <span class="st">"Schooling"</span>, <span class="st">"Pop. growth"</span>, <span class="st">"Trade openness"</span>]</span>
-<span id="cb10-368"><a href="#cb10-368" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-369"><a href="#cb10-369" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stars(p):</span>
-<span id="cb10-370"><a href="#cb10-370" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Add significance stars based on p-value thresholds."""</span></span>
-<span id="cb10-371"><a href="#cb10-371" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.01</span>: <span class="cf">return</span> <span class="st">"***"</span></span>
-<span id="cb10-372"><a href="#cb10-372" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.05</span>: <span class="cf">return</span> <span class="st">"**"</span></span>
-<span id="cb10-373"><a href="#cb10-373" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.10</span>: <span class="cf">return</span> <span class="st">"*"</span></span>
-<span id="cb10-374"><a href="#cb10-374" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">""</span></span>
-<span id="cb10-375"><a href="#cb10-375" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-376"><a href="#cb10-376" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Build coefficient rows ---</span></span>
-<span id="cb10-377"><a href="#cb10-377" aria-hidden="true" tabindex="-1"></a><span class="co"># Each variable produces two rows: coefficient (with stars) and SE (in parentheses)</span></span>
-<span id="cb10-378"><a href="#cb10-378" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
-<span id="cb10-379"><a href="#cb10-379" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> vname, vlabel <span class="kw">in</span> <span class="bu">zip</span>(varnames, reg_labels):</span>
-<span id="cb10-380"><a href="#cb10-380" aria-hidden="true" tabindex="-1"></a>    coef_row <span class="op">=</span> [vlabel]</span>
-<span id="cb10-381"><a href="#cb10-381" aria-hidden="true" tabindex="-1"></a>    se_row <span class="op">=</span> [<span class="st">""</span>]</span>
-<span id="cb10-382"><a href="#cb10-382" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> m <span class="kw">in</span> models:</span>
-<span id="cb10-383"><a href="#cb10-383" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
-<span id="cb10-384"><a href="#cb10-384" aria-hidden="true" tabindex="-1"></a>            c <span class="op">=</span> m.coef()[vname]       <span class="co"># Point estimate</span></span>
-<span id="cb10-385"><a href="#cb10-385" aria-hidden="true" tabindex="-1"></a>            s <span class="op">=</span> m.se()[vname]         <span class="co"># Standard error</span></span>
-<span id="cb10-386"><a href="#cb10-386" aria-hidden="true" tabindex="-1"></a>            p <span class="op">=</span> m.pvalue()[vname]     <span class="co"># P-value for significance test</span></span>
-<span id="cb10-387"><a href="#cb10-387" aria-hidden="true" tabindex="-1"></a>            coef_row.append(<span class="ss">f"</span><span class="sc">{</span>c<span class="sc">:.3f}{</span>stars(p)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb10-388"><a href="#cb10-388" aria-hidden="true" tabindex="-1"></a>            se_row.append(<span class="ss">f"(</span><span class="sc">{</span>s<span class="sc">:.3f}</span><span class="ss">)"</span>)</span>
-<span id="cb10-389"><a href="#cb10-389" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">KeyError</span>:</span>
-<span id="cb10-390"><a href="#cb10-390" aria-hidden="true" tabindex="-1"></a>            coef_row.append(<span class="st">""</span>)       <span class="co"># Variable not in model</span></span>
-<span id="cb10-391"><a href="#cb10-391" aria-hidden="true" tabindex="-1"></a>            se_row.append(<span class="st">""</span>)</span>
-<span id="cb10-392"><a href="#cb10-392" aria-hidden="true" tabindex="-1"></a>    rows.append(coef_row)</span>
-<span id="cb10-393"><a href="#cb10-393" aria-hidden="true" tabindex="-1"></a>    rows.append(se_row)</span>
-<span id="cb10-394"><a href="#cb10-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-395"><a href="#cb10-395" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Fixed effects indicators and fit statistics ---</span></span>
-<span id="cb10-396"><a href="#cb10-396" aria-hidden="true" tabindex="-1"></a>separator <span class="op">=</span> [<span class="st">""</span>] <span class="op">+</span> [<span class="st">""</span>] <span class="op">*</span> <span class="dv">4</span>            <span class="co"># Visual separator between coefficients and metadata</span></span>
-<span id="cb10-397"><a href="#cb10-397" aria-hidden="true" tabindex="-1"></a>fe_country <span class="op">=</span> [<span class="st">"Country FE"</span>, <span class="st">"No"</span>, <span class="st">"Yes"</span>, <span class="st">"No"</span>, <span class="st">"Yes"</span>]</span>
-<span id="cb10-398"><a href="#cb10-398" aria-hidden="true" tabindex="-1"></a>fe_year <span class="op">=</span> [<span class="st">"Year FE"</span>, <span class="st">"No"</span>, <span class="st">"No"</span>, <span class="st">"Yes"</span>, <span class="st">"Yes"</span>]</span>
-<span id="cb10-399"><a href="#cb10-399" aria-hidden="true" tabindex="-1"></a>obs_row <span class="op">=</span> [<span class="st">"Observations"</span>] <span class="op">+</span> [<span class="bu">str</span>(m._N) <span class="cf">for</span> m <span class="kw">in</span> models]</span>
-<span id="cb10-400"><a href="#cb10-400" aria-hidden="true" tabindex="-1"></a>r2_row <span class="op">=</span> [<span class="st">"R-squared"</span>] <span class="op">+</span> [<span class="ss">f"</span><span class="sc">{</span>m<span class="sc">.</span>_r2<span class="sc">:.3f}</span><span class="ss">"</span> <span class="cf">for</span> m <span class="kw">in</span> models]</span>
-<span id="cb10-401"><a href="#cb10-401" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-402"><a href="#cb10-402" aria-hidden="true" tabindex="-1"></a>all_rows <span class="op">=</span> rows <span class="op">+</span> [separator, fe_country, fe_year, obs_row, r2_row]</span>
-<span id="cb10-403"><a href="#cb10-403" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-404"><a href="#cb10-404" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Export as Markdown ---</span></span>
-<span id="cb10-405"><a href="#cb10-405" aria-hidden="true" tabindex="-1"></a>header <span class="op">=</span> <span class="st">"| | "</span> <span class="op">+</span> <span class="st">" | "</span>.join(<span class="ss">f"(</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">) </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(model_names)) <span class="op">+</span> <span class="st">" |"</span></span>
-<span id="cb10-406"><a href="#cb10-406" aria-hidden="true" tabindex="-1"></a>sep <span class="op">=</span> <span class="st">"|:---|"</span> <span class="op">+</span> <span class="st">"|"</span>.join([<span class="st">":---:"</span>] <span class="op">*</span> <span class="dv">4</span>) <span class="op">+</span> <span class="st">"|"</span></span>
-<span id="cb10-407"><a href="#cb10-407" aria-hidden="true" tabindex="-1"></a>md_lines <span class="op">=</span> [header, sep]</span>
-<span id="cb10-408"><a href="#cb10-408" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> all_rows:</span>
-<span id="cb10-409"><a href="#cb10-409" aria-hidden="true" tabindex="-1"></a>    md_lines.append(<span class="st">"| "</span> <span class="op">+</span> <span class="st">" | "</span>.join(row) <span class="op">+</span> <span class="st">" |"</span>)</span>
-<span id="cb10-410"><a href="#cb10-410" aria-hidden="true" tabindex="-1"></a>md_out <span class="op">=</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(md_lines)</span>
-<span id="cb10-411"><a href="#cb10-411" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-412"><a href="#cb10-412" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../tables/tbl-regression.md"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb10-413"><a href="#cb10-413" aria-hidden="true" tabindex="-1"></a>    f.write(md_out)</span>
+<span id="cb10-313"><a href="#cb10-313" aria-hidden="true" tabindex="-1"></a>In all models, standard errors are **clustered by country** to account</span>
+<span id="cb10-314"><a href="#cb10-314" aria-hidden="true" tabindex="-1"></a>for serial correlation within countries over time.</span>
+<span id="cb10-315"><a href="#cb10-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-316"><a href="#cb10-316" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estimation</span></span>
+<span id="cb10-317"><a href="#cb10-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-318"><a href="#cb10-318" aria-hidden="true" tabindex="-1"></a>We use the <span class="in">`pyfixest`</span> package, which provides R-style formula syntax.</span>
+<span id="cb10-319"><a href="#cb10-319" aria-hidden="true" tabindex="-1"></a>Fixed effects are specified after the <span class="in">`|`</span> operator (e.g., <span class="in">`| country`</span>).</span>
+<span id="cb10-320"><a href="#cb10-320" aria-hidden="true" tabindex="-1"></a>When FE are present, <span class="in">`pyfixest`</span> automatically clusters standard errors</span>
+<span id="cb10-321"><a href="#cb10-321" aria-hidden="true" tabindex="-1"></a>by the first fixed effect.</span>
+<span id="cb10-322"><a href="#cb10-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-325"><a href="#cb10-325" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb10-326"><a href="#cb10-326" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyfixest <span class="im">as</span> pf</span>
+<span id="cb10-327"><a href="#cb10-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-328"><a href="#cb10-328" aria-hidden="true" tabindex="-1"></a><span class="co"># (1) Pooled OLS — no fixed effects; must specify clustering explicitly</span></span>
+<span id="cb10-329"><a href="#cb10-329" aria-hidden="true" tabindex="-1"></a>ols <span class="op">=</span> pf.feols(</span>
+<span id="cb10-330"><a href="#cb10-330" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gdp_growth ~ ln_initial_gdp + investment + schooling + pop_growth + trade_openness"</span>,</span>
+<span id="cb10-331"><a href="#cb10-331" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>panel,</span>
+<span id="cb10-332"><a href="#cb10-332" aria-hidden="true" tabindex="-1"></a>    vcov<span class="op">=</span>{<span class="st">"CRV1"</span>: <span class="st">"country"</span>},  <span class="co"># Cluster-robust variance by country</span></span>
+<span id="cb10-333"><a href="#cb10-333" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-334"><a href="#cb10-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-335"><a href="#cb10-335" aria-hidden="true" tabindex="-1"></a><span class="co"># (2) Country FE — controls for time-invariant country characteristics</span></span>
+<span id="cb10-336"><a href="#cb10-336" aria-hidden="true" tabindex="-1"></a><span class="co">#     The "| country" syntax absorbs country dummies via demeaning</span></span>
+<span id="cb10-337"><a href="#cb10-337" aria-hidden="true" tabindex="-1"></a>fe_c <span class="op">=</span> pf.feols(</span>
+<span id="cb10-338"><a href="#cb10-338" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gdp_growth ~ ln_initial_gdp + investment + schooling + pop_growth + trade_openness | country"</span>,</span>
+<span id="cb10-339"><a href="#cb10-339" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>panel,  <span class="co"># Auto-clusters by first FE (country)</span></span>
+<span id="cb10-340"><a href="#cb10-340" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-341"><a href="#cb10-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-342"><a href="#cb10-342" aria-hidden="true" tabindex="-1"></a><span class="co"># (3) Time FE — controls for period-specific global shocks</span></span>
+<span id="cb10-343"><a href="#cb10-343" aria-hidden="true" tabindex="-1"></a>fe_t <span class="op">=</span> pf.feols(</span>
+<span id="cb10-344"><a href="#cb10-344" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gdp_growth ~ ln_initial_gdp + investment + schooling + pop_growth + trade_openness | year"</span>,</span>
+<span id="cb10-345"><a href="#cb10-345" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>panel,</span>
+<span id="cb10-346"><a href="#cb10-346" aria-hidden="true" tabindex="-1"></a>    vcov<span class="op">=</span>{<span class="st">"CRV1"</span>: <span class="st">"country"</span>},  <span class="co"># Cluster by country (not year)</span></span>
+<span id="cb10-347"><a href="#cb10-347" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-348"><a href="#cb10-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-349"><a href="#cb10-349" aria-hidden="true" tabindex="-1"></a><span class="co"># (4) Two-way FE — controls for both country and time effects</span></span>
+<span id="cb10-350"><a href="#cb10-350" aria-hidden="true" tabindex="-1"></a>fe_ct <span class="op">=</span> pf.feols(</span>
+<span id="cb10-351"><a href="#cb10-351" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gdp_growth ~ ln_initial_gdp + investment + schooling + pop_growth + trade_openness | country + year"</span>,</span>
+<span id="cb10-352"><a href="#cb10-352" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>panel,  <span class="co"># Auto-clusters by first FE (country)</span></span>
+<span id="cb10-353"><a href="#cb10-353" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-354"><a href="#cb10-354" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-355"><a href="#cb10-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-356"><a href="#cb10-356" aria-hidden="true" tabindex="-1"></a><span class="fu">### Build and Export Regression Table</span></span>
+<span id="cb10-357"><a href="#cb10-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-358"><a href="#cb10-358" aria-hidden="true" tabindex="-1"></a>The code below constructs a publication-style regression table with</span>
+<span id="cb10-359"><a href="#cb10-359" aria-hidden="true" tabindex="-1"></a>coefficients, standard errors, significance stars, fixed effects indicators,</span>
+<span id="cb10-360"><a href="#cb10-360" aria-hidden="true" tabindex="-1"></a>and fit statistics. The table is exported in three formats: Markdown</span>
+<span id="cb10-361"><a href="#cb10-361" aria-hidden="true" tabindex="-1"></a>(for the manuscript), LaTeX (for standalone use), and CSV (for data reuse).</span>
+<span id="cb10-362"><a href="#cb10-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-365"><a href="#cb10-365" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb10-366"><a href="#cb10-366" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Configuration ---</span></span>
+<span id="cb10-367"><a href="#cb10-367" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [ols, fe_c, fe_t, fe_ct]</span>
+<span id="cb10-368"><a href="#cb10-368" aria-hidden="true" tabindex="-1"></a>model_names <span class="op">=</span> [<span class="st">"OLS"</span>, <span class="st">"Country FE"</span>, <span class="st">"Time FE"</span>, <span class="st">"Two-way FE"</span>]</span>
+<span id="cb10-369"><a href="#cb10-369" aria-hidden="true" tabindex="-1"></a>varnames <span class="op">=</span> [<span class="st">"ln_initial_gdp"</span>, <span class="st">"investment"</span>, <span class="st">"schooling"</span>, <span class="st">"pop_growth"</span>, <span class="st">"trade_openness"</span>]</span>
+<span id="cb10-370"><a href="#cb10-370" aria-hidden="true" tabindex="-1"></a>reg_labels <span class="op">=</span> [<span class="st">"Log initial GDP"</span>, <span class="st">"Investment"</span>, <span class="st">"Schooling"</span>, <span class="st">"Pop. growth"</span>, <span class="st">"Trade openness"</span>]</span>
+<span id="cb10-371"><a href="#cb10-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-372"><a href="#cb10-372" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stars(p):</span>
+<span id="cb10-373"><a href="#cb10-373" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Add significance stars based on p-value thresholds."""</span></span>
+<span id="cb10-374"><a href="#cb10-374" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.01</span>: <span class="cf">return</span> <span class="st">"***"</span></span>
+<span id="cb10-375"><a href="#cb10-375" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.05</span>: <span class="cf">return</span> <span class="st">"**"</span></span>
+<span id="cb10-376"><a href="#cb10-376" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">&lt;</span> <span class="fl">0.10</span>: <span class="cf">return</span> <span class="st">"*"</span></span>
+<span id="cb10-377"><a href="#cb10-377" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">""</span></span>
+<span id="cb10-378"><a href="#cb10-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-379"><a href="#cb10-379" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Build coefficient rows ---</span></span>
+<span id="cb10-380"><a href="#cb10-380" aria-hidden="true" tabindex="-1"></a><span class="co"># Each variable produces two rows: coefficient (with stars) and SE (in parentheses)</span></span>
+<span id="cb10-381"><a href="#cb10-381" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb10-382"><a href="#cb10-382" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> vname, vlabel <span class="kw">in</span> <span class="bu">zip</span>(varnames, reg_labels):</span>
+<span id="cb10-383"><a href="#cb10-383" aria-hidden="true" tabindex="-1"></a>    coef_row <span class="op">=</span> [vlabel]</span>
+<span id="cb10-384"><a href="#cb10-384" aria-hidden="true" tabindex="-1"></a>    se_row <span class="op">=</span> [<span class="st">""</span>]</span>
+<span id="cb10-385"><a href="#cb10-385" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> m <span class="kw">in</span> models:</span>
+<span id="cb10-386"><a href="#cb10-386" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb10-387"><a href="#cb10-387" aria-hidden="true" tabindex="-1"></a>            c <span class="op">=</span> m.coef()[vname]       <span class="co"># Point estimate</span></span>
+<span id="cb10-388"><a href="#cb10-388" aria-hidden="true" tabindex="-1"></a>            s <span class="op">=</span> m.se()[vname]         <span class="co"># Standard error</span></span>
+<span id="cb10-389"><a href="#cb10-389" aria-hidden="true" tabindex="-1"></a>            p <span class="op">=</span> m.pvalue()[vname]     <span class="co"># P-value for significance test</span></span>
+<span id="cb10-390"><a href="#cb10-390" aria-hidden="true" tabindex="-1"></a>            coef_row.append(<span class="ss">f"</span><span class="sc">{</span>c<span class="sc">:.3f}{</span>stars(p)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-391"><a href="#cb10-391" aria-hidden="true" tabindex="-1"></a>            se_row.append(<span class="ss">f"(</span><span class="sc">{</span>s<span class="sc">:.3f}</span><span class="ss">)"</span>)</span>
+<span id="cb10-392"><a href="#cb10-392" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">KeyError</span>:</span>
+<span id="cb10-393"><a href="#cb10-393" aria-hidden="true" tabindex="-1"></a>            coef_row.append(<span class="st">""</span>)       <span class="co"># Variable not in model</span></span>
+<span id="cb10-394"><a href="#cb10-394" aria-hidden="true" tabindex="-1"></a>            se_row.append(<span class="st">""</span>)</span>
+<span id="cb10-395"><a href="#cb10-395" aria-hidden="true" tabindex="-1"></a>    rows.append(coef_row)</span>
+<span id="cb10-396"><a href="#cb10-396" aria-hidden="true" tabindex="-1"></a>    rows.append(se_row)</span>
+<span id="cb10-397"><a href="#cb10-397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-398"><a href="#cb10-398" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Fixed effects indicators and fit statistics ---</span></span>
+<span id="cb10-399"><a href="#cb10-399" aria-hidden="true" tabindex="-1"></a>separator <span class="op">=</span> [<span class="st">""</span>] <span class="op">+</span> [<span class="st">""</span>] <span class="op">*</span> <span class="dv">4</span>            <span class="co"># Visual separator between coefficients and metadata</span></span>
+<span id="cb10-400"><a href="#cb10-400" aria-hidden="true" tabindex="-1"></a>fe_country <span class="op">=</span> [<span class="st">"Country FE"</span>, <span class="st">"No"</span>, <span class="st">"Yes"</span>, <span class="st">"No"</span>, <span class="st">"Yes"</span>]</span>
+<span id="cb10-401"><a href="#cb10-401" aria-hidden="true" tabindex="-1"></a>fe_year <span class="op">=</span> [<span class="st">"Year FE"</span>, <span class="st">"No"</span>, <span class="st">"No"</span>, <span class="st">"Yes"</span>, <span class="st">"Yes"</span>]</span>
+<span id="cb10-402"><a href="#cb10-402" aria-hidden="true" tabindex="-1"></a>obs_row <span class="op">=</span> [<span class="st">"Observations"</span>] <span class="op">+</span> [<span class="bu">str</span>(m._N) <span class="cf">for</span> m <span class="kw">in</span> models]</span>
+<span id="cb10-403"><a href="#cb10-403" aria-hidden="true" tabindex="-1"></a>r2_row <span class="op">=</span> [<span class="st">"R-squared"</span>] <span class="op">+</span> [<span class="ss">f"</span><span class="sc">{</span>m<span class="sc">.</span>_r2<span class="sc">:.3f}</span><span class="ss">"</span> <span class="cf">for</span> m <span class="kw">in</span> models]</span>
+<span id="cb10-404"><a href="#cb10-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-405"><a href="#cb10-405" aria-hidden="true" tabindex="-1"></a>all_rows <span class="op">=</span> rows <span class="op">+</span> [separator, fe_country, fe_year, obs_row, r2_row]</span>
+<span id="cb10-406"><a href="#cb10-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-407"><a href="#cb10-407" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Export as Markdown ---</span></span>
+<span id="cb10-408"><a href="#cb10-408" aria-hidden="true" tabindex="-1"></a>header <span class="op">=</span> <span class="st">"| | "</span> <span class="op">+</span> <span class="st">" | "</span>.join(<span class="ss">f"(</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">) </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(model_names)) <span class="op">+</span> <span class="st">" |"</span></span>
+<span id="cb10-409"><a href="#cb10-409" aria-hidden="true" tabindex="-1"></a>sep <span class="op">=</span> <span class="st">"|:---|"</span> <span class="op">+</span> <span class="st">"|"</span>.join([<span class="st">":---:"</span>] <span class="op">*</span> <span class="dv">4</span>) <span class="op">+</span> <span class="st">"|"</span></span>
+<span id="cb10-410"><a href="#cb10-410" aria-hidden="true" tabindex="-1"></a>md_lines <span class="op">=</span> [header, sep]</span>
+<span id="cb10-411"><a href="#cb10-411" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> all_rows:</span>
+<span id="cb10-412"><a href="#cb10-412" aria-hidden="true" tabindex="-1"></a>    md_lines.append(<span class="st">"| "</span> <span class="op">+</span> <span class="st">" | "</span>.join(row) <span class="op">+</span> <span class="st">" |"</span>)</span>
+<span id="cb10-413"><a href="#cb10-413" aria-hidden="true" tabindex="-1"></a>md_out <span class="op">=</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(md_lines)</span>
 <span id="cb10-414"><a href="#cb10-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-415"><a href="#cb10-415" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Export as LaTeX (booktabs format) ---</span></span>
-<span id="cb10-416"><a href="#cb10-416" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../tables/tbl-regression.tex"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb10-417"><a href="#cb10-417" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">"</span><span class="ch">\\</span><span class="st">begin</span><span class="sc">{tabular}{lcccc}</span><span class="ch">\n\\</span><span class="st">toprule</span><span class="ch">\n</span><span class="st">"</span>)</span>
-<span id="cb10-418"><a href="#cb10-418" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">" &amp; "</span> <span class="op">+</span> <span class="st">" &amp; "</span>.join(<span class="ss">f"(</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">) </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(model_names)) <span class="op">+</span> <span class="st">" </span><span class="ch">\\\\\n\\</span><span class="st">midrule</span><span class="ch">\n</span><span class="st">"</span>)</span>
-<span id="cb10-419"><a href="#cb10-419" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> all_rows:</span>
-<span id="cb10-420"><a href="#cb10-420" aria-hidden="true" tabindex="-1"></a>        f.write(<span class="st">" &amp; "</span>.join(row) <span class="op">+</span> <span class="st">" </span><span class="ch">\\\\\n</span><span class="st">"</span>)</span>
-<span id="cb10-421"><a href="#cb10-421" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">"</span><span class="ch">\\</span><span class="st">bottomrule</span><span class="ch">\n\\</span><span class="st">end</span><span class="sc">{tabular}</span><span class="ch">\n</span><span class="st">"</span>)</span>
-<span id="cb10-422"><a href="#cb10-422" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-423"><a href="#cb10-423" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Export as CSV ---</span></span>
-<span id="cb10-424"><a href="#cb10-424" aria-hidden="true" tabindex="-1"></a>csv_rows <span class="op">=</span> [[<span class="st">""</span>] <span class="op">+</span> [<span class="ss">f"(</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">) </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(model_names)]]</span>
-<span id="cb10-425"><a href="#cb10-425" aria-hidden="true" tabindex="-1"></a>csv_rows.extend(all_rows)</span>
-<span id="cb10-426"><a href="#cb10-426" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(csv_rows[<span class="dv">1</span>:], columns<span class="op">=</span>csv_rows[<span class="dv">0</span>]).to_csv(</span>
-<span id="cb10-427"><a href="#cb10-427" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../tables/tbl-regression.csv"</span>, index<span class="op">=</span><span class="va">False</span></span>
-<span id="cb10-428"><a href="#cb10-428" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-429"><a href="#cb10-429" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-430"><a href="#cb10-430" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the table</span></span>
-<span id="cb10-431"><a href="#cb10-431" aria-hidden="true" tabindex="-1"></a>Markdown(md_out)</span>
-<span id="cb10-432"><a href="#cb10-432" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-415"><a href="#cb10-415" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../tables/tbl-regression.md"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb10-416"><a href="#cb10-416" aria-hidden="true" tabindex="-1"></a>    f.write(md_out)</span>
+<span id="cb10-417"><a href="#cb10-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-418"><a href="#cb10-418" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Export as LaTeX (booktabs format) ---</span></span>
+<span id="cb10-419"><a href="#cb10-419" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../tables/tbl-regression.tex"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb10-420"><a href="#cb10-420" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">"</span><span class="ch">\\</span><span class="st">begin</span><span class="sc">{tabular}{lcccc}</span><span class="ch">\n\\</span><span class="st">toprule</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb10-421"><a href="#cb10-421" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">" &amp; "</span> <span class="op">+</span> <span class="st">" &amp; "</span>.join(<span class="ss">f"(</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">) </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(model_names)) <span class="op">+</span> <span class="st">" </span><span class="ch">\\\\\n\\</span><span class="st">midrule</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb10-422"><a href="#cb10-422" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> all_rows:</span>
+<span id="cb10-423"><a href="#cb10-423" aria-hidden="true" tabindex="-1"></a>        f.write(<span class="st">" &amp; "</span>.join(row) <span class="op">+</span> <span class="st">" </span><span class="ch">\\\\\n</span><span class="st">"</span>)</span>
+<span id="cb10-424"><a href="#cb10-424" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">"</span><span class="ch">\\</span><span class="st">bottomrule</span><span class="ch">\n\\</span><span class="st">end</span><span class="sc">{tabular}</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb10-425"><a href="#cb10-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-426"><a href="#cb10-426" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Export as CSV ---</span></span>
+<span id="cb10-427"><a href="#cb10-427" aria-hidden="true" tabindex="-1"></a>csv_rows <span class="op">=</span> [[<span class="st">""</span>] <span class="op">+</span> [<span class="ss">f"(</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">) </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(model_names)]]</span>
+<span id="cb10-428"><a href="#cb10-428" aria-hidden="true" tabindex="-1"></a>csv_rows.extend(all_rows)</span>
+<span id="cb10-429"><a href="#cb10-429" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(csv_rows[<span class="dv">1</span>:], columns<span class="op">=</span>csv_rows[<span class="dv">0</span>]).to_csv(</span>
+<span id="cb10-430"><a href="#cb10-430" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../tables/tbl-regression.csv"</span>, index<span class="op">=</span><span class="va">False</span></span>
+<span id="cb10-431"><a href="#cb10-431" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-432"><a href="#cb10-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-433"><a href="#cb10-433" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the table</span></span>
+<span id="cb10-434"><a href="#cb10-434" aria-hidden="true" tabindex="-1"></a>Markdown(md_out)</span>
+<span id="cb10-435"><a href="#cb10-435" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {

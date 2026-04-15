@@ -273,6 +273,9 @@ sns.heatmap(
     linewidths=0, cbar_kws={"shrink": 0.8},
     ax=ax,
 )
+# seaborn.heatmap re-enables the grid on its Axes regardless of rcParams,
+# so we have to disable it explicitly here or horizontal lines bleed through.
+ax.grid(False)
 ax.tick_params(axis="both", length=0)
 ax.set_xticklabels(labels, rotation=45, ha="right")
 plt.tight_layout()
