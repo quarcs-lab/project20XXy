@@ -83,7 +83,7 @@ flowchart LR
 
 | Tool | Purpose | Required? |
 | ---- | ------- | --------- |
-| [Quarto](https://quarto.org/) >= 1.4 | Manuscript rendering | Yes |
+| [Quarto](https://quarto.org/) >= 1.9 | Manuscript rendering | Yes |
 | [uv](https://docs.astral.sh/uv/) | Python package manager | Yes |
 | Python 3.12+ | Notebooks, scripting | Yes |
 | R | R notebooks | If using R |
@@ -92,7 +92,7 @@ flowchart LR
 Verify your setup:
 
 ```bash
-quarto --version        # >= 1.4
+quarto --version        # >= 1.9
 uv --version            # any recent version
 python3 --version       # >= 3.12
 R --version             # optional
@@ -179,7 +179,7 @@ quarto render notebooks/notebook-01.qmd
 quarto render index.qmd --to html
 ```
 
-The render script clears caches, runs `quarto render` twice (to pick up fresh table includes), copies LaTeX to `latex/` for Overleaf, and deploys the HTML manuscript to GitHub Pages.
+The render script handles the full pipeline: clean caches, two-pass render, generate LLM-friendly markdown, stage LaTeX for Overleaf, and deploy to GitHub Pages.
 
 ```mermaid
 flowchart TD
@@ -187,8 +187,9 @@ flowchart TD
     B --> C["Pass 1: quarto render<br/>(execute notebooks, generate table .md files)"]
     C --> D["Pass 2: quarto render<br/>(include fresh tables in manuscript)"]
     D --> E["Outputs: HTML + PDF + Word"]
-    D --> F["LaTeX staged for Overleaf"]
-    D --> G["Deploy to GitHub Pages<br/>(gh-pages branch)"]
+    D --> F["Generate index.llms.md<br/>(LLM-friendly markdown via Pandoc)"]
+    F --> G["LaTeX staged for Overleaf"]
+    G --> H["Deploy to GitHub Pages<br/>(gh-pages branch)"]
 ```
 
 ---
@@ -338,7 +339,7 @@ API keys and secrets go in `.env` (gitignored). Never commit `.env` to git.
 | `scripts/` | Build utilities (`render.sh`) |
 | `handoffs/` | Session handoff reports (`YYYYMMDD_HHMM.md`) |
 | `legacy/` | Archived old files (never deleted, always moved here) |
-| `_manuscript/` | Rendered outputs — **auto-generated**, gitignored |
+| `_manuscript/` | Rendered outputs: HTML, PDF, Word, LLM markdown, notebook previews |
 
 ### Root-Level Files
 

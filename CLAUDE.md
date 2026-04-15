@@ -52,7 +52,7 @@ These are non-negotiable behavioral constraints.
 | `images/` | Exported figures (PNG, 300 DPI, 6×4 inches) |
 | `tables/` | Exported tables (CSV + Markdown + LaTeX) |
 | `data/rawData/` | Raw source data (never modify) |
-| `scripts/render.sh` | Two-pass clean render + Overleaf staging + GitHub Pages deploy |
+| `scripts/render.sh` | Two-pass render + LLM markdown + Overleaf staging + GitHub Pages deploy |
 | `handoffs/` | Session handoff reports |
 | `.claude/skills/` | 24 skill definitions (SKILL.md with YAML frontmatter) |
 | `.env` | API keys and secrets (gitignored, never commit) |
@@ -111,10 +111,12 @@ Invoke with `/project:<name>`. See `README.md` § Available Skills for full desc
 See `README.md` § Manuscript Workflow and § Notebook Workflow for full details.
 
 ```bash
-bash scripts/render.sh                                      # two-pass clean render (all formats)
+bash scripts/render.sh                                      # full pipeline (render + LLM md + Overleaf + deploy)
 quarto render notebooks/<file>.qmd                           # render individual notebook
 uv add <package>                                             # add Python package (NEVER use pip)
 ```
+
+The `scripts/render.sh` pipeline: clean caches → two-pass `quarto render` → generate `index.llms.md` (LLM-friendly markdown from LaTeX via Pandoc) → stage LaTeX for Overleaf → deploy to GitHub Pages.
 
 ---
 
@@ -222,4 +224,7 @@ These are non-obvious pitfalls. See `README.md` for full context.
 - **Never use `tbl-` prefix** for Stata text output cells (e.g., `tabstat`, `summarize`) -- it triggers Quarto's table parser and crashes. This does NOT apply to properly formatted markdown tables
 - **Never use `pip install`** -- it bypasses the lockfile. Always use `uv add`
 - **HTML theme** -- `cosmo` theme with `github` syntax highlighting, configured in `_quarto.yml`
+- **LLM-friendly output** -- `scripts/render.sh` generates `_manuscript/index.llms.md` from the LaTeX source via Pandoc (`gfm-raw_html` format). Clean markdown with prose, tables, equations — no HTML artifacts
+- **GitHub Pages** -- manuscript is auto-deployed to `gh-pages` branch by `scripts/render.sh`
+- **Quarto version** -- project uses Quarto >= 1.9 (currently 1.9.37)
 - **Credentials** go in `.env` only. Never commit secrets to git
