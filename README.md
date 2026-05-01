@@ -429,20 +429,68 @@ format:
 
 ## Workflow with Claude Code
 
-This template includes [Claude Code](https://claude.com/claude-code) integration with 24 skills. Type `/project:<name>` to invoke.
+This template includes [Claude Code](https://claude.com/claude-code) integration with 27 agentic skills. Type `/project:<name>` to invoke any skill.
+
+Skills are defined in [`.claude/skills/`](.claude/skills/). Each has a `SKILL.md` with instructions and YAML frontmatter.
 
 ### Available Skills
 
-| Category | Skills |
-| -------- | ------ |
-| **Build & Execution** | `/project:render`, `/project:execute`, `/project:init`, `/project:sync-tex` |
-| **Notebook Creation** | `/project:new-notebook`, `/project:new-analysis`, `/project:new-slide-deck` |
-| **Writing & Results** | `/project:draft-section`, `/project:abstract`, `/project:interpret-results`, `/project:regression-table`, `/project:robustness-table`, `/project:referee-response` |
-| **References & Data** | `/project:cite`, `/project:literature-note`, `/project:codebook` |
-| **Quality Checks** | `/project:bib-check`, `/project:data-audit`, `/project:freeze-check`, `/project:check-env`, `/project:submission-prep`, `/project:figures-gallery` |
-| **Session Management** | `/project:handoff`, `/project:env-snapshot` |
+#### Build and Execution
 
-Skills are defined in [`.claude/skills/`](.claude/skills/). Each has a `SKILL.md` with instructions and YAML frontmatter.
+| Skill | Description |
+| ----- | ----------- |
+| `/project:render` | Runs the full render pipeline (HTML, PDF, Word) via `scripts/render.sh` — cleans caches, two-pass Quarto render, LLM markdown generation, Overleaf staging, and GitHub Pages deploy. |
+| `/project:execute` | Re-runs all registered notebooks via Quarto render to refresh their cached outputs in `_freeze/`. Reports per-notebook status, timing, and errors. |
+| `/project:init` | One-time project setup. Fills all `[FILL:]` placeholders across the template (title, authors, data sources) to initialize a freshly cloned project. |
+| `/project:sync-tex` | Transfers prose edits made in the LaTeX source (`latex/index.tex`, e.g. from Overleaf) back into `index.qmd`, preserving embed/include shortcodes. |
+
+#### Notebook and Presentation Creation
+
+| Skill | Description |
+| ----- | ----------- |
+| `/project:new-notebook` | Creates a new Quarto notebook (`.qmd`) with the project's standard structure (data import, EDA, regressions) and registers it in `_quarto.yml`. |
+| `/project:new-analysis` | Scaffolds a method-specific analysis notebook (DiD, IV, RDD, LASSO, Panel FE) with econometric boilerplate, diagnostics, and language-specific package guidance. |
+| `/project:new-slide-deck` | Creates a Quarto revealjs slide deck in `slides/` following the project style guide. |
+| `/project:econ-visualization` | Generates publication-quality economics figures (coefficient plots, event studies, RD plots, time series, scatter, distributions, bar charts, heatmaps) with colorblind-safe palettes and journal-ready styling. |
+
+#### Writing and Results
+
+| Skill | Description |
+| ----- | ----------- |
+| `/project:draft-section` | Drafts academic prose for any manuscript section (Introduction, Data, Results, Conclusion) from bullet points or an outline, integrating citations from `references.bib`. |
+| `/project:abstract` | Reads the full manuscript and notebooks to generate a structured abstract (Motivation, Data, Results, Contribution) targeting a specified word count. |
+| `/project:interpret-results` | Writes manuscript-ready prose interpreting regression output — covers statistical significance, economic magnitude, cross-specification comparisons, and uses appropriate hedging language. |
+| `/project:regression-table` | Formats estimation output as a publication-quality regression table with significance stars, clustered SEs in parentheses, fixed-effects indicators, and fit statistics. Exports to CSV, Markdown, and LaTeX. |
+| `/project:robustness-table` | Generates robustness check code (alternative samples, controls, specifications) and formats all results as a combined multi-column table. |
+| `/project:referee-response` | Drafts a point-by-point response letter to referee comments, mapping each concern to specific manuscript locations and suggesting concrete edits. |
+
+#### Research and Literature
+
+| Skill | Description |
+| ----- | ----------- |
+| `/project:cite` | Finds a paper by title, author, or DOI; adds its BibTeX entry to `references.bib`; and shows the `@citekey` syntax for use in `index.qmd`. |
+| `/project:literature-note` | Creates a structured annotation note in `references/` with sections for research question, identification strategy, data, findings, limitations, and connections to other project notes. |
+| `/project:lit-review` | Conducts a structured literature review: designs a search strategy, builds a paper inventory, synthesizes findings thematically, and identifies gaps. Integrates with `/project:cite` and `/project:literature-note`. |
+| `/project:research-ideation` | Generates research questions from an observation or phenomenon using four frameworks (Puzzle, Policy, Data, Extension) and evaluates them on data availability, identification credibility, novelty, and policy relevance. |
+| `/project:codebook` | Auto-generates a Markdown codebook from a dataset file (CSV, DTA, Excel, Parquet) with variable names, types, and summary statistics. |
+
+#### Quality Checks and Audits
+
+| Skill | Description |
+| ----- | ----------- |
+| `/project:submission-prep` | Runs comprehensive pre-submission checks — word count, anonymization, citation completeness, placeholder detection, cross-reference validation — and generates a checklist. |
+| `/project:bib-check` | Cross-checks citation keys used in `index.qmd` against `references.bib`, reporting missing, orphaned, and duplicate entries. |
+| `/project:freeze-check` | Checks whether registered notebooks have current, stale, or missing cached outputs in `_freeze/`. Useful before rendering. |
+| `/project:data-audit` | Scans all notebooks for data file references (Python, R, Stata patterns) and verifies each referenced file exists on disk. Reports broken paths and undocumented files. |
+| `/project:check-env` | Verifies that required tools (Quarto, uv, Python, R, Stata, TeX) and Jupyter kernels are installed and reports their versions. |
+| `/project:figures-gallery` | Generates an HTML gallery page of all project figures (from `images/` and notebook cells) with captions, source notebooks, and embed shortcodes. |
+
+#### Session Management
+
+| Skill | Description |
+| ----- | ----------- |
+| `/project:handoff` | Writes a session handoff report to `handoffs/` documenting project state, work completed, decisions made, and next steps. |
+| `/project:env-snapshot` | Captures tool versions, Python/R packages, and kernel info as a timestamped reproducibility record in `notes/`. |
 
 ### Session Continuity
 
