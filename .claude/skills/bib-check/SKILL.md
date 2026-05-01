@@ -2,6 +2,12 @@
 name: bib-check
 description: Cross-checks citation keys in index.qmd against references.bib, reporting missing, orphaned, and duplicate entries. Use when verifying citations.
 allowed-tools: Bash, Read, Glob, Grep
+version: 1.0.0
+workflow_stage: writing
+tags:
+  - citations
+  - bibliography
+  - quality-check
 ---
 
 # Audit Citations and References

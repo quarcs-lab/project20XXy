@@ -3,6 +3,13 @@ name: literature-note
 description: Creates a structured annotation note in references/ with sections for research question, data, findings, and relevance. Use when documenting a paper.
 argument-hint: <key, DOI, or description>
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+version: 1.1.0
+workflow_stage: writing
+tags:
+  - literature
+  - annotation
+  - citations
+  - review
 ---
 
 # Create Literature Note
@@ -54,13 +61,38 @@ Create a structured annotation note for a paper in `references/`.
    ## Relevance to This Project
 
    [How does this paper relate to the current research? What can we build on or contrast with?]
+
+   ## Limitations and Critiques
+
+   [What are the paper's acknowledged limitations? What critiques have others raised? What questions remain unanswered?]
+
+   ## Citation Network
+
+   - **Builds on:** [Key papers this work extends or responds to]
+   - **Cited by:** [Notable subsequent papers that cite this work]
+   - **Related:** [Papers using similar methods on different questions, or the same question with different methods]
    ```
 
 4. If information about the paper was retrieved (from the web or a PDF), pre-fill the sections with extracted content. Otherwise, leave the bracket placeholders for the user to fill in.
 
-5. Report the file path and remind the user to fill in any remaining placeholder sections.
+5. **Cross-reference with existing notes:** After creating the note, scan `references/` for other literature notes and identify connections — shared methods, overlapping datasets, complementary or contradictory findings. Append a "Connections" subsection listing related notes in the project:
+   ```markdown
+   ## Connections to Other Notes
+
+   - [`<key1>.md`](key1.md) — uses same dataset / complementary identification strategy
+   - [`<key2>.md`](key2.md) — contradicts finding on X; uses different sample period
+   ```
+
+6. Report the file path and remind the user to fill in any remaining placeholder sections.
 
 ## Error handling
 
 - If the citation key is not found in `references.bib` and cannot be resolved, ask the user for more details.
 - If `references/<key>.md` already exists, show the existing note and ask if the user wants to update it.
+
+## Common Pitfalls
+
+- **Summarizing without evaluating:** A literature note should critically assess the paper's contribution, not just describe it. Note strengths and weaknesses of the identification strategy.
+- **Missing the identification strategy:** For empirical papers, this is the most important section. Always identify the source of exogenous variation and whether it is credible.
+- **Not connecting to the current project:** Every note should explicitly state how the paper relates to your research — even if the connection is "this paper studies a different context but uses a method we should consider."
+- **Ignoring recent contradictions:** Check whether more recent papers have challenged the findings or proposed better methods for the same question.

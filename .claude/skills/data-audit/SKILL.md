@@ -2,6 +2,12 @@
 name: data-audit
 description: Scans notebooks for data file references and verifies each file exists on disk. Use when checking for broken data paths.
 allowed-tools: Bash, Read, Glob, Grep
+version: 1.0.0
+workflow_stage: data
+tags:
+  - data
+  - validation
+  - quality-check
 ---
 
 # Audit Data References

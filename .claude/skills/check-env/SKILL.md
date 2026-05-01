@@ -2,6 +2,12 @@
 name: check-env
 description: Verifies required tools (Quarto, uv, Python, R, Stata, TeX) and Jupyter kernels are installed. Use when setting up or troubleshooting.
 allowed-tools: Bash, Read, Glob, Grep
+version: 1.0.0
+workflow_stage: setup
+tags:
+  - environment
+  - setup
+  - diagnostics
 ---
 
 # Check Environment

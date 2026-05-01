@@ -3,6 +3,12 @@ name: cite
 description: Finds a paper by title, author, or DOI, adds BibTeX to references.bib, and shows citation syntax. Use when adding a reference.
 argument-hint: <paper or DOI>
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+version: 1.0.0
+workflow_stage: writing
+tags:
+  - citations
+  - bibliography
+  - BibTeX
 ---
 
 # Add Citation

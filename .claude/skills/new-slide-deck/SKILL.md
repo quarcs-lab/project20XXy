@@ -3,6 +3,12 @@ name: new-slide-deck
 description: Creates a Quarto revealjs slide deck in slides/ with the project style guide. Use when a presentation is needed.
 argument-hint: <title>
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+version: 1.0.0
+workflow_stage: communication
+tags:
+  - presentation
+  - slides
+  - revealjs
 ---
 
 # Create Presentation

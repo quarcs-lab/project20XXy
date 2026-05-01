@@ -2,6 +2,12 @@
 name: submission-prep
 description: Runs pre-submission checks (word count, anonymization, citations, placeholders, cross-refs) and generates a checklist. Use before journal submission.
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+version: 1.0.0
+workflow_stage: quality
+tags:
+  - submission
+  - checklist
+  - quality-check
 ---
 
 # Prepare for Submission

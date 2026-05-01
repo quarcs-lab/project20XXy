@@ -3,6 +3,12 @@ name: sync-tex
 description: Transfers prose edits from latex/index.tex (Overleaf) back into index.qmd. Use after pulling LaTeX edits from a collaborator.
 disable-model-invocation: true
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+version: 1.0.0
+workflow_stage: communication
+tags:
+  - Overleaf
+  - LaTeX
+  - sync
 ---
 
 # Sync LaTeX Edits to QMD

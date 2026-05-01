@@ -3,6 +3,12 @@ name: new-notebook
 description: Creates a Quarto notebook (.qmd) and registers it in _quarto.yml. Use when adding a new notebook.
 argument-hint: <name> <title>
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+version: 1.0.0
+workflow_stage: analysis
+tags:
+  - notebook
+  - Quarto
+  - scaffold
 ---
 
 # Create New Notebook

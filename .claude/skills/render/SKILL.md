@@ -3,6 +3,12 @@ name: render
 description: Runs the clean render pipeline (HTML, PDF, Word) via scripts/render.sh. Use when asked to render, build, or compile the manuscript.
 disable-model-invocation: true
 allowed-tools: Bash, Read, Glob, Grep
+version: 1.0.0
+workflow_stage: communication
+tags:
+  - render
+  - Quarto
+  - build
 ---
 
 # Render Manuscript

@@ -3,6 +3,12 @@ name: robustness-table
 description: Generates robustness check code and formats results as a combined table. Use for sensitivity analysis.
 argument-hint: <notebook> <baseline spec>
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+version: 1.0.0
+workflow_stage: writing
+tags:
+  - regression
+  - robustness
+  - tables
 ---
 
 # Generate Robustness Checks and Table

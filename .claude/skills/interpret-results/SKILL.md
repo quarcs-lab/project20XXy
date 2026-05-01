@@ -3,6 +3,12 @@ name: interpret-results
 description: Writes academic prose interpreting regression output. Use when describing estimation results in manuscript-ready language.
 argument-hint: <cell ref or output>
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+version: 1.0.0
+workflow_stage: writing
+tags:
+  - regression
+  - interpretation
+  - manuscript
 ---
 
 # Interpret Regression Results

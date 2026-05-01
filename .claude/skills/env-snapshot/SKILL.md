@@ -2,6 +2,12 @@
 name: env-snapshot
 description: Captures tool versions, packages, and kernel info as a reproducibility record in notes/. Use when documenting the environment.
 allowed-tools: Bash, Read, Write, Glob, Grep
+version: 1.0.0
+workflow_stage: setup
+tags:
+  - environment
+  - reproducibility
+  - documentation
 ---
 
 # Document Environment Snapshot

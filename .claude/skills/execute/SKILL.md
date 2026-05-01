@@ -3,6 +3,12 @@ name: execute
 description: Executes all registered notebooks via Quarto render. Use when asked to re-run notebooks or refresh outputs.
 disable-model-invocation: true
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+version: 1.0.0
+workflow_stage: analysis
+tags:
+  - execution
+  - notebooks
+  - Quarto
 ---
 
 # Execute All Notebooks

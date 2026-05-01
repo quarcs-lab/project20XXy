@@ -2,6 +2,12 @@
 name: freeze-check
 description: Checks whether registered notebooks have current, stale, or missing outputs. Use before rendering or to verify freshness.
 allowed-tools: Bash, Read, Glob, Grep
+version: 1.0.0
+workflow_stage: quality
+tags:
+  - notebooks
+  - freshness
+  - quality-check
 ---
 
 # Check Notebook Execution Freshness

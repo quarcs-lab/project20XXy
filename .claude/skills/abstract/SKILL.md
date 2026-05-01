@@ -3,6 +3,12 @@ name: abstract
 description: Reads the manuscript and notebooks to generate a structured abstract. Use when writing or updating the abstract.
 argument-hint: "[word count]"
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+version: 1.0.0
+workflow_stage: writing
+tags:
+  - manuscript
+  - abstract
+  - writing
 ---
 
 # Generate Abstract

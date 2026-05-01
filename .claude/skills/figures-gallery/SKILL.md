@@ -2,6 +2,12 @@
 name: figures-gallery
 description: Generates an HTML gallery of all project figures with captions and source notebooks. Use when reviewing figures.
 allowed-tools: Bash, Read, Write, Glob, Grep
+version: 1.0.0
+workflow_stage: communication
+tags:
+  - figures
+  - gallery
+  - review
 ---
 
 # Generate Figures Gallery

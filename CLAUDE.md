@@ -35,6 +35,7 @@ These are non-negotiable behavioral constraints.
 2. **Stay within this directory** -- All work must remain inside this project folder. Ask before accessing external resources.
 3. **Preserve raw data** -- Files in `data/rawData/` are source-of-truth inputs. Never modify them.
 4. **Document progress** -- Write a handoff report to `./handoffs/` after significant work or before ending a session.
+5. **Ask before coding** -- Before implementing any change, ask clarifying questions until you are 95% confident you understand exactly what is needed. Do not make assumptions about scope, approach, or intent.
 
 ---
 
@@ -54,7 +55,7 @@ These are non-negotiable behavioral constraints.
 | `data/rawData/` | Raw source data (never modify) |
 | `scripts/render.sh` | Two-pass render + LLM markdown + Overleaf staging + GitHub Pages deploy |
 | `handoffs/` | Session handoff reports |
-| `.claude/skills/` | 24 skill definitions (SKILL.md with YAML frontmatter) |
+| `.claude/skills/` | 27 skill definitions (SKILL.md with YAML frontmatter) |
 | `.env` | API keys and secrets (gitignored, never commit) |
 
 ---
@@ -70,8 +71,8 @@ Invoke with `/project:<name>`. See `README.md` § Available Skills for full desc
 
 **Notebook & Presentation Creation** -- Create new files; accept arguments.
 
-| `/project:new-notebook` | `/project:new-analysis` | `/project:new-slide-deck` |
-| --- | --- | --- |
+| `/project:new-notebook` | `/project:new-analysis` | `/project:new-slide-deck` | `/project:econ-visualization` |
+| --- | --- | --- | --- |
 
 **Writing & Results** -- Draft prose, interpret output, format tables.
 
@@ -79,10 +80,11 @@ Invoke with `/project:<name>`. See `README.md` § Available Skills for full desc
 | --- | --- | --- |
 | `/project:regression-table` | `/project:robustness-table` | `/project:referee-response` |
 
-**References & Data** -- Manage citations, literature notes, data docs.
+**Research & Literature** -- Ideation, literature reviews, citations, data docs.
 
-| `/project:cite` | `/project:literature-note` | `/project:codebook` |
+| `/project:research-ideation` | `/project:lit-review` | `/project:literature-note` |
 | --- | --- | --- |
+| `/project:cite` | `/project:codebook` | |
 
 **Quality Checks & Audits** -- Read-only; can be auto-invoked when relevant.
 

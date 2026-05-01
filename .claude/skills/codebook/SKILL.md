@@ -3,6 +3,12 @@ name: codebook
 description: Auto-generates a Markdown codebook from a dataset (CSV, DTA, Excel, Parquet) with types and summary statistics. Use when documenting variables.
 argument-hint: <path to dataset>
 allowed-tools: Bash, Read, Write, Glob, Grep
+version: 1.0.0
+workflow_stage: data
+tags:
+  - data
+  - documentation
+  - codebook
 ---
 
 # Generate Variable Codebook

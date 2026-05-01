@@ -3,6 +3,12 @@ name: referee-response
 description: Drafts a point-by-point response letter to referee comments with suggested edits. Use after a revise-and-resubmit.
 argument-hint: "<path> or 'paste'"
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+version: 1.0.0
+workflow_stage: writing
+tags:
+  - revision
+  - referee
+  - response-letter
 ---
 
 # Draft Referee Response
