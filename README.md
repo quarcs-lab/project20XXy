@@ -22,6 +22,7 @@
 - [Customizing This Template](#customizing-this-template)
 - [Workflow with Claude Code](#workflow-with-claude-code)
 - [Troubleshooting & FAQ](#troubleshooting--faq)
+- [License](#license)
 
 ## What Is This Template?
 
@@ -469,6 +470,7 @@ project20XXy/
 ├── uv.lock                # Locked dependency versions
 ├── CLAUDE.md              # Instructions for Claude Code
 ├── README.md              # This file
+├── LICENSE                # MIT license
 │
 ├── notebooks/             # Quarto notebooks (.qmd): Python, R, Stata
 │   ├── notebook-01.qmd    #   Python panel-FE analysis
@@ -658,3 +660,12 @@ grep -rn "\[FILL:" --include="*.md" --include="*.qmd" --include="*.toml" .
 
 Run `/project:init` to fill them interactively, or edit by hand
 (see [Using This Template](#using-this-template)).
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE) — © 2026 Carlos Mendez. You are free to
+use, modify, and distribute this template; the copyright notice and license text
+must be retained. Update the copyright holder in [`LICENSE`](LICENSE) when you adapt
+the template for your own project.

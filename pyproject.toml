@@ -2,6 +2,7 @@
 name = "project20XXy"  # [FILL: Rename to your project slug]
 version = "0.1.0"
 description = "[FILL: Project description]"
+license = "MIT"
 requires-python = ">=3.12"
 authors = [
     { name = "[FILL: Author name]", email = "[FILL: email@example.com]" },
