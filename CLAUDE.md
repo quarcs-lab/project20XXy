@@ -31,7 +31,7 @@ For full documentation (installation, workflows, Overleaf sync, reproducibility)
 
 These are non-negotiable behavioral constraints.
 
-1. **Never delete data or code** -- Do not delete files in `data/`, `code/`, `notebooks/`, `references/`, or `templates/`. Move old versions to `legacy/`.
+1. **Never delete data or code** -- Do not delete files in `data/`, `code/`, `notebooks/`, `references/`, `read/`, `notes/`, or `templates/`. Move old versions to `legacy/`.
 2. **Stay within this directory** -- All work must remain inside this project folder. Ask before accessing external resources.
 3. **Preserve raw data** -- Files in `data/rawData/` are source-of-truth inputs. Never modify them.
 4. **Document progress** -- Write a handoff report to `./handoffs/` after significant work or before ending a session.
@@ -53,46 +53,43 @@ These are non-negotiable behavioral constraints.
 | `images/` | Exported figures (PNG, 300 DPI, 6×4 inches) |
 | `tables/` | Exported tables (CSV + Markdown + LaTeX) |
 | `data/rawData/` | Raw source data (never modify) |
-| `scripts/render.sh` | Two-pass render + LLM markdown + Overleaf staging + GitHub Pages deploy |
+| `scripts/render.sh` | Two-pass render + LLM markdown + Overleaf staging + GitHub Pages deploy; tees output to `logs/` |
 | `handoffs/` | Session handoff reports |
-| `.claude/skills/` | 27 skill definitions (SKILL.md with YAML frontmatter) |
+| `logs/` | Timestamped execution logs (`<name>_YYYYMMDD_HHMM.txt`); contents gitignored, folder tracked |
+| `notes/` | Working notes + per-notebook audit trail (`notes/<slug>/<slug>_{plan,review,results_report}.md`); also env snapshots, ideation, referee letters (see `notes/README.md`) |
+| `read/` | Reference-paper PDFs & replication kits (distinct from `references.bib` and `references/`) |
+| `.claude/skills/` | 14 skill definitions (5 pipeline + 9 infra/utility); detail in each skill's `references/`. Originals archived in `legacy/skills/` |
 | `.env` | API keys and secrets (gitignored, never commit) |
 
 ---
 
 ## Skills
 
-Invoke with `/project:<name>`. See `README.md` § Available Skills for full descriptions and SKILL.md links.
+Invoke with `/project:<name>`. Consolidated from 27 narrow skills into **5 pipeline
+skills + 9 infra/utility skills** (the 18 absorbed skills are archived in
+`legacy/skills/`). Each pipeline skill is a dispatcher on its first argument and
+delegates detail to docs in its own `references/` folder. See `README.md`
+§ Available Skills for full descriptions.
+
+**Pipeline** -- One skill per stage; pick a mode via the first argument.
+
+| Skill | Modes | Replaces |
+| ----- | ----- | -------- |
+| `/project:analyze <mode>` | `notebook` · `did`/`iv`/`rdd`/`lasso`/`panel-fe` · `figure` · `codebook` | new-notebook, new-analysis, econ-visualization, codebook |
+| `/project:write <mode>` | `section` · `abstract` · `interpret` · `referee` | draft-section, abstract, interpret-results, referee-response |
+| `/project:tables <mode>` | `regression` · `robustness` | regression-table, robustness-table |
+| `/project:literature <mode>` | `ideate` · `review` · `cite` · `note` · `check` | cite, bib-check, literature-note, lit-review, research-ideation |
+| `/project:review [scope]` | `manuscript` (default) · `<notebook-slug>` | data-audit, freeze-check, submission-prep (+ new audit logic) |
 
 **Build & Execution** -- Side-effect skills, manual invocation only.
 
 | `/project:render` | `/project:execute` | `/project:init` | `/project:sync-tex` |
 | --- | --- | --- | --- |
 
-**Notebook & Presentation Creation** -- Create new files; accept arguments.
+**Setup, Session & Misc** -- Kept standalone.
 
-| `/project:new-notebook` | `/project:new-analysis` | `/project:new-slide-deck` | `/project:econ-visualization` |
-| --- | --- | --- | --- |
-
-**Writing & Results** -- Draft prose, interpret output, format tables.
-
-| `/project:draft-section` | `/project:abstract` | `/project:interpret-results` |
-| --- | --- | --- |
-| `/project:regression-table` | `/project:robustness-table` | `/project:referee-response` |
-
-**Research & Literature** -- Ideation, literature reviews, citations, data docs.
-
-| `/project:research-ideation` | `/project:lit-review` | `/project:literature-note` |
-| --- | --- | --- |
-| `/project:cite` | `/project:codebook` | |
-
-**Quality Checks & Audits** -- Read-only; can be auto-invoked when relevant.
-
-| `/project:bib-check` | `/project:data-audit` | `/project:freeze-check` |
-| --- | --- | --- |
-| `/project:check-env` | `/project:submission-prep` | `/project:figures-gallery` |
-
-**Session Management** -- `/project:handoff` and `/project:env-snapshot`
+| `/project:check-env` | `/project:env-snapshot` | `/project:handoff` | `/project:figures-gallery` | `/project:new-slide-deck` |
+| --- | --- | --- | --- | --- |
 
 ---
 
@@ -105,6 +102,10 @@ Invoke with `/project:<name>`. See `README.md` § Available Skills for full desc
 - Decisions made and rationale
 - Open issues or blockers
 - Concrete next steps
+
+Two related trails complement handoffs: **execution logs** (timestamped runs) live
+in `logs/`, and the **per-notebook audit trail** (plan → review → results report)
+lives in `notes/<slug>/` — `/project:review` writes `notes/<slug>/<slug>_review.md`.
 
 ---
 
@@ -228,5 +229,5 @@ These are non-obvious pitfalls. See `README.md` for full context.
 - **HTML theme** -- `cosmo` theme with `github` syntax highlighting, configured in `_quarto.yml`
 - **LLM-friendly output** -- `scripts/render.sh` generates `_manuscript/index.llms.md` from the LaTeX source via Pandoc (`gfm-raw_html` format). Clean markdown with prose, tables, equations — no HTML artifacts
 - **GitHub Pages** -- manuscript is auto-deployed to `gh-pages` branch by `scripts/render.sh`
-- **Quarto version** -- project uses Quarto >= 1.9 (currently 1.9.37)
+- **Quarto version** -- project uses Quarto >= 1.8 (tested with 1.8.27)
 - **Credentials** go in `.env` only. Never commit secrets to git

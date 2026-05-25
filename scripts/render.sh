@@ -4,6 +4,13 @@ cd "$(dirname "$0")/.."
 
 command -v quarto >/dev/null 2>&1 || { echo "ERROR: quarto not found"; exit 1; }
 
+# Tee the full pipeline output into a timestamped log (logs/ is gitignored
+# except its README). Convention: logs/render_YYYYMMDD_HHMM.txt
+mkdir -p logs
+LOG_FILE="logs/render_$(date +%Y%m%d_%H%M).txt"
+exec > >(tee "$LOG_FILE") 2>&1
+echo "=== render.sh started $(date) -> $LOG_FILE ==="
+
 # Clean caches and render (two passes: first generates table .md files,
 # second includes them correctly in the manuscript)
 rm -rf _freeze/ _manuscript/ .quarto/

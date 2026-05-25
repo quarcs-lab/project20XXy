@@ -4,6 +4,25 @@
 
 [FILL: One-paragraph description of the project — what question it investigates, why it matters, and what data/methods it uses.]
 
+## Contents
+
+- [What Is This Template?](#what-is-this-template)
+- [Quick Start](#quick-start)
+- [Using This Template](#using-this-template)
+- [How It Works](#how-it-works)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Manuscript Workflow](#manuscript-workflow)
+- [Notebook Workflow](#notebook-workflow)
+- [Review & Audit Trail](#review--audit-trail)
+- [Overleaf Collaboration](#overleaf-collaboration)
+- [Publishing: GitHub Pages & LLM Outputs](#publishing-github-pages--llm-outputs)
+- [Reproducibility](#reproducibility)
+- [Project Structure](#project-structure)
+- [Customizing This Template](#customizing-this-template)
+- [Workflow with Claude Code](#workflow-with-claude-code)
+- [Troubleshooting & FAQ](#troubleshooting--faq)
+
 ## What Is This Template?
 
 `project20XXy` is a ready-to-clone template for reproducible academic research. It integrates:
@@ -12,7 +31,7 @@
 - **Quarto manuscript** — A single source file (`index.qmd`) that embeds figures and tables from notebooks and renders to HTML, PDF, and Word simultaneously.
 - **Overleaf collaboration** — A sync workflow that lets LaTeX-only collaborators edit the manuscript in Overleaf while you keep working in Quarto.
 - **Reproducibility by design** — Locked dependencies, protected raw data, and consistent random seeds.
-- **AI-assisted workflow** — Claude Code integration with 24 skills for rendering, notebook creation, session handoffs, LaTeX sync, and more.
+- **AI-assisted workflow** — Claude Code integration with 14 skills (5 mode-based pipeline skills + 9 infra/utility skills) for analysis, writing, tables, literature, review, rendering, session handoffs, LaTeX sync, and more.
 
 Clone this repository, fill in the `[FILL: ...]` placeholders, and start researching.
 
@@ -41,7 +60,7 @@ open _manuscript/index.html
 
 If you've just forked or cloned this repo and want to turn it into your own project, run through the checklist below in order. Each step links to a deeper section if you need details.
 
-1. **Install the toolchain.** Quarto >= 1.9, `uv`, Python 3.12, and (optionally) R + Stata. See [Requirements](#requirements).
+1. **Install the toolchain.** Quarto >= 1.8, `uv`, Python 3.12, and (optionally) R + Stata. See [Requirements](#requirements).
 2. **Install Python deps.** `uv sync`. See [Python Environment](#python-environment).
 3. **Install kernels you'll use.** [R kernel](#r-kernel-irkernel) and/or [Stata kernel](#stata-kernel-nbstata). Skip either if you don't need it — the pipeline runs with Python alone.
 4. **Verify the environment.** In Claude Code, run `/project:check-env` to confirm every required tool and kernel is reachable.
@@ -67,9 +86,9 @@ If you've just forked or cloned this repo and want to turn it into your own proj
    ```
 
 7. **Bring in your data.** Put raw inputs in `data/rawData/` (never modified afterwards per CLAUDE.md rule #3) and document provenance in `data/rawData/README.md`. The demo `data/panel_growth.csv` is synthetic — move it to `legacy/` when you replace it.
-8. **Replace or repurpose the sample notebooks.** The three notebooks in `notebooks/` are a panel-FE tutorial in Python, R, and Stata against the synthetic panel. Keep them as a reference, replace them with your analyses via `/project:new-notebook` or `/project:new-analysis`, and register anything new in `_quarto.yml` under `manuscript.notebooks`.
+8. **Replace or repurpose the sample notebooks.** The three notebooks in `notebooks/` are a panel-FE tutorial in Python, R, and Stata against the synthetic panel. Keep them as a reference, replace them with your analyses via `/project:analyze notebook` (or a method mode like `/project:analyze did`), and register anything new in `_quarto.yml` under `manuscript.notebooks`.
 9. **Clear the template's session history.** Archive or delete everything in `handoffs/` so forkers start with their own context.
-10. **Populate `references.bib`** from Zotero (or add entries one at a time with `/project:cite`). Run `/project:bib-check` to catch orphan / missing citations.
+10. **Populate `references.bib`** from Zotero (or add entries one at a time with `/project:literature cite`). Run `/project:literature check` to catch orphan / missing citations.
 
 Once these are done, the remaining sections below (Manuscript Workflow, Notebook Workflow, Overleaf Collaboration, Reproducibility) describe the day-to-day loop.
 
@@ -121,7 +140,7 @@ flowchart LR
 
 | Tool | Purpose | Required? |
 | ---- | ------- | --------- |
-| [Quarto](https://quarto.org/) >= 1.9 | Manuscript rendering | Yes |
+| [Quarto](https://quarto.org/) >= 1.8 (tested with 1.8.27) | Manuscript rendering | Yes |
 | [uv](https://docs.astral.sh/uv/) | Python package manager | Yes |
 | Python 3.12+ | Notebooks, scripting | Yes |
 | R | R notebooks | If using R |
@@ -130,7 +149,7 @@ flowchart LR
 Verify your setup:
 
 ```bash
-quarto --version        # >= 1.9
+quarto --version        # >= 1.8 (tested with 1.8.27)
 uv --version            # any recent version
 python3 --version       # >= 3.12
 R --version             # optional
@@ -246,7 +265,7 @@ Include pedagogical markdown text between code blocks explaining what the code d
 
 ### Creating Notebooks
 
-Use `/project:new-notebook` in Claude Code, or manually:
+Use `/project:analyze notebook` in Claude Code (or `/project:analyze <method>` for a method-specific scaffold), or manually:
 
 1. Create `notebooks/notebook-NN.qmd` with YAML frontmatter (`title` and `jupyter` kernel)
 2. Set the random seed in the first code cell (see [Reproducibility](#reproducibility))
@@ -312,6 +331,49 @@ See the existing notebooks for complete working examples.
 
 ---
 
+## Review & Audit Trail
+
+Beyond producing outputs, the template keeps a lightweight **quality loop** so that
+every analysis has a traceable plan → review → report history and the manuscript
+can be audited before submission.
+
+### The `notes/` audit trail
+
+Each analysis gets a slug-named subfolder under `notes/` (the slug is the notebook
+name, e.g. `notebook-01`). A subfolder accumulates up to three artifacts:
+
+| File | Stage | Produced by |
+| ---- | ----- | ----------- |
+| `notes/<slug>/<slug>_plan.md` | Approved scope before writing the notebook | planning / `/project:analyze` |
+| `notes/<slug>/<slug>_review.md` | Scored correctness/quality review | `/project:review <slug>` |
+| `notes/<slug>/<slug>_results_report.md` | Results write-up with interpretation | `/project:write interpret` |
+
+`notes/` is version-controlled (these are durable knowledge artifacts) and also
+holds loose working notes, environment snapshots, ideation, and referee letters. See
+[`notes/README.md`](notes/README.md) for the full convention.
+
+### `/project:review` — scored audits
+
+`/project:review` runs a **read-only** audit and writes a scored report to `notes/`:
+
+- **`/project:review manuscript`** (default) — full pre-submission audit of `index.qmd`.
+- **`/project:review notebook-02`** — audit a single notebook.
+
+It produces a verdict (**SUBMISSION-READY / MINOR REVISION / MAJOR REVISION**) over
+eight dimensions: freeze freshness, data-path existence, citation integrity,
+figure/table export presence, `[FILL:]`/`[CITE:]` placeholders, anonymization,
+cross-reference resolution, and word count. It never edits notebooks, data, or the
+manuscript — only the report. For an authoritative citation cross-check alone, use
+`/project:literature check`.
+
+### Execution logs
+
+`logs/` holds timestamped run logs (`<name>_YYYYMMDD_HHMM.txt`). `scripts/render.sh`
+tees each run into `logs/render_<timestamp>.txt`. Log **contents** are gitignored
+(run artifacts); the folder and its `README.md` stay tracked.
+
+---
+
 ## Overleaf Collaboration
 
 For collaborators who prefer LaTeX, the project supports a sync workflow with [Overleaf](https://www.overleaf.com/) via GitHub integration.
@@ -331,6 +393,41 @@ flowchart TD
 - **Prose only** — Only text edits are transferred. `{{< embed >}}` shortcodes are preserved.
 - **Captions are not synced** — Figure/table captions live in notebook cells.
 - **Preamble is ignored** — Everything before `\begin{document}` is auto-generated by Quarto.
+
+---
+
+## Publishing: GitHub Pages & LLM Outputs
+
+A full `bash scripts/render.sh` produces several outputs under `_manuscript/` and
+can publish them automatically.
+
+### Rendered outputs (`_manuscript/`)
+
+| File | What it is |
+| ---- | ---------- |
+| `index.html` | Web version of the manuscript |
+| `index.pdf` | Print/submission PDF (LaTeX via `scrartcl`) |
+| `index.docx` | Word version for co-authors who need it |
+| `index.llms.md` | LLM-friendly Markdown (see below) |
+| `notebooks/*-preview.html` | Rendered previews of each notebook |
+
+### LLM-friendly Markdown (`index.llms.md`)
+
+`render.sh` converts the generated LaTeX into clean GitHub-flavored Markdown with
+Pandoc (`-f latex -t gfm-raw_html`). The result is prose, tables, and equations
+with no HTML artifacts — convenient for pasting into an LLM, diffing prose, or
+quick reading.
+
+### GitHub Pages deployment
+
+If a `gh-pages` branch exists, `render.sh` copies `_manuscript/*` into it (adding
+`.nojekyll`) and pushes — publishing the HTML manuscript. If the branch does not
+exist, the deploy step is skipped cleanly, so local rendering always works. To
+enable publishing, create the branch once:
+
+```bash
+git checkout --orphan gh-pages && git rm -rf . && git commit --allow-empty -m "init gh-pages" && git checkout -
+```
 
 ---
 
@@ -360,6 +457,47 @@ API keys and secrets go in `.env` (gitignored). Never commit `.env` to git.
 
 ## Project Structure
 
+### Repository Layout
+
+```text
+project20XXy/
+├── index.qmd              # Main manuscript source
+├── _quarto.yml            # Quarto project config (formats, notebook registrations)
+├── styles.css             # Custom HTML styling
+├── references.bib         # BibTeX bibliography (from Zotero)
+├── pyproject.toml         # Python deps (uv) + project metadata
+├── uv.lock                # Locked dependency versions
+├── CLAUDE.md              # Instructions for Claude Code
+├── README.md              # This file
+│
+├── notebooks/             # Quarto notebooks (.qmd): Python, R, Stata
+│   ├── notebook-01.qmd    #   Python panel-FE analysis
+│   ├── notebook-02.qmd    #   R panel-FE analysis
+│   └── notebook-03.qmd    #   Stata panel-FE analysis
+├── data/                  # Datasets
+│   ├── panel_growth.csv   #   Synthetic sample panel (40 countries × 6 periods)
+│   └── rawData/           #   Source-of-truth inputs — never modify
+├── images/                # Exported figures (PNG, 6×4 in, 300 DPI)
+├── tables/                # Exported tables (CSV + Markdown + LaTeX)
+├── code/                  # Standalone scripts outside notebooks
+├── references/            # Annotated bibliography notes (Markdown)
+├── read/                  # Reference-paper PDFs & replication kits
+├── notes/                 # Working notes, env snapshots + per-notebook audit trail (<slug>/)
+├── slides/                # Quarto revealjs presentations
+├── latex/                 # Overleaf sync staging (index.tex + .baseline.tex)
+├── templates/             # Alternative manuscript templates (chadManuscript)
+├── scripts/               # Build utilities (render.sh)
+│
+├── logs/                  # Timestamped execution logs (contents gitignored)
+├── handoffs/              # Session handoff reports (YYYYMMDD_HHMM.md)
+│
+├── legacy/                # Archived old files (never deleted, moved here)
+│   └── skills/            #   18 skills absorbed in the 27→14 consolidation
+├── _manuscript/           # Rendered outputs (generated): HTML, PDF, Word, llms.md
+└── .claude/
+    └── skills/            # 14 Claude Code skills (5 pipeline + 9 infra/utility)
+```
+
 ### Directories
 
 | Directory | Purpose |
@@ -373,10 +511,13 @@ API keys and secrets go in `.env` (gitignored). Never commit `.env` to git.
 | `latex/` | Overleaf sync staging (`index.tex` + `.baseline.tex`) |
 | `slides/` | Quarto revealjs presentations |
 | `references/` | Annotated bibliography notes |
-| `notes/` | Research notes and brainstorming |
+| `read/` | Reference-paper PDFs and replication kits (distinct from `references.bib` and `references/`) |
+| `notes/` | Research notes, env snapshots, ideation, referee letters, and the per-notebook audit trail (`<slug>/` plan → review → report) |
+| `templates/` | Alternative manuscript templates (e.g. the `chadManuscript` LaTeX style) |
 | `scripts/` | Build utilities (`render.sh`) |
 | `handoffs/` | Session handoff reports (`YYYYMMDD_HHMM.md`) |
-| `legacy/` | Archived old files (never deleted, always moved here) |
+| `logs/` | Timestamped execution logs (`<name>_YYYYMMDD_HHMM.txt`); contents gitignored, folder tracked |
+| `legacy/` | Archived old files (never deleted, always moved here — includes `legacy/skills/` from the skill consolidation) |
 | `_manuscript/` | Rendered outputs: HTML, PDF, Word, LLM markdown, notebook previews |
 
 ### Root-Level Files
@@ -429,69 +570,91 @@ format:
 
 ## Workflow with Claude Code
 
-This template includes [Claude Code](https://claude.com/claude-code) integration with 27 agentic skills. Type `/project:<name>` to invoke any skill.
+This template includes [Claude Code](https://claude.com/claude-code) integration with 14 skills. Type `/project:<name>` to invoke any skill.
 
-Skills are defined in [`.claude/skills/`](.claude/skills/). Each has a `SKILL.md` with instructions and YAML frontmatter.
+Skills are defined in [`.claude/skills/`](.claude/skills/). Each has a `SKILL.md` with instructions and YAML frontmatter. The set was **consolidated from 27 narrow skills into 5 mode-based pipeline skills + 9 infra/utility skills**; each pipeline skill dispatches on its first argument and keeps its detailed guidance in a `references/` folder. The 18 absorbed skills are preserved in [`legacy/skills/`](legacy/skills/) (see its README for the old→new map).
 
 ### Available Skills
+
+#### Pipeline (mode-based)
+
+Each pipeline skill takes a **mode** as its first argument.
+
+| Skill | Modes | Description |
+| ----- | ----- | ----------- |
+| `/project:analyze` | `notebook` · `did` · `iv` · `rdd` · `lasso` · `panel-fe` · `figure` · `codebook` | Scaffold a Quarto notebook (generic or method-specific) and register it in `_quarto.yml`; style publication-quality figures (6×4, 300 DPI); generate dataset codebooks. Renders only the new notebook to verify — not the suite. |
+| `/project:write` | `section` · `abstract` · `interpret` · `referee` | Draft manuscript prose: a section from an outline, a structured abstract, regression-result interpretation, or a point-by-point referee response. Inserts into `index.qmd` on approval. |
+| `/project:tables` | `regression` · `robustness` | Build publication-quality regression and robustness tables (stars, SEs, fit stats) exported to `tables/` as CSV + Markdown + LaTeX, embedded via `{{< include >}}`. |
+| `/project:literature` | `ideate` · `review` · `cite` · `note` · `check` | Ideate research questions, run a structured literature review, add a citation to `references.bib`, write an annotation note in `references/`, or cross-check `index.qmd` citations against the bib. |
+| `/project:review` | `manuscript` (default) · `<notebook-slug>` | Read-only scored audit — freeze freshness, data paths, citation integrity, figure/table exports, placeholders, anonymization, cross-refs, word count. Writes a report to `notes/<slug>/`. |
 
 #### Build and Execution
 
 | Skill | Description |
 | ----- | ----------- |
-| `/project:render` | Runs the full render pipeline (HTML, PDF, Word) via `scripts/render.sh` — cleans caches, two-pass Quarto render, LLM markdown generation, Overleaf staging, and GitHub Pages deploy. |
+| `/project:render` | Runs the full render pipeline (HTML, PDF, Word) via `scripts/render.sh` — cleans caches, two-pass Quarto render, LLM markdown generation, Overleaf staging, GitHub Pages deploy, and tees output to `logs/`. |
 | `/project:execute` | Re-runs all registered notebooks via Quarto render to refresh their cached outputs in `_freeze/`. Reports per-notebook status, timing, and errors. |
 | `/project:init` | One-time project setup. Fills all `[FILL:]` placeholders across the template (title, authors, data sources) to initialize a freshly cloned project. |
 | `/project:sync-tex` | Transfers prose edits made in the LaTeX source (`latex/index.tex`, e.g. from Overleaf) back into `index.qmd`, preserving embed/include shortcodes. |
 
-#### Notebook and Presentation Creation
+#### Setup, Session & Misc
 
 | Skill | Description |
 | ----- | ----------- |
-| `/project:new-notebook` | Creates a new Quarto notebook (`.qmd`) with the project's standard structure (data import, EDA, regressions) and registers it in `_quarto.yml`. |
-| `/project:new-analysis` | Scaffolds a method-specific analysis notebook (DiD, IV, RDD, LASSO, Panel FE) with econometric boilerplate, diagnostics, and language-specific package guidance. |
-| `/project:new-slide-deck` | Creates a Quarto revealjs slide deck in `slides/` following the project style guide. |
-| `/project:econ-visualization` | Generates publication-quality economics figures (coefficient plots, event studies, RD plots, time series, scatter, distributions, bar charts, heatmaps) with colorblind-safe palettes and journal-ready styling. |
-
-#### Writing and Results
-
-| Skill | Description |
-| ----- | ----------- |
-| `/project:draft-section` | Drafts academic prose for any manuscript section (Introduction, Data, Results, Conclusion) from bullet points or an outline, integrating citations from `references.bib`. |
-| `/project:abstract` | Reads the full manuscript and notebooks to generate a structured abstract (Motivation, Data, Results, Contribution) targeting a specified word count. |
-| `/project:interpret-results` | Writes manuscript-ready prose interpreting regression output — covers statistical significance, economic magnitude, cross-specification comparisons, and uses appropriate hedging language. |
-| `/project:regression-table` | Formats estimation output as a publication-quality regression table with significance stars, clustered SEs in parentheses, fixed-effects indicators, and fit statistics. Exports to CSV, Markdown, and LaTeX. |
-| `/project:robustness-table` | Generates robustness check code (alternative samples, controls, specifications) and formats all results as a combined multi-column table. |
-| `/project:referee-response` | Drafts a point-by-point response letter to referee comments, mapping each concern to specific manuscript locations and suggesting concrete edits. |
-
-#### Research and Literature
-
-| Skill | Description |
-| ----- | ----------- |
-| `/project:cite` | Finds a paper by title, author, or DOI; adds its BibTeX entry to `references.bib`; and shows the `@citekey` syntax for use in `index.qmd`. |
-| `/project:literature-note` | Creates a structured annotation note in `references/` with sections for research question, identification strategy, data, findings, limitations, and connections to other project notes. |
-| `/project:lit-review` | Conducts a structured literature review: designs a search strategy, builds a paper inventory, synthesizes findings thematically, and identifies gaps. Integrates with `/project:cite` and `/project:literature-note`. |
-| `/project:research-ideation` | Generates research questions from an observation or phenomenon using four frameworks (Puzzle, Policy, Data, Extension) and evaluates them on data availability, identification credibility, novelty, and policy relevance. |
-| `/project:codebook` | Auto-generates a Markdown codebook from a dataset file (CSV, DTA, Excel, Parquet) with variable names, types, and summary statistics. |
-
-#### Quality Checks and Audits
-
-| Skill | Description |
-| ----- | ----------- |
-| `/project:submission-prep` | Runs comprehensive pre-submission checks — word count, anonymization, citation completeness, placeholder detection, cross-reference validation — and generates a checklist. |
-| `/project:bib-check` | Cross-checks citation keys used in `index.qmd` against `references.bib`, reporting missing, orphaned, and duplicate entries. |
-| `/project:freeze-check` | Checks whether registered notebooks have current, stale, or missing cached outputs in `_freeze/`. Useful before rendering. |
-| `/project:data-audit` | Scans all notebooks for data file references (Python, R, Stata patterns) and verifies each referenced file exists on disk. Reports broken paths and undocumented files. |
 | `/project:check-env` | Verifies that required tools (Quarto, uv, Python, R, Stata, TeX) and Jupyter kernels are installed and reports their versions. |
-| `/project:figures-gallery` | Generates an HTML gallery page of all project figures (from `images/` and notebook cells) with captions, source notebooks, and embed shortcodes. |
-
-#### Session Management
-
-| Skill | Description |
-| ----- | ----------- |
-| `/project:handoff` | Writes a session handoff report to `handoffs/` documenting project state, work completed, decisions made, and next steps. |
 | `/project:env-snapshot` | Captures tool versions, Python/R packages, and kernel info as a timestamped reproducibility record in `notes/`. |
+| `/project:handoff` | Writes a session handoff report to `handoffs/` documenting project state, work completed, decisions made, and next steps. |
+| `/project:figures-gallery` | Generates an HTML gallery page of all project figures (from `images/` and notebook cells) with captions, source notebooks, and embed shortcodes. |
+| `/project:new-slide-deck` | Creates a Quarto revealjs slide deck in `slides/` following the project style guide. |
 
 ### Session Continuity
 
 Handoff reports in `handoffs/` preserve context across sessions. Each report includes the project state, work completed, decisions made, and next steps. Claude reads the most recent handoff at the start of every session.
+
+---
+
+## Troubleshooting & FAQ
+
+**`quarto render` fails on a notebook in a language I don't use (e.g. Stata or R).**
+The pipeline renders every notebook registered in `_quarto.yml`. If you only use
+Python, remove the R/Stata notebooks from `manuscript.notebooks` in `_quarto.yml`
+(and, optionally, move the `.qmd` files to `legacy/`). Run `/project:check-env` to
+see which kernels are actually installed.
+
+**`jupyter kernelspec list` doesn't show `ir` or `nbstata`.**
+The kernel isn't registered. Re-run the kernel install steps in
+[Installation](#installation): `IRkernel::installspec()` for R, or
+`uv run python -m nbstata.install` for Stata. Stata also needs a valid
+`~/.config/nbstata/nbstata.conf` pointing at your Stata install.
+
+**A table shows stale content after I changed a notebook.**
+Tables are exported as `.md` files and pulled in via `{{< include >}}`. A single
+`quarto render` can include the previous version. Use the two-pass
+`bash scripts/render.sh`, or refresh outputs with `/project:execute`. Check
+freshness anytime with `/project:review`.
+
+**Stata cell crashes the render with a table-parsing error.**
+Don't put a `tbl-` label/prefix on Stata text-output cells (`tabstat`, `summarize`,
+etc.) — it triggers Quarto's table parser. This only applies to text output, not to
+properly formatted Markdown tables.
+
+**`pip install` "worked" but the build broke / lockfile drifted.**
+Never use `pip install` — it bypasses `uv.lock`. Always `uv add <package>`, and run
+Python via `uv run`.
+
+**Quarto reports my version is too old.**
+The template targets **Quarto ≥ 1.8** (tested with 1.8.27). Check with
+`quarto --version` and upgrade from [quarto.org](https://quarto.org/) if needed.
+
+**`render.sh` finished but nothing deployed to GitHub Pages.**
+The deploy step runs only when a `gh-pages` branch exists; otherwise it is skipped.
+See [Publishing](#publishing-github-pages--llm-outputs) to create the branch.
+
+**Where are the remaining template placeholders?**
+
+```bash
+grep -rn "\[FILL:" --include="*.md" --include="*.qmd" --include="*.toml" .
+```
+
+Run `/project:init` to fill them interactively, or edit by hand
+(see [Using This Template](#using-this-template)).

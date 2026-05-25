@@ -5,6 +5,9 @@ project:
     - "notebooks/*.qmd"
     - "!legacy/"
     - "!templates/"
+    - "!logs/"
+    - "!notes/"
+    - "!read/"
 
 manuscript:
   article: index.qmd

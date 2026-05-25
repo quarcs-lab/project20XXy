@@ -42,6 +42,10 @@ latex/.baseline.tex
 *.fdb_latexmk
 *.synctex.gz
 
+# Execution logs (keep the folder + README, ignore run artifacts)
+logs/*
+!logs/README.md
+
 # OS
 .DS_Store
 
